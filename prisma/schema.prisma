@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,130 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  username  String
+  email     String
+  password  String
+  token     String?
+  restToken DateTime?
+  phone     String?
+  image     String?
+  isDeleted Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  UserRole  UserRole[]
+}
+
+model Role {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  UserRole  UserRole[]
+}
+
+model UserRole {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  roleId    Int
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Postion {
+  id        Int      @id @default(autoincrement())
+  name      String
+  isDeleted Boolean     @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Issue     Issue[]
+}
+
+model GovernmentOffice {
+  id        Int         @id @default(autoincrement())
+  name      String
+  isDeleted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Issue     Issue[]
+  Complaint Complaint[]
+  decision  Decision[]
+}
+
+model Issue {
+  id                 Int              @id @default(autoincrement())
+  name               String
+  postionId          Int
+  postion            Postion          @relation(fields: [postionId], references: [id])
+  governmentOfficeId Int
+  governmentOffice   GovernmentOffice @relation(fields: [governmentOfficeId], references: [id])
+  title              String
+  type               Int
+  invitationType     Int 
+  isDeleted Boolean     @default(false)
+  state              Boolean          @default(false)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  IssueDetails       IssueDetails[]
+}
+
+model IssueDetails {
+  id          Int      @id @default(autoincrement())
+  issueId     Int
+  Issue       Issue    @relation(fields: [issueId], references: [id])
+  level       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  detailsDate DateTime
+  judgment    String
+  refrance    String
+  Resumed     Boolean
+  isDeleted Boolean     @default(false)
+}
+
+model Complaint {
+  id                 Int              @id @default(autoincrement())
+  name               String
+  refrance           String
+  governmentOfficeId Int
+  governmentOffice   GovernmentOffice @relation(fields: [governmentOfficeId], references: [id])
+  title              String
+  description        String
+  date               DateTime
+  officeOpinian      String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  isDeleted Boolean     @default(false)
+}
+
+model Decision {
+  id                 Int              @id @default(autoincrement())
+  decisionName       String
+  refrance           String
+  governmentOfficeId Int
+  governmentOffice   GovernmentOffice @relation(fields: [governmentOfficeId], references: [id])
+  title              String
+  description        String
+  decisionSource     String
+  nameSource         String
+  isDeleted Boolean     @default(false)
+  attachmentPath     String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Generalization {
+  id             Int      @id @default(autoincrement())
+  title          String
+  refrance       String
+  description    String
+  attachmentPath String
+  isDeleted Boolean     @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
