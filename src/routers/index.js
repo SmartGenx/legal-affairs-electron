@@ -1,0 +1,30 @@
+const { Router } = require('express');
+
+const AuthRoutes = require('./AuthRouters');
+const RoleRoutes = require('./RoleRoutes');
+const UserRoutes = require('./userRoutes');
+const PostionRoutes = require('./PostionRoutes');
+const GovernmentOfficeRoutes = require('./GovernmentOfficeRoutes');
+const Issue = require('./IssueRouters');
+const EnumRoutes = require('./EnumValueRouters');
+const IssueDetails = require('./IssueDetailsRouters');
+const ComplaintRoutes =require('./ComplaintRouters');
+const GeneralizationRoutes =require("./GeneralizationRoutes");
+const DecisionRoutes =require('./DecisionRputers')
+
+const rootRouter = Router();
+
+rootRouter.use('/auth', AuthRoutes);
+rootRouter.use('/role', RoleRoutes);
+rootRouter.use('/user', UserRoutes);
+rootRouter.use('/position', PostionRoutes);
+rootRouter.use('/government-office', GovernmentOfficeRoutes);
+rootRouter.use('/issue', Issue);
+rootRouter.use('/enum', EnumRoutes);
+rootRouter.use('/issue-details', IssueDetails);
+rootRouter.use('/complaint', ComplaintRoutes);
+rootRouter.use('/generalization',GeneralizationRoutes)
+rootRouter.use('/decision',DecisionRoutes)
+
+
+module.exports = rootRouter;

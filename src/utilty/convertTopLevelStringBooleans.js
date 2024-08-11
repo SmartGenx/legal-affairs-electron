@@ -1,13 +1,20 @@
 /**
- * @typedef {Object} SimpleFilterObject
- * @property {string | number | boolean | { select: { [key: string]: boolean } }} [key]
+ * @typedef {Object<string, string | number | boolean | ComplexFilter>} SimpleFilterObject
  */
 
- /**
- * @param {SimpleFilterObject} filters
- * @returns {SimpleFilterObject}
+/**
+ * @typedef {Object} ComplexFilter
+ * @property {Object<string, boolean>} [select]
+ * @property {Object<string, boolean>} [include]
  */
- function convertTopLevelStringBooleans(filters) {
+
+/**
+ * Convert top-level string booleans in filters to actual booleans and handle complex filters.
+ *
+ * @param {SimpleFilterObject} filters - The filters to convert.
+ * @returns {SimpleFilterObject} - The converted filters.
+ */
+function convertTopLevelStringBooleans(filters) {
     const result = {};
     for (const [key, value] of Object.entries(filters)) {
         if (typeof value === 'string') {
@@ -20,14 +27,26 @@
                 // Retain other strings as they are
                 result[key] = value;
             }
-        } else if (typeof value === 'object' && value !== null && value.hasOwnProperty('select')) {
-            const selectValue = value['select'];
-            const splitArray = selectValue.split('-');
-            let select = {};
-            for (let i in splitArray) {
-                select[`${splitArray[i]}`] = true;
+        } else if (typeof value === 'object' && value !== null) {
+            if (value['select']) {
+                const selectValue = value['select'];
+                const splitArray = selectValue.split('-');
+                const select = {};
+                for (const item of splitArray) {
+                    select[item] = true;
+                }
+                result[key] = { select: select };
+            } else if (value['include']) {
+                const includeValue = value['include'];
+                const splitArray = includeValue.split('-');
+                const include = {};
+                for (const item of splitArray) {
+                    include[item] = true;
+                }
+                result[key] = { include: include };
+            } else {
+                result[key] = value;
             }
-            result[key] = { select: select };
         } else {
             result[key] = value;
         }

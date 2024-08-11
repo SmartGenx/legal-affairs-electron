@@ -1,0 +1,24 @@
+{
+   "Issue":{
+    "type":[
+        {
+            "label": "invitationType",
+            "value": 1
+        }
+    ],
+    "invitationType":[
+        {
+            "label": "invitationType",
+            "value": 1
+        }
+    ]
+   },
+   "IssueDetails":{
+    "level":[
+        {
+            "label": "level",
+            "value": 1
+        }
+    ]
+   } 
+}
