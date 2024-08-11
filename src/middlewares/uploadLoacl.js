@@ -22,7 +22,8 @@ const upload = multer({
 });
 
 const copyFileToProfileDir = () => async (req, res, next) => {
-    console.log(req.route.path.includes('registration'));
+    console.log(req.route.path);
+    
     if (!req.file) {
         //  next(new Error('No file uploaded'));
         return next();
@@ -39,6 +40,7 @@ const copyFileToProfileDir = () => async (req, res, next) => {
         case req.route.path.includes('registration'):
             fileName = `${originalName}-${timestamp}${extension}-User`;
             break;
+       
      
         default:
             fileName = `${originalName}-${timestamp}${extension}`;

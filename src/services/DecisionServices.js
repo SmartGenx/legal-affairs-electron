@@ -69,19 +69,21 @@ class DecisionServices {
             // Optional cleanup code can be added here
         }
     }
-    async createDecision(DecisionData) {
+    async createDecision(DecisionData,filePath) {
         try {
             const { governmentOfficeId,decisionName } = DecisionData;
-            const governmentOffice= await prisma.governmentOffice.findUnique({where: {id:governmentOfficeId}})
-            if(!governmentOffice){
-                throw new NotFoundError(`government Office with id ${id} not found `)
+            const governmentOffice= await prisma.governmentOffice.findFirst({where: {id:+governmentOfficeId ,isDeleted:false}})
+            console.log('governmentOffice',governmentOffice);
+            
+            if(!governmentOffice || null){
+                throw new NotFoundError(`government Office with id => ( ${governmentOfficeId}  ) not found `)
 
             }
-            const Decision = await prisma.decision.findFirst({where: {decisionName: decisionName , governmentOfficeId:governmentOfficeId}});
+            const Decision = await prisma.decision.findFirst({where: {decisionName: decisionName , governmentOfficeId:+governmentOfficeId}});
             if (Decision) {
                 throw new NotFoundError(`decision with name ${decisionName}  already exists.`);
             }
-            return await prisma.decision.create({data: DecisionData});
+            return await prisma.decision.create({data: {...DecisionData,attachmentPath:filePath,governmentOfficeId:+governmentOfficeId}});
         } catch (error) {
             if (error instanceof NotFoundError) {
                 throw error;
@@ -92,27 +94,57 @@ class DecisionServices {
         }
     }
 
-    async updateDecision(id, DecisionData) {
+    async updateDecision(id, DecisionData, filePath) {
         try {
-            const { governmentOfficeId,decisionName } = DecisionData;
-
-            const generalizationxistingDecision = await prisma.decision.findUnique({where: {id}});
+            const { governmentOfficeId, decisionName } = DecisionData;
+            const governmentOffice=await prisma.governmentOffice.findUnique({where: {id:+governmentOfficeId,isDeleted:false}})
+            if(!governmentOffice){ 
+                throw new NotFoundError(`government Office with id => ( ${governmentOfficeId}  ) not found `)
+            }
+    
+            // Find the existing decision by ID
+            let generalizationxistingDecision = await prisma.decision.findUnique({ where: { id } });
             if (!generalizationxistingDecision) {
-                throw new NotFoundError(`decision with id ${id} not found.`);
+                throw new NotFoundError(`Decision with id ${id} not found.`);
             }
-            if(decisionName){
-                const generalizationxistingDecision = await prisma.decision.findFirst({where: {decisionName: decisionName , governmentOfficeId:generalizationxistingDecision.governmentOfficeId}});
-                if (generalizationxistingDecision) {
-                    throw new NotFoundError(`decision with name ${decisionName}  already exists.`);
+    
+            // Check if the decision name already exists in the same government office
+            if (decisionName) {
+                const existingDecisionByName = await prisma.decision.findFirst({
+                    where: {
+                        decisionName: decisionName,
+                        governmentOfficeId: +generalizationxistingDecision.governmentOfficeId,
+                    },
+                });
+                if (existingDecisionByName) {
+                    throw new NotFoundError(`Decision with name ${decisionName} already exists in the specified government office.`);
                 }
             }
-            if(governmentOfficeId){
-                const generalizationxistingDecision = await prisma.decision.findFirst({where: {decisionName:generalizationxistingDecision.decisionName , governmentOfficeId:governmentOfficeId}});
-                if (generalizationxistingDecision) {
-                    throw new NotFoundError(`decision with name ${governmentOfficeId}  already exists.`);
+    
+            // Check if there's a decision with the same name in the new government office
+            if (governmentOfficeId) {
+                const existingDecisionByOffice = await prisma.decision.findFirst({
+                    where: {
+                        decisionName: generalizationxistingDecision.decisionName,
+                        governmentOfficeId: +governmentOfficeId,
+                    },
+                });
+                console.log(existingDecisionByOffice);
+                
+                if (!existingDecisionByOffice ) {
+                    throw new NotFoundError(`Decision with name ${decisionName} already exists in the specified government office.`);
                 }
             }
-            return await prisma.decision.update({where: {id}, data: DecisionData});
+    
+            // Update the decision
+            return await prisma.decision.update({
+                where: { id },
+                data: {
+                    ...DecisionData,
+                    governmentOfficeId: +governmentOfficeId,
+                    attachmentPath: filePath.length > 0 ? filePath : generalizationxistingDecision.attachmentPath,
+                },
+            });
         } catch (error) {
             if (error instanceof NotFoundError) {
                 throw error;
@@ -122,6 +154,7 @@ class DecisionServices {
             // Optional cleanup code can be added here
         }
     }
+    
 
     async deleteDecision(id) {
         try {

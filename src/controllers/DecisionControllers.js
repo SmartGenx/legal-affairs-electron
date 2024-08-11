@@ -37,7 +37,12 @@ class DecisionControllers{
                 return next(new ValidationError('Validation Failed', errors.array()));
             }
             const DecisionData = req.body;
-            const Decision = await DecisionServices.createDecision(DecisionData);
+            let filePath = '';
+
+            if (req.file) {
+                filePath = `${req.file.local}-decision`;
+            }
+            const Decision = await DecisionServices.createDecision(DecisionData, filePath);
             res.status(201).json(Decision);
         } catch (error) {
             console.log(error);
@@ -52,8 +57,15 @@ class DecisionControllers{
             if (!errors.isEmpty()) {
                 return next(new ValidationError('Validation Failed', errors.array()));
             }
+            let filePath = '';
+            
+            if (req.file) {
+                filePath = `${req.file.local}-decision`;
+            }
+            console.log("🚀 ~ DecisionControllers ~ updateDecision ~ filePath:", filePath)
+            
             const DecisionData = req.body;
-            const Decision = await DecisionServices.updateDecision(id,DecisionData);
+            const Decision = await DecisionServices.updateDecision(id,DecisionData,filePath);
             if (!Decision) {
                 return next(new NotFoundError(`Decision with id ${id} not found.`));
             }
