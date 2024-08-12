@@ -149,10 +149,11 @@ model LeaveType {
 model Leaveallocation {
   id          Int       @id @default(autoincrement())
   employeeId  Int
-  leavetype   Int
+  leavetypeId   Int
   remaingDay  Int
   leaveYear   Int
-  LeaveType   LeaveType @relation(fields: [leavetype], references: [id])
+  LeaveType   LeaveType @relation(fields: [leavetypeId], references: [id])
+  Employ Employ @relation(fields: [employeeId],references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   detailsDate DateTime
@@ -167,6 +168,7 @@ model Attachment {
   updatedAt   DateTime @updatedAt
   detailsDate DateTime
   isDeleted   Boolean  @default(false)
+  Employ Employ @relation(fields: [emploteeId],references: [id])
 }
 
 model Employ {
@@ -199,6 +201,8 @@ model Employ {
   detailsDate     DateTime
   isDeleted       Boolean  @default(false)
   leaveDetails leaveDetails[]
+  Attachment Attachment[]
+  Leaveallocation Leaveallocation[]
 }
 
 model leaveDetails {
