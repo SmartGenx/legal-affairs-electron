@@ -22,8 +22,7 @@ const upload = multer({
 });
 
 const copyFileToProfileDir = () => async (req, res, next) => {
-    console.log(req.route.path);
-    
+    console.log("🚀 ~ copyFileToProfileDir ~  req.route:",  req.route)
     if (!req.file) {
         //  next(new Error('No file uploaded'));
         return next();
@@ -39,6 +38,12 @@ const copyFileToProfileDir = () => async (req, res, next) => {
     switch (true) {
         case req.route.path.includes('registration'):
             fileName = `${originalName}-${timestamp}${extension}-User`;
+            break;
+        case req.route.path.includes('create_decision'):
+            fileName = `${originalName}-${timestamp}${extension}-decision`;
+            break;
+        case req.route.path.includes('create_generalization'):
+            fileName = `${originalName}-${timestamp}${extension}-generalization`;
             break;
        
      
@@ -67,5 +72,7 @@ const copyFileToProfileDir = () => async (req, res, next) => {
         next(error);
     }
 };
+   
+    
 
 module.exports = { upload, copyFileToProfileDir };
