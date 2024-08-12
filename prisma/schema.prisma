@@ -166,7 +166,6 @@ model Attachment {
   emploteeId  Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  detailsDate DateTime
   isDeleted   Boolean  @default(false)
   Employ Employ @relation(fields: [emploteeId],references: [id])
 }

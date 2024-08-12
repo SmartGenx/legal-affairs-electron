@@ -11,6 +11,8 @@ const IssueDetails = require('./IssueDetailsRouters');
 const ComplaintRoutes =require('./ComplaintRouters');
 const GeneralizationRoutes =require("./GeneralizationRoutes");
 const DecisionRoutes =require('./DecisionRputers')
+const LeaveTypeRoutes=require('./LeaveTypeRouters')
+const EmployRoutes= require('./EmployRouters')
 
 const rootRouter = Router();
 
@@ -25,6 +27,8 @@ rootRouter.use('/issue-details', IssueDetails);
 rootRouter.use('/complaint', ComplaintRoutes);
 rootRouter.use('/generalization',GeneralizationRoutes)
 rootRouter.use('/decision',DecisionRoutes)
+rootRouter.use('/leave-type',LeaveTypeRoutes)
+rootRouter.use('/employ',EmployRoutes)
 
 
 module.exports = rootRouter;

@@ -45,6 +45,9 @@ const copyFileToProfileDir = () => async (req, res, next) => {
         case req.route.path.includes('create_generalization'):
             fileName = `${originalName}-${timestamp}${extension}-generalization`;
             break;
+        case req.route.path.includes('create_employ'):
+            fileName = `${originalName}-${timestamp}${extension}-employ`;
+            break;
        
      
         default:
