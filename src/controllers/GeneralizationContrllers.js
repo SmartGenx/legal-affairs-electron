@@ -37,7 +37,11 @@ class GeneralizationContrllers{
                 return next(new ValidationError('Validation Failed', errors.array()));
             }
             const generalizationData = req.body;
-            const generalization = await GeneralizationServicesss.creategeneralization(generalizationData);
+            let filePath=''
+            if (req.file) {
+                filePath = `${req.file.local}-generalization`;
+            }
+            const generalization = await GeneralizationServicesss.creategeneralization(generalizationData,filePath);
             res.status(201).json(generalization);
         } catch (error) {
             console.log(error);
@@ -53,7 +57,11 @@ class GeneralizationContrllers{
                 return next(new ValidationError('Validation Failed', errors.array()));
             }
             const generalizationData = req.body;
-            const generalization = await GeneralizationServicesss.updategeneralization(id,generalizationData);
+            let filePath=''
+            if (req.file) {
+                filePath = `${req.file.local}-generalization`;
+            }
+            const generalization = await GeneralizationServicesss.updategeneralization(id,generalizationData,filePath);
             if (!generalization) {
                 return next(new NotFoundError(`generalization with id ${id} not found.`));
             }

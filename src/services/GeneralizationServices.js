@@ -69,14 +69,14 @@ class GeneralizationServices {
             // Optional cleanup code can be added here
         }
     }
-    async creategeneralization(generalizationData) {
+    async creategeneralization(generalizationData,filePath) {
         try {
             const { title } = generalizationData;
             const generalizationExist = await prisma.generalization.findFirst({where: {title: title}});
             if (generalizationExist) {
                 throw new NotFoundError(`generalization with title ${title} already exists.`);
             }
-            return await prisma.generalization.create({data: generalizationData});
+            return await prisma.generalization.create({data: {...generalizationData,attachmentPath:filePath}});
         } catch (error) {
             if (error instanceof NotFoundError) {
                 throw error;
@@ -87,13 +87,13 @@ class GeneralizationServices {
         }
     }
 
-    async updategeneralization(id, generalizationData) {
+    async updategeneralization(id, generalizationData,filePath) {
         try {
             const generalizationExist = await prisma.generalization.findUnique({where: {id}});
             if (!generalizationExist) {
                 throw new NotFoundError(`generalization with id ${id} not found.`);
             }
-            return await prisma.generalization.update({where: {id}, data: generalizationData});
+            return await prisma.generalization.update({where: {id}, data: {...generalizationData,attachmentPath:filePath.length>0?filePath:generalizationExist.attachmentPath}});
         } catch (error) {
             if (error instanceof NotFoundError) {
                 throw error;
