@@ -135,101 +135,99 @@ model Generalization {
 
 //----------------------------------------------------------------------------------------
 model LeaveType {
-  id              Int               @id @default(autoincrement())
-  name            String
-  defaultDay      Int
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  detailsDate     DateTime
+  id         Int      @id @default(autoincrement())
+  name       String
+  defaultDay Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
   isDeleted       Boolean           @default(false)
   Leaveallocation Leaveallocation[]
-  leaveDetails     leaveDetails[]
+  leaveDetails    leaveDetails[]
 }
 
 model Leaveallocation {
   id          Int       @id @default(autoincrement())
   employeeId  Int
-  leavetypeId   Int
+  leavetypeId Int
   remaingDay  Int
   leaveYear   Int
   LeaveType   LeaveType @relation(fields: [leavetypeId], references: [id])
-  Employ Employ @relation(fields: [employeeId],references: [id])
+  Employ      Employ    @relation(fields: [employeeId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  detailsDate DateTime
-  isDeleted   Boolean   @default(false)
+
+  isDeleted Boolean @default(false)
 }
 
 model Attachment {
-  id          Int      @id @default(autoincrement())
-  file        String
-  emploteeId  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isDeleted   Boolean  @default(false)
-  Employ Employ @relation(fields: [emploteeId],references: [id])
+  id         Int      @id @default(autoincrement())
+  file       String
+  emploteeId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isDeleted  Boolean  @default(false)
+  Employ     Employ   @relation(fields: [emploteeId], references: [id])
 }
 
 model Employ {
-  id              Int      @id @default(autoincrement())
-  name            String
-  reference       String
-  phone           String
-  address         String
-  dob             DateTime
-  education       String // هذا غير مفهوم
-  megor           Int //enum
-  graduationDate  DateTime //هذا غير مفهوم
-  idtype          Int //enum
-  idNumber        String
-  issuerDate      DateTime
-  issuerPlace     String
-  empLeaved       String
-  empDgree        Int
-  position        String
-  salary          Float
-  firstEmployment String
-  employmentDate DateTime
-  currentUnit Int
+  id                    Int               @id @default(autoincrement())
+  name                  String
+  reference             String
+  phone                 String
+  address               String
+  dob                   DateTime
+  education             String // هذا غير مفهوم
+  megor                 Int //enum
+  graduationDate        DateTime //هذا غير مفهوم
+  idtype                Int //enum
+  idNumber              String
+  issuerDate            DateTime
+  issuerPlace           String
+  empLeaved             String
+  empDgree              Int
+  position              String
+  salary                Float
+  firstEmployment       String
+  employmentDate        DateTime
+  currentUnit           Int
   currentEmploymentDate DateTime
-  legalStatus Int //enum
-  employeeStatus Int //enum
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  detailsDate     DateTime
-  isDeleted       Boolean  @default(false)
-  leaveDetails leaveDetails[]
-  Attachment Attachment[]
-  Leaveallocation Leaveallocation[]
+  legalStatus           Int //enum
+  employeeStatus        Int //enum
+  detailsDate           DateTime
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  isDeleted             Boolean           @default(false)
+  leaveDetails          leaveDetails[]
+  Attachment            Attachment[]
+  Leaveallocation       Leaveallocation[]
 }
 
 model leaveDetails {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   employeeeId Int
   leaveTypeId Int
   dayNumber   Int
   startDate   DateTime
   endDate     DateTime
-  addDate     DateTime
   leaveNote   String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  detailsDate DateTime
-  isDeleted   Boolean   @default(false)
-  LeaveType   LeaveType @relation(fields: [leaveTypeId], references: [id])
-  Employ Employ @relation(fields: [employeeeId],references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  isDeleted Boolean   @default(false)
+  LeaveType LeaveType @relation(fields: [leaveTypeId], references: [id])
+  employ    Employ    @relation(fields: [employeeeId], references: [id])
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
-  name        String
-  quantity    Int
-  price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  detailsDate DateTime
-  isDeleted   Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  name      String
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isDeleted Boolean     @default(false)
   BookOrder BookOrder[]
 }
 
@@ -242,37 +240,49 @@ model BookOrder {
   description String
   sellingDate DateTime
   orderNumber Int
-  Book Book @relation(fields: [bookId],references: [id])
-  Customer Customer @relation(fields: [customerId],references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isDeleted   Boolean  @default(false)
+  Book        Book     @relation(fields: [bookId], references: [id])
+  Customer    Customer @relation(fields: [customerId], references: [id])
 }
 
 model Customer {
-  id   Int    @id @default(autoincrement())
-  name String
-  type Int //enum
+  id        Int         @id @default(autoincrement())
+  name      String
+  type      Int //enum
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  isDeleted Boolean     @default(false)
   BookOrder BookOrder[]
-  license license[]
+  license   license[]
 }
 
 model licenseType {
-  id   Int    @id @default(autoincrement())
-  name String
-  fees Float
-  license license[]
+  id        Int       @id @default(autoincrement())
+  name      String
+  fees      Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  isDeleted Boolean   @default(false)
+  license   license[]
 }
-model license{
-  id Int @id @default(autoincrement())
-  licenseTypeId Int
-  customerId Int
-  licenseNumber String
-  licenseYear Int
-  compnayPorpose String
-  compnayLocation String
-  compnayCapital Float
-  compnayManger String
-  referenceNum String
-  referenceDate DateTime
-  licenseType licenseType @relation(fields: [licenseTypeId],references: [id])
-  Customer Customer @relation(fields: [customerId],references: [id])
 
+model license {
+  id              Int         @id @default(autoincrement())
+  licenseTypeId   Int
+  customerId      Int
+  licenseNumber   String
+  licenseYear     Int
+  compnayPorpose  String
+  compnayLocation String
+  compnayCapital  Float
+  compnayManger   String
+  referenceNum    String
+  referenceDate   DateTime
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
+  licenseType     licenseType @relation(fields: [licenseTypeId], references: [id])
+  Customer        Customer    @relation(fields: [customerId], references: [id])
 }
