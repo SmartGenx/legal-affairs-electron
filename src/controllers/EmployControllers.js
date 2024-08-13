@@ -1,93 +1,93 @@
 const { validationResult } = require('express-validator');
-const DecisionServices = require('../services/DecisionServices'); // Adjust this import to match your actual service file
+const EmployServices = require('../services/EmployServices'); // Adjust this import to match your actual service file
 const { ApiError } = require('../errors/ApiError');
 const { ValidationError } = require('../errors/ValidationError');
 const { NotFoundError } = require('../errors/NotFoundError');
-class DecisionControllers{
+class EmployControllers{
 
-    async getAllDecision(req, res, next) {
+    async getAllEmploy(req, res, next) {
         try {
-            const DecisionFilter = req.query;
-            const Decision = await DecisionServices.getAllDecision(DecisionFilter);
-            res.status(200).json(Decision);
+            const EmployFilter = req.query;
+            const Employ = await EmployServices.getAllEmploy(EmployFilter);
+            res.status(200).json(Employ);
         } catch (error) {
             console.log(error);
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
     }
 
-    async getDecisionById(req, res, next) {
+    async getEmployById(req, res, next) {
         const id = Number(req.params.id);
         try {
-            const Decision = await DecisionServices.getDecisionById(id);
-            if (!Decision) {
-                return next(new NotFoundError(`Decision with id ${id} not found.`));
+            const Employ = await EmployServices.getEmployById(id);
+            if (!Employ) {
+                return next(new NotFoundError(`Employ with id ${id} not found.`));
             }
-            res.status(200).json(Decision);
+            res.status(200).json(Employ);
         } catch (error) {
             console.log(error);
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
     }
 
-    async createDecision(req, res, next) {
+    async createEmploy(req, res, next) {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return next(new ValidationError('Validation Failed', errors.array()));
             }
-            const DecisionData = req.body;
+            const EmployData = req.body;
             let filePath = '';
 
             if (req.file) {
                 filePath = `${req.file.local}`;
             }
-            const Decision = await DecisionServices.createDecision(DecisionData, filePath);
-            res.status(201).json(Decision);
+            
+            const Employ = await EmployServices.createEmploy(EmployData, filePath);
+            res.status(201).json(Employ);
         } catch (error) {
             console.log(error);
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
     }
 
-    async updateDecision(req, res, next) {
+    async updateEmploy(req, res, next) {
         const id = Number(req.params.id);
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return next(new ValidationError('Validation Failed', errors.array()));
             }
+                      
+            const EmployData = req.body;
             let filePath = '';
-            
+
             if (req.file) {
-                filePath = `${req.file.local}-decision`;
+                filePath = `${req.file.local}-employ`;
             }
-            console.log("🚀 ~ DecisionControllers ~ updateDecision ~ filePath:", filePath)
-            
-            const DecisionData = req.body;
-            const Decision = await DecisionServices.updateDecision(id,DecisionData,filePath);
-            if (!Decision) {
-                return next(new NotFoundError(`Decision with id ${id} not found.`));
+            const Employ = await EmployServices.updateEmploy(id,EmployData,filePath);
+            if (!Employ) {
+                return next(new NotFoundError(`Employ with id ${id} not found.`));
             }
-            res.status(200).json(Decision);
+            res.status(200).json(Employ);
         } catch (error) {
             console.log(error);
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
     }
 
-    async deleteDecision(req, res, next) {
+    async deleteEmploy(req, res, next) {
         const id = Number(req.params.id);
         try {
-            const Decision = await DecisionServices.deleteDecision(id);
-            if (!Decision) { 
-                return next(new NotFoundError(`Decision with id ${id} not found.`));
+            const Employ = await EmployServices.deleteEmploy(id);
+            if (!Employ) { 
+                return next(new NotFoundError(`Employ with id ${id} not found.`));
             }
-            res.status(200).json(Decision);
+            res.status(200).json(Employ);
         } catch (error) {
             console.log(error);
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
     }
 }
-module.exports=new DecisionControllers()
+module.exports=new EmployControllers()

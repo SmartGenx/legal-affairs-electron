@@ -11,6 +11,16 @@ const IssueDetails = require('./IssueDetailsRouters');
 const ComplaintRoutes =require('./ComplaintRouters');
 const GeneralizationRoutes =require("./GeneralizationRoutes");
 const DecisionRoutes =require('./DecisionRputers')
+const LeaveTypeRoutes=require('./LeaveTypeRouters')
+const EmployRoutes= require('./EmployRouters')
+const LicenseTypeRoutes=require('./LicenseTypeRoutes')
+const LicenseRoutes =require('./LicenseRoutes.js')
+const LeaveDetailsRoutes = require('./leaveDetailsRouters');
+const LeaveAllocationRoutes = require('./LeaveAllocationRouters');
+const CustomerRoutes= require('./CustomerRoutes');
+const BookRoutes= require('./BookRouters');
+const BookOrderRoutes= require('./BookOrderRoutes');
+
 
 const rootRouter = Router();
 
@@ -25,6 +35,15 @@ rootRouter.use('/issue-details', IssueDetails);
 rootRouter.use('/complaint', ComplaintRoutes);
 rootRouter.use('/generalization',GeneralizationRoutes)
 rootRouter.use('/decision',DecisionRoutes)
+rootRouter.use('/leave-type',LeaveTypeRoutes)
+rootRouter.use('/employ',EmployRoutes)
+rootRouter.use('/license-type',LicenseTypeRoutes)
+rootRouter.use('/license',LicenseRoutes)
+rootRouter.use('/leave-details',LeaveDetailsRoutes)
+rootRouter.use('/leave-allocation',LeaveAllocationRoutes)
+rootRouter.use('/customer',CustomerRoutes)
+rootRouter.use('/book',BookRoutes)
+rootRouter.use('/book-order',BookOrderRoutes)
 
 
 module.exports = rootRouter;
