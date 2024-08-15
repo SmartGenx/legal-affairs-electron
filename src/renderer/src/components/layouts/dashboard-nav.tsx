@@ -14,10 +14,9 @@ import { Icons } from '../icons/icons'
 interface DashboardNavProps {
   items: NavItem[]
   expanded?: boolean
-  onItemClick?: () => void
 }
 
-export default function DashboardNav({ items, expanded = false, onItemClick }: DashboardNavProps) {
+export default function DashboardNav({ items, expanded = false }: DashboardNavProps) {
   const location = useLocation()
   const path = location.pathname
   const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({})

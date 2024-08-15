@@ -1,8 +1,10 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import { join, resolve } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import '../main/index.js'
+import { spawn } from 'child_process';
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -68,6 +70,23 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+// In this file you can include the rest of your app"s specific main process
+// code. You can also put them in separate files and require them here.
+// Start the Express server
+const serverPath = resolve(__dirname, '../../server/index')
+console.log(`Starting server with path: ${serverPath}`)
+
+const serverProcess = spawn('node', [serverPath], {
+  stdio: 'inherit' // Passes stdio to the parent process, useful for debugging
+})
+
+serverProcess.on('error', (error) => {
+  console.error(`Error starting server: ${error.message}`)
+})
+serverProcess.on('close', (code) => {
+  console.log(`Server process exited with code ${code}`)
 })
 
 // In this file you can include the rest of your app"s specific main process

@@ -1,10 +1,9 @@
-'use client'
 import { useState } from 'react'
 // import ThemeToggle from "@/components/layout/ThemeToggle/theme-toggle";
 import useCurrentNav from '@renderer/hooks/useCurrentNav'
 import { MenuIcon, X } from 'lucide-react'
 import NotificationIcon from '../icons/notification'
-import { UserNav } from './user-nav'
+import UserNav from './user-nav'
 
 export default function Header() {
   const currentPath = useCurrentNav()

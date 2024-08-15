@@ -1,7 +1,8 @@
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronDown } from 'lucide-react'
-import { useAuthUser, useIsAuthenticated, useSignOut } from 'react-auth-kit'
-import userIcon from '../icons/user.svg'
+import {  useIsAuthenticated, useSignOut } from 'react-auth-kit'
+// import { useAuthUser, useIsAuthenticated, useSignOut } from 'react-auth-kit'
+// import userIcon from '../icons/user.svg'
 import { Button } from '../ui/button'
 import {
   DropdownMenu,
@@ -12,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu'
+// import { Avatar } from '../ui/avatar'
 
 export type userData = {
   user: {
@@ -21,23 +23,23 @@ export type userData = {
   }
 }
 
-export function UserNav() {
+export default function UserNav() {
   const issAuthenticated = useIsAuthenticated()
   const signOut = useSignOut()
-  const auth = useAuthUser()
+  // const auth = useAuthUser()
 
   if (issAuthenticated()) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="justify-between w-44 border">
           <Button variant="ghost" className="relative flex gap-1">
-            {/* <Avatar className=''> */}
-            <img
+            {/* <Avatar className=''/> */}
+            {/* <img
               className="w-[35px] h-[35px]"
               src={auth?.user?.image ?? userIcon}
               alt={auth?.user?.name ?? 'Unknown User'}
             />
-            {/* {!session.user?.image && <span>{session.user?.employeeName}</span>}  */}
+
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
                 {auth?.user?.name ?? 'Unknown User'}
@@ -45,7 +47,7 @@ export function UserNav() {
               <p className="text-xs leading-none text-muted-foreground">
                 {auth?.user?.name ?? 'Unknown User'}
               </p>
-            </div>
+            </div> */}
             <ChevronDown size={15} />
           </Button>
         </DropdownMenuTrigger>
@@ -62,4 +64,5 @@ export function UserNav() {
       </DropdownMenu>
     )
   }
+  return null
 }

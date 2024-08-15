@@ -1,13 +1,13 @@
 // src/index.js or src/app.js
 const express = require('express')
-const rootRouter = require('../../server/routers/index')
-const { errorMiddleware } = require('../../server/middlewares/errorMiddleware')
+const rootRouter = require('../server/routers/index')
+const { errorMiddleware } = require('./middlewares/errorMiddleware')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const { hashPassword } = require('../../server/passport-config')
+const { hashPassword } = require('./passport-config')
 const util = require('util')
 const fs = require('fs')
-const { prisma } = require('../../server/utilty/prisma')
+const { prisma } = require('./utilty/prisma')
 
 const cors = require('cors')
 require('dotenv').config()
@@ -109,7 +109,7 @@ class App {
   }
 
   listen() {
-    const PORT = process.env.PORT || 3000 // Good use of environment variable for the PORT with a fallback.
+    const PORT = process.env.PORT || 5050 // Good use of environment variable for the PORT with a fallback.
     this.app.listen(PORT, async () => {
       console.log(`Server is running on http://localhost:${PORT}`) // Informative startup log is useful.
     })
