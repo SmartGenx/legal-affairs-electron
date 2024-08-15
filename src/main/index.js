@@ -109,7 +109,7 @@ class App {
   }
 
   listen() {
-    const PORT = process.env.PORT || 5050 // Good use of environment variable for the PORT with a fallback.
+    const PORT = process.env.PORT || 3000 // Good use of environment variable for the PORT with a fallback.
     this.app.listen(PORT, async () => {
       console.log(`Server is running on http://localhost:${PORT}`) // Informative startup log is useful.
     })
