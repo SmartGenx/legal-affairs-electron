@@ -2,10 +2,10 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const { JWT_SECRET } = require('../server/secrets')
+const { JWT_SECRET } = require('./secrets')
 require('dotenv').config()
 
-const { prisma } = require('../server/utilty/prisma')
+const { prisma } = require('./utilty/prisma')
 
 const saltRounds = 10 // The cost factor controls how much time is needed to calculate a single bcrypt hash. The higher the cost factor, the more hashing rounds are done.
 

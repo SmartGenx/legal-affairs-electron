@@ -1,6 +1,6 @@
 // src/index.js or src/app.js
 const express = require('express')
-const rootRouter = require('../server/routers/index')
+const rootRouter = require('./routers/index')
 const { errorMiddleware } = require('./middlewares/errorMiddleware')
 const bodyParser = require('body-parser')
 const passport = require('passport')
@@ -107,6 +107,7 @@ class App {
     // Error handling middleware should be the last middleware added.
     this.app.use(errorMiddleware)
   }
+ 
 
   listen() {
     const PORT = process.env.PORT || 5050 // Good use of environment variable for the PORT with a fallback.

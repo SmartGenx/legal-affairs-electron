@@ -3,7 +3,7 @@ const { NotFoundError } = require("../errors/NotFoundError");
 const { hashPassword } = require("../passport-config");
 const { prisma } = require("../utilty/prisma");
 const convertEqualsToInt = require("../utilty/convertToInt");
-const convertTopLevelStringBooleans = require("..//utilty/convertTopLevelStringBooleans");
+const convertTopLevelStringBooleans = require("../utilty/convertTopLevelStringBooleans");
 
 class UserService {
   // Retrieve all Users
@@ -24,7 +24,7 @@ class UserService {
         include = [];
       }
       console.log(include);
-      
+
       const convertString = convertEqualsToInt(userFilter);
       userFilter = convertString;
 
@@ -93,7 +93,7 @@ class UserService {
           email: true,
           phone: true,
           image: true,
-   
+
         },
       });
       if (!user) {
@@ -114,7 +114,7 @@ class UserService {
       const { email } = userData;
       const roleId = userData.roleId;
       delete userData.roleId;
-      
+
         const existRole = await prisma.role.findFirst({
           where: { id: +roleId },
         });
@@ -145,7 +145,7 @@ class UserService {
           },
         });
         console.log("🚀 ~ UserService ~ createUser ~ NewUser:", NewUser.username)
-    
+
 
         await prisma.userRole.create({
           data: {
