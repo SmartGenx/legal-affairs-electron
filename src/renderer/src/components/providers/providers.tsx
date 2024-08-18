@@ -8,10 +8,8 @@ const Providers = () => {
   return (
     <ReactQueryClientProvider>
       <AuthProvider
-        authType={'cookie'}
+        authType={'localstorage'}
         authName={'_auth'}
-        cookieDomain={window.location.hostname}
-        cookieSecure={window.location.protocol === 'https:'}
       >
         <DirectionProvider dir="rtl">
           <RouterProvider router={router} />
