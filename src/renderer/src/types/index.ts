@@ -30,7 +30,11 @@ export interface FooterItem {
     external?: boolean
   }[]
 }
-
+export interface LogInResponse {
+  email: string
+  username: string
+  token: string
+}
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
