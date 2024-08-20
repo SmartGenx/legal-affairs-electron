@@ -13,17 +13,22 @@ import { Icons } from '../icons/icons'
 
 interface DashboardNavProps {
   items: NavItem[]
+  itemsSettings: NavItem[]
   expanded?: boolean
 }
 
-export default function DashboardNav({ items, expanded = false }: DashboardNavProps) {
+export default function DashboardNav({
+  items,
+  itemsSettings,
+  expanded = false
+}: DashboardNavProps) {
   const location = useLocation()
   const path = location.pathname
   const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({})
 
-  const toggleGroup = (index: number) => {
-    setExpandedGroups((prev) => ({ ...prev, [index]: !prev[index] }))
-  }
+  // const toggleGroup = (index: number) => {
+  // setExpandedGroups((prev) => ({ ...prev, [index]: !prev[index] }))
+  // }
 
   const isSelected = (href: string) => {
     if (href === '/dashboard') {
@@ -49,9 +54,7 @@ export default function DashboardNav({ items, expanded = false }: DashboardNavPr
           )}
           {item.list.map((nav, i) => {
             const Icon = Icons[nav.icon || 'arrowRight']
-            const isGroup =
-              nav.type === 'group' && nav.href === '' && nav.subLinks && nav.subLinks.length > 0
-
+            const Arows = Icons[nav.arrows || 'arrowRight']
             return (
               <div key={i}>
                 <TooltipProvider delayDuration={0}>
@@ -60,25 +63,22 @@ export default function DashboardNav({ items, expanded = false }: DashboardNavPr
                       {nav.href === '' ? (
                         <div
                           className={cn(
-                            'group mb-1 flex items-center px-4 py-3 text-sm font-medium hover:bg-[#e6dcee] hover:text-[#8150AB] cursor-pointer',
+                            'group mb-1 flex items-center px-4 py-3 text-sm font-medium text-white hover:bg-[#fff] hover:text-[#3734a9] w-[90%] hover:rounded-l-2xl cursor-pointer',
                             nav.subLinks &&
                               nav.subLinks.filter((x) => isSelected(x.href)).length > 0
-                              ? 'bg-[#e6dcee] text-[#8150AB] border-l-4 border-primary'
+                              ? 'text-white hover:text-[#3734a9]'
                               : 'transparent',
                             !expanded && 'justify-center',
                             nav.disabled && 'cursor-not-allowed opacity-80'
                           )}
                           onClick={(e) => {
                             if (nav.disabled) e.preventDefault()
-
-                            isGroup && toggleGroup(i)
                           }}
                         >
                           <Icon className="mx-2 h-5 w-5" />
                           {expanded && (
                             <span className="min-w-max text-lg font-medium flex items-center justify-between w-full">
                               {nav.label}
-                              {isGroup && (expandedGroups[i] ? <ChevronUp /> : <ChevronDown />)}
                             </span>
                           )}
                         </div>
@@ -86,26 +86,22 @@ export default function DashboardNav({ items, expanded = false }: DashboardNavPr
                         <Link
                           to={nav.href}
                           className={cn(
-                            'group mb-1 flex items-center px-4 py-3 text-sm font-medium hover:bg-[#e6dcee] hover:text-[#8150AB] cursor-pointer',
-                            isSelected(nav.href)
-                              ? 'bg-[#e6dcee] text-[#8150AB] border-l-4 border-primary'
-                              : 'transparent',
+                            'group mb-1 flex items-center px-4 py-3 text-sm font-medium text-white hover:bg-[#fff] hover:text-[#3734a9] w-[90%] rounded-l-2xl cursor-pointer',
+                            isSelected(nav.href) ? 'bg-white text-[#3734a9] ' : 'transparent',
                             !expanded && 'justify-center',
                             nav.disabled && 'cursor-not-allowed opacity-80'
                           )}
                           onClick={(e) => {
                             if (nav.disabled) e.preventDefault()
-
-                            isGroup && toggleGroup(i)
                           }}
                         >
                           <Icon className="mx-2 h-5 w-5" />
                           {expanded && (
                             <span className="min-w-max text-lg font-medium flex items-center justify-between w-full">
                               {nav.label}
-                              {isGroup && <ChevronDown />}
                             </span>
                           )}
+                          <Arows className="mx-2 h-3 w-3" />
                         </Link>
                       )}
                     </TooltipTrigger>
@@ -116,35 +112,67 @@ export default function DashboardNav({ items, expanded = false }: DashboardNavPr
                     )}
                   </Tooltip>
                 </TooltipProvider>
-                {isGroup && expandedGroups[i] && (
-                  <div className="ms-4">
-                    {nav.subLinks?.map((subLink, j) => (
-                      <Link
-                        key={j}
-                        to={subLink.href}
-                        className={cn(
-                          ' mb-1 flex items-center gap-1 ps-8 py-3 text-sm font-medium hover:bg-[#e6dcee] hover:text-[#8150AB]',
-                          'transparent',
-                          subLink.disabled && 'cursor-not-allowed opacity-80',
-                          !expanded && 'justify-center'
-                        )}
-                      >
-                        <div
-                          className={cn(
-                            'w-2 h-2 rounded-full',
-                            isSelected(subLink.href) ? 'bg-primary' : 'bg-gray-600/75'
-                          )}
-                        ></div>{' '}
-                        {subLink.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
               </div>
             )
           })}
         </div>
       ))}
+
+      <div className="mt-[3.2rem]">
+        {itemsSettings.map((item, index) => (
+          <div key={index}>
+            {item.title && (
+              <h5
+                className={cn(
+                  'mb-2 px-4 text-sm font-normal text-primary',
+                  !expanded && 'invisible'
+                )}
+              >
+                {item.title}
+              </h5>
+            )}
+            {item.list.map((nav, i) => {
+              const Icon = Icons[nav.icon || 'arrowRight']
+
+              return (
+                <div key={i}>
+                  <TooltipProvider delayDuration={0}>
+                    <Tooltip disableHoverableContent>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={cn(
+                            'group mb-1 flex items-center px-4 py-3 text-sm font-medium text-white hover:bg-[#fff] hover:text-[#3734a9] w-[90%] hover:rounded-l-2xl cursor-pointer ',
+                            isSelected(nav.href)
+                              ? 'bg-white text-[#3734a9] border-l-4 border-primary'
+                              : 'transparent',
+                            !expanded && 'justify-center',
+                            nav.disabled && 'cursor-not-allowed opacity-80'
+                          )}
+                          onClick={(e) => {
+                            if (nav.disabled) e.preventDefault()
+                          }}
+                        >
+                          <Icon className="mx-2 h-5 w-5" />
+                          {expanded && (
+                            <span className="min-w-max text-lg font-medium flex items-center justify-between w-full">
+                              {nav.label}
+                            </span>
+                          )}
+                        </div>
+                      </TooltipTrigger>
+                      {!expanded && (
+                        <TooltipContent side="left">
+                          <div>{nav.label}</div>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              )
+            })}
+          </div>
+        ))}
+      </div>
     </nav>
   )
 }

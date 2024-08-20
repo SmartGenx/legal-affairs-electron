@@ -6,15 +6,16 @@ export default function useNavItems() {
       list: [
         {
           href: '/',
-          icon: 'category',
-          label: ' الصفحة الرئيسية'
+          icon: 'house',
+          label: ' الرئيسية',
+          arrows: 'arows'
         },
 
         {
-          href: '',
-          icon: 'idCard',
-          label: 'ادارة المستخدمين',
-          type: 'group',
+          href: '/ww',
+          icon: 'bank',
+          label: 'قضايا الدولة',
+          arrows: 'arows',
           subLinks: [
             {
               label: 'المستخدمين',
@@ -33,10 +34,34 @@ export default function useNavItems() {
           ]
         },
         {
-          href: '/backup',
-          icon: 'databaseBackup',
-          label: 'النسخ الاحتياطي',
-          disabled: true
+          href: '/qq',
+          icon: 'chart',
+          label: ' إدارة الأفتاء',
+          arrows: 'arows'
+        },
+        {
+          href: '/xx',
+          icon: 'bill',
+          label: ' القرارات',
+          arrows: 'arows'
+        },
+        {
+          href: '/vv',
+          icon: 'documentText',
+          label: ' الجريدة الرسمية',
+          arrows: 'arows'
+        },
+        {
+          href: '/bb',
+          icon: 'save2',
+          label: ' التعميمات',
+          arrows: 'arows'
+        },
+        {
+          href: '/nn',
+          icon: 'userSquare',
+          label: ' شؤون الموظفين',
+          arrows: 'arows'
         }
       ]
     }
