@@ -6,7 +6,6 @@ export default function useCurrentNav() {
   // console.log(location)
 
   const path = location.pathname
-  // console.log(path)
 
   const navItems = useNavItems()
   // console.log(navItems)

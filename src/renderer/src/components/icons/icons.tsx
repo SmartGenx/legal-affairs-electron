@@ -120,6 +120,7 @@ export const Icons = {
   presentation: Presentation,
   idCard: IdCard,
   databaseBackup: DatabaseBackup,
+
   house: ({ ...props }: LucideProps) => (
     <svg
       width="20"
