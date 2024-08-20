@@ -61,6 +61,7 @@ export default function UserNav() {
           <DropdownMenuLabel className="font-normal"></DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
+            <DropdownMenuItem>{authToken()}</DropdownMenuItem>
             <DropdownMenuItem disabled>الملف الشخصي</DropdownMenuItem>
             <DropdownMenuItem disabled>الإعدادات</DropdownMenuItem>
           </DropdownMenuGroup>

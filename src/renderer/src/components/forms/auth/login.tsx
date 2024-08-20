@@ -175,11 +175,17 @@ export default function LoginForm() {
             <Button
               className="!mt-4 !h-12 w-full bg-[#3734a9] text-sm hover:bg-[#d4d5d5] hover:text-[#8d8d8d]"
               type="submit"
-              // isLoading={delayedSubmitting}
+              isLoading={delayedSubmitting}
               disabled={delayedSubmitting}
             >
               تسجيل الدخول
             </Button>
+            {/* <button
+              className="!mt-4 !h-12 w-full bg-[#3734a9] text-sm hover:bg-[#d4d5d5] hover:text-[#8d8d8d]"
+              type="submit"
+            >
+              تسجيل الدخول
+            </button> */}
           </form>
         </Form>
       </div>

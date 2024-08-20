@@ -3,13 +3,14 @@ import { Icons } from '@renderer/components/icons/icons'
 export type NavItem = {
   title?: string
   list: Array<{
-    type?: 'link' | 'group'
+    type?: 'link'
     href: string
     disabled?: boolean
     external?: boolean
     icon?: keyof typeof Icons
     label: string
     description?: string
+    arrows?: keyof typeof Icons
     subLinks?: { href: string; label: string; disabled?: boolean }[]
   }>
 }
