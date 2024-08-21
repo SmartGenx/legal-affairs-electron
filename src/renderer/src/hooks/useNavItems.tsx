@@ -12,26 +12,10 @@ export default function useNavItems() {
         },
 
         {
-          href: '/ww',
+          href: '/state-affairs',
           icon: 'bank',
           label: 'قضايا الدولة',
-          arrows: 'arows',
-          subLinks: [
-            {
-              label: 'المستخدمين',
-              href: '/users'
-            },
-            {
-              label: 'الموطفين',
-              href: '/employees',
-              disabled: true
-            },
-            {
-              label: 'ضبط كلمة المرور',
-              href: '/reset-password',
-              disabled: true
-            }
-          ]
+          arrows: 'arows'
         },
         {
           href: '/qq',

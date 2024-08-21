@@ -4,6 +4,7 @@ import RootLayout from '../layouts/layout'
 import Home from '../pages/home/home'
 import Login from '../pages/login/login'
 import ProtectedRoute from '../layouts/protected-route'
+import StateAffairs from '../pages/state-affairs/state-affairs'
 
 export const router = createHashRouter([
   {
@@ -17,6 +18,11 @@ export const router = createHashRouter([
       {
         path: '/',
         element: <ProtectedRoute element={<Home />} />
+        // element: <Home />
+      },
+      {
+        path: '/state-affairs',
+        element: <ProtectedRoute element={<StateAffairs />} />
         // element: <Home />
       }
     ]

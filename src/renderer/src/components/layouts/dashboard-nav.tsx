@@ -5,6 +5,7 @@ import {
   TooltipTrigger
 } from '@renderer/components/ui/tooltip'
 import { cn } from '@renderer/lib/utils'
+import { useSignOut } from 'react-auth-kit'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
@@ -23,6 +24,7 @@ export default function DashboardNav({
   expanded = false
 }: DashboardNavProps) {
   const location = useLocation()
+  const signOut = useSignOut()
   const path = location.pathname
   const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({})
 
@@ -101,7 +103,7 @@ export default function DashboardNav({
                               {nav.label}
                             </span>
                           )}
-                          <Arows className="mx-2 h-3 w-3" />
+                          <Arows className={expanded == true ? 'mx-2 h-3 w-3' : 'hidden'} />
                         </Link>
                       )}
                     </TooltipTrigger>
@@ -118,7 +120,7 @@ export default function DashboardNav({
         </div>
       ))}
 
-      <div className="mt-[3.2rem]">
+      <div className="lg:mt-[7rem] md:mt-[6rem] ">
         {itemsSettings.map((item, index) => (
           <div key={index}>
             {item.title && (
@@ -154,7 +156,10 @@ export default function DashboardNav({
                         >
                           <Icon className="mx-2 h-5 w-5" />
                           {expanded && (
-                            <span className="min-w-max text-lg font-medium flex items-center justify-between w-full">
+                            <span
+                              onClick={nav.label == 'تسجيل الخروج' ? () => signOut() : () => {}}
+                              className="min-w-max text-lg font-medium flex items-center justify-between w-full"
+                            >
                               {nav.label}
                             </span>
                           )}
