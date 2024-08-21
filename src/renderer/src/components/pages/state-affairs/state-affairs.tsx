@@ -24,15 +24,18 @@ export default function StateAffairs() {
       })
   })
   //
-  console.log('dsdsdfs', data)
+  // console.log('dsdsdfs', data)
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error.message
+  const infoArray = data?.data?.info || [] // Directly access the `info` array from `data.data`
+  console.log('infoArray:', infoArray)
+
   return (
     <section className="relative space-y-4 ">
       <SearchAffairs />
       <TopButtons />
-      <StateTable info={data?.data.info || []} page={1} pageSize="0" total="0" />
+      <StateTable info={infoArray || []} page={1} pageSize="0" total="0" />
     </section>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 import * as React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
+import { GevStatus, GovernmentFacility, kind_of_case } from '../../../types/enum'
 import { MoreHorizontal } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -30,105 +31,68 @@ type Props = {
 export default function StateTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
 
-  const columns = React.useMemo<ColumnDef<Issues>[]>(
+  const columns = React.useMemo<ColumnDef<InfoIssue>[]>(
     () => [
       {
         accessorKey: 'id',
-        header: 'الرقم',
+        header: 'م',
         cell: ({ row }) => (row.index + 1 + (page - 1) * 10).toString().padStart(2, '0')
       },
       {
-        header: 'اسم الجهة',
-        cell: ({ row }) => (
-          <div className="flex w-fit items-center gap-2">
-            <Avatar className="bg-black">
-              <AvatarImage
-              //   src={row.original?.logo} alt={row.original?.arabicName}
-              />
-              <AvatarFallback className="bg-secondary"></AvatarFallback>
-            </Avatar>
-            <h1>{/* {row.original?.arabicName} */}</h1>
-          </div>
-        )
+        accessorKey: 'name',
+        header: 'الأسم'
       },
       {
-        accessorKey: 'orgType.name',
-        header: 'النوع'
-      },
-      {
-        accessorKey: 'orgActive.name',
-        header: 'النشاط'
-      },
-      {
-        accessorKey: 'fieldsOrgs',
-        header: 'المجال',
+        accessorKey: 'id',
+        header: 'الصفة',
         cell: ({ row }) => {
-          //   const fields = row.original?.fieldsOrgs
-          return (
-            <TooltipProvider delayDuration={0}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="text-base font-medium">
-                    {/* {fields?.length > 1 ? (
-                      <>
-                        <span className="text-primary-500 ms-1 ">متعدد</span>
-                      </>
-                    ) : (
-                      <>{fields[0]?.fieldsType.name}</>
-                    )} */}
-                  </span>
-                </TooltipTrigger>
+          const state = row.original.type as GevStatus
+          switch (state) {
+            case GevStatus.Director_of_the_Department:
+              return 'مدير إدارة'
 
-                {/* {fields?.length > 1 && (
-                  <TooltipContent className="m-2 p-2">
-                    {fields?.slice(1)?.map((field, i) => (
-                      <span key={i}>
-                        {field.fieldsType.name}
-                        {i !== fields?.length - 2 && ', '}
-                      </span>
-                    ))}
-                  </TooltipContent>
-                )} */}
-              </Tooltip>
-            </TooltipProvider>
-          )
+            default:
+              return 'sfvv'
+          }
         }
       },
       {
-        accessorKey: 'orgScope',
-        header: 'النطاق'
-        // cell: ({ row }) => orgScope[row.original?.orgScope as keyof typeof orgScope] ?? ' - '
-      },
-      {
-        accessorKey: 'status',
-        header: 'حالة الترخيص ',
+        accessorKey: 'id',
+        header: 'المرفق الحكومي',
         cell: ({ row }) => {
-          //   const statusObj = enumData.licenseStatus?.find(
-          //     (status) => status.value == row.original?.licenseStatus
-          //   )
+          const state = row.original.governmentOfficeId as GovernmentFacility
+          switch (state) {
+            case GovernmentFacility.Legal_Affairs:
+              return 'الشؤون القانونية'
 
-          return (
-            <Badge
-            //   className={cn(
-            // 'flex h-fit w-24 items-center justify-center px-4 py-1 text-base font-medium',
-            // {
-            //   'text-on-success-container': row.original?.licenseStatus === 2,
-            //   'text-on-error-container': row.original?.licenseStatus === 3
-            // }
-            //   )}
-            //   variant={
-            //     row.original?.licenseStatus === 3
-            //       ? 'destructive'
-            //       : row.original?.licenseStatus === 2
-            //         ? 'success'
-            //         : null
-            //   }
-            >
-              {/* {statusObj?.label} */}
-            </Badge>
-          )
+            default:
+              return 'sfvv'
+          }
         }
       },
+      {
+        accessorKey: 'postionId',
+        header: 'نوع القضية',
+        cell: ({ row }) => {
+          const state = row.original.postionId as kind_of_case
+          switch (state) {
+            case kind_of_case.civilian:
+              return 'مدني'
+
+            default:
+              return 'تجارية'
+          }
+        }
+      },
+      {
+        accessorKey: 'title',
+        header: 'درجة التقاضي'
+      },
+      {
+        accessorKey: 'invitationType',
+        header: 'رقم الحكم'
+      },
+
       {
         id: 'actions',
         cell: ({ row }) => (
@@ -144,6 +108,14 @@ export default function StateTable({ info, page, total, pageSize }: Props) {
                   url={`/Organization/${row.original?.id}`}
                   revalidatePath={Paths.localOrg}
                 /> */}
+                تعديل
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                {/* <DeleteDialog
+                  url={`/Organization/${row.original?.id}`}
+                  revalidatePath={Paths.localOrg}
+                /> */}
+                حذف
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -154,19 +126,14 @@ export default function StateTable({ info, page, total, pageSize }: Props) {
   )
 
   return (
-    // <OrganizationTable
-    //   columns={columns}
-    //   data={data}
-    //   page={page.toString()}
-    //   total={total}
-    //   onRowClick={(_, { original }) => {
-    // navigate(`/${original.id}`)
-    //   }}
-    // />
-    <>
-      {info.map((el) => (
-        <span>{el.name}</span>
-      ))}
-    </>
+    <OrganizationTable
+      columns={columns}
+      data={info}
+      page={page.toString()}
+      total={Number(total)}
+      onRowClick={(_, { original }) => {
+        navigate(`/state-affairs/info/${original.id}`)
+      }}
+    />
   )
 }
