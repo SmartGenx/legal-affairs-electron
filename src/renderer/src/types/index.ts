@@ -36,6 +36,25 @@ export interface LogInResponse {
   username: string
   token: string
 }
+export interface InfoIssue {
+  id: number
+  name: string
+  postionId: number
+  governmentOfficeId: number
+  title: string
+  type: number
+  invitationType: number
+  isDeleted: boolean
+  state: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+export type Issues = {
+  info: InfoIssue[]
+  total: number
+  page: string
+  pageSize: string
+}
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
