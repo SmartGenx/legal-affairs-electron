@@ -1,7 +1,7 @@
-'use client'
-import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination'
+import { Pagination, PaginationContent, PaginationItem } from './pagination'
 import { Button } from '../ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+// import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import * as React from 'react'
 

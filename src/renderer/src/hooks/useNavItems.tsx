@@ -42,6 +42,12 @@ export default function useNavItems() {
           arrows: 'arows'
         },
         {
+          href: '/bb',
+          icon: 'notificationStatus',
+          label: ' التوكيلات',
+          arrows: 'arows'
+        },
+        {
           href: '/nn',
           icon: 'userSquare',
           label: ' شؤون الموظفين',
