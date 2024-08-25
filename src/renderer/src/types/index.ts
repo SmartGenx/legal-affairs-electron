@@ -31,10 +31,24 @@ export interface FooterItem {
     external?: boolean
   }[]
 }
+
 export interface LogInResponse {
   email: string
   username: string
   token: string
+}
+export interface IssuesResponse {
+  id: number
+  name: string
+  postionId: number
+  governmentOfficeId: number
+  title: string
+  type: number
+  invitationType: number
+  isDeleted: boolean
+  state: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 export interface InfoIssue {
   id: number
