@@ -58,28 +58,32 @@ model GovernmentOffice {
   Issue     Issue[]
   Complaint Complaint[]
   decision  Decision[]
+  agency    Agency[]
 }
 
 model Issue {
-  id                 Int              @id @default(autoincrement())
+  id                 Int                @id @default(autoincrement())
   name               String
   postionId          Int
-  postion            Postion          @relation(fields: [postionId], references: [id])
+  postion            Postion            @relation(fields: [postionId], references: [id])
   governmentOfficeId Int
-  governmentOffice   GovernmentOffice @relation(fields: [governmentOfficeId], references: [id])
+  governmentOffice   GovernmentOffice   @relation(fields: [governmentOfficeId], references: [id])
   title              String
   type               Int
   invitationType     Int
-  isDeleted          Boolean          @default(false)
-  state              Boolean          @default(false)
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  isDeleted          Boolean            @default(false)
+  state              Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
   IssueDetails       IssueDetails[]
+  stateIssueAgency   StateIssueAgency[]
+
 }
 
 model IssueDetails {
   id          Int      @id @default(autoincrement())
   issueId     Int
+  tribunalId         Int
   Issue       Issue    @relation(fields: [issueId], references: [id])
   level       Int
   createdAt   DateTime @default(now())
@@ -89,6 +93,7 @@ model IssueDetails {
   judgment    String
   refrance    String
   Resumed     Boolean
+  Tribunal           Tribunal          @relation(fields: [tribunalId], references: [id])
 }
 
 model Complaint {
@@ -285,4 +290,38 @@ model license {
   isDeleted       Boolean     @default(false)
   licenseType     licenseType @relation(fields: [licenseTypeId], references: [id])
   Customer        Customer    @relation(fields: [customerId], references: [id])
+}
+
+//--------------------------------------------------------------------------------
+model Agency {
+  id                 Int                @id @default(autoincrement())
+  legalName          String
+  providedDocument   String?
+  governmentOfficeId Int                @unique
+    createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
+  stateIssueAgencies StateIssueAgency[]
+  governmentOffice   GovernmentOffice   @relation(fields: [governmentOfficeId], references: [id])
+}
+
+model StateIssueAgency {
+  id                    Int       @id @default(autoincrement())
+  issueId          Int
+  dateOfPowerOfAttorney DateTime?
+  agencyId              Int
+    createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
+  agency                Agency    @relation(fields: [agencyId], references: [id])
+  Issue                 Issue     @relation(fields: [issueId], references: [id])
+}
+
+model Tribunal {
+  id                    Int       @id @default(autoincrement())
+  name                  String
+    createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
+  IssueDetails IssueDetails[]
 }
