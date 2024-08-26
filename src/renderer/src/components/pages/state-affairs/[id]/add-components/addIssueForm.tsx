@@ -5,8 +5,9 @@ import { useForm } from 'react-hook-form'
 import { number, z } from 'zod'
 import { Input } from '../../../../ui/input'
 import { axiosInstance, postApi } from '../../../../../lib/http'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useToast } from '../../../../ui/use-toast'
+import { useAuthHeader } from 'react-auth-kit'
 import { Label } from '../../../../ui/label'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { GevStatus, kind_of_case, GovernmentFacility, Level } from '@renderer/types/enum'
@@ -20,20 +21,32 @@ import {
   SelectTrigger,
   SelectValue
 } from '../../../../ui/select'
+
 import { Textarea } from '@renderer/components/ui/textarea'
 import { Button } from '@renderer/components/ui/button'
-import { Link } from 'react-router-dom'
-import { IssuesResponse } from '@renderer/types'
+import { Link, useNavigate } from 'react-router-dom'
+import { TribunalResponse } from '@renderer/types'
+import { header } from 'express-validator'
+// import { IssuesResponse } from '@renderer/types'
+
+export type Tribunal = {
+  id: number
+  name: string
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
 const formSchema = z.object({
   name: z.string(),
-  postionId: z.number(),
-  governmentOfficeId: z.number(),
+  postionId: z.string(),
+  governmentOfficeId: z.string(),
   title: z.string(),
   type: z.number(),
-  invitationType: z.number(),
+  invitationType: z.string(),
   state: z.boolean(),
-  issueId: z.number(),
-  level: z.number(),
+  tribunalId: z.string(),
+  level: z.string(),
   detailsDate: z.string(),
   judgment: z.string(),
   refrance: z.string(),
@@ -60,11 +73,9 @@ const type2 = [
   }
 ]
 
-const Postions = [
-  { label: 'مدير إدارة', value: GevStatus.Director_of_the_Department as unknown as string }
-] as const
+const Postions = [{ label: 'مدير إدارة', value: GevStatus.Director_of_the_Department }] as const
 const GovernmentFacilities = [
-  { label: 'الشؤون القانونية', value: GovernmentFacility.Legal_Affairs as unknown as string }
+  { label: 'الشؤون القانونية', value: GovernmentFacility.Legal_Affairs }
 ] as const
 
 const kindOfCase = [
@@ -98,22 +109,139 @@ const DegreeOfLitigationOptions = [
 type IssuesFormValue = z.infer<typeof formSchema>
 export default function AddIssueForm() {
   const { toast } = useToast()
+  const authToken = useAuthHeader()
 
+  const [data, setData] = useState<Tribunal[]>([])
+
+  const [selectedLevel, setSelectedLevel] = useState(null)
   const [selectedValue, setSelectedValue] = useState<kind_of_case | null>(null)
-
+  const navigate = useNavigate()
   const [selectedResumedValue, setSelectedResumedValue] = useState<boolean | null>(null)
   const [selectedStateValue, setSelectedStatedValue] = useState<boolean | null>(null)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
 
-  useEffect(() => {}, [selectedOption])
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get('/tribunal', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setData(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+  useEffect(() => {
+    fetchData()
+  }, [selectedOption])
 
   const form = useForm<IssuesFormValue>({
     resolver: zodResolver(formSchema)
   })
   const [delayedSubmitting, setDelayedSubmitting] = useState(form.formState.isSubmitting)
 
-  const onSubmit = (data: IssuesFormValue) => {
-    console.log('asdasdsd', data)
+  const {
+    mutate: firstMutate,
+    isError: firstIsError,
+    isSuccess: firstIsSuccess,
+    isPending: firstIsPending
+  } = useMutation({
+    mutationKey: ['issue'],
+    mutationFn: (datas: IssuesFormValue) =>
+      postApi(
+        '/issue',
+        {
+          name: datas.name,
+          postionId: +datas.postionId,
+          governmentOfficeId: +datas.governmentOfficeId,
+          title: datas.title,
+          type: datas.type,
+          invitationType: +datas.invitationType,
+          state: datas.state
+        },
+        {
+          headers: {
+            Authorization: `${authToken()}`
+          }
+        }
+      ),
+    onSuccess: (data, variables, context) => {
+      console.log('Response data:', data)
+
+      // Trigger the second mutation using the ID from the first mutation's response
+      secondMutate({
+        //@ts-ignore
+        issueId: data.data.id,
+        level: variables.level,
+        tribunalId: variables.tribunalId,
+        detailsDate: variables.detailsDate,
+        judgment: variables.judgment,
+        refrance: variables.refrance,
+        Resumed: variables.Resumed
+      })
+    },
+    onError: (error, variables, context) => {
+      toast({
+        title: 'لم تتم العملية',
+        description: error.message,
+        variant: 'destructive'
+      })
+    }
+  })
+
+  const {
+    mutate: secondMutate,
+    isError: secondIsError,
+    isSuccess: secondIsSuccess,
+    isPending: secondIsPending
+  } = useMutation({
+    mutationKey: ['judgment'],
+    mutationFn: (datas: {
+      issueId: number
+      level: string
+      tribunalId: string
+      detailsDate: string
+      judgment: string
+      refrance: string
+      Resumed: boolean
+    }) =>
+      postApi(
+        '/issue-details',
+        {
+          issueId: datas.issueId, // Use the issueId passed from the first mutation's response
+          tribunalId: +datas.tribunalId,
+          level: +datas.level,
+          detailsDate: new Date(datas.detailsDate),
+          judgment: datas.judgment,
+          refrance: datas.refrance,
+          Resumed: datas.Resumed
+        },
+        {
+          headers: {
+            Authorization: `${authToken()}`
+          }
+        }
+      ),
+    onSuccess: (data, variables, context) => {
+      toast({
+        title: 'اشعار',
+        variant: 'success',
+        description: 'تمت الاضافة بنجاح'
+      })
+      navigate('/state-affairs')
+    },
+    onError: (error, variables, context) => {
+      toast({
+        title: 'لم تتم العملية',
+        description: error.message,
+        variant: 'destructive'
+      })
+    }
+  })
+
+  const onSubmit = (datas: IssuesFormValue) => {
+    firstMutate(datas)
   }
 
   return (
@@ -134,6 +262,7 @@ export default function AddIssueForm() {
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">بيانات المختص القانوني</h3>
           </div>
+
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <FormField
@@ -161,23 +290,22 @@ export default function AddIssueForm() {
                 name="postionId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Select disabled={delayedSubmitting} {...field} value={field.value}>
-                        <SelectTrigger className="">
+                    <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                      <FormControl>
+                        <SelectTrigger>
                           <SelectValue placeholder="الصفة" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>الصفة</SelectLabel>
-                            {Postions.map((position) => (
-                              <SelectItem key={position.value} value={String(position.value)}>
-                                {position.label}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                      </FormControl>
+                      <SelectContent>
+                        {Postions.map((position) => (
+                          <SelectItem key={position.value} value={String(position.value)}>
+                            {position.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -190,29 +318,75 @@ export default function AddIssueForm() {
                 name="governmentOfficeId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Select disabled={delayedSubmitting} {...field}>
-                        <SelectTrigger className="">
+                    <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                      <FormControl>
+                        <SelectTrigger>
                           <SelectValue placeholder="المرفق الحكومي" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>المرفق الحكومي</SelectLabel>
-                            {GovernmentFacilities.map((directorate) => (
-                              <SelectItem key={directorate.value} value={String(directorate.value)}>
-                                {directorate.label}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                      </FormControl>
+                      <SelectContent>
+                        {GovernmentFacilities.map((directorate) => (
+                          <SelectItem key={directorate.value} value={String(directorate.value)}>
+                            {directorate.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
           </div>
+          <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[40px] ">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FormInput
+                        className="h-12  rounded-xl text-sm"
+                        placeholder="   عنوان القضية "
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="col-span-1 ">
+              <FormField
+                control={form.control}
+                name="tribunalId"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="المحكمه" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {data.map((options) => (
+                          <SelectItem key={options.name} value={String(options.id)}>
+                            {options.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/*  */}
+          </div>
           {/*  */}
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">نوع القضية</h3>
@@ -270,104 +444,100 @@ export default function AddIssueForm() {
               {selectedValue === kind_of_case.civilian ? (
                 <FormField
                   control={form.control}
-                  name="governmentOfficeId"
+                  name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <Select disabled={delayedSubmitting} {...field}>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="اختر واحد" />
+                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>اختر واحد</SelectLabel>
-                              {type2.map((types) => (
-                                <SelectItem key={types.value} value={String(types.value)}>
-                                  {types.label}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
+                        </FormControl>
+                        <SelectContent>
+                          {type2.map((type) => (
+                            <SelectItem key={type.value} value={String(type.value)}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               ) : selectedValue === kind_of_case.business ? (
                 <FormField
                   control={form.control}
-                  name="governmentOfficeId"
+                  name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <Select disabled={delayedSubmitting} {...field}>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="اختر واحد" />
+                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>اختر واحد</SelectLabel>
-                              {type2.map((types) => (
-                                <SelectItem key={types.value} value={String(types.value)}>
-                                  {types.label}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
+                        </FormControl>
+                        <SelectContent>
+                          {type2.map((type) => (
+                            <SelectItem key={type.value} value={String(type.value)}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               ) : selectedValue === kind_of_case.criminal ? (
                 <FormField
                   control={form.control}
-                  name="governmentOfficeId"
+                  name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <Select disabled={delayedSubmitting} {...field}>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="اختر واحد" />
+                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>اختر واحد</SelectLabel>
-                              {type1.map((types) => (
-                                <SelectItem key={types.value} value={String(types.value)}>
-                                  {types.label}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
+                        </FormControl>
+                        <SelectContent>
+                          {type1.map((type) => (
+                            <SelectItem key={type.value} value={String(type.value)}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               ) : selectedValue === kind_of_case.administrative ? (
                 <FormField
                   control={form.control}
-                  name="governmentOfficeId"
+                  name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormControl>
-                        <Select disabled={delayedSubmitting} {...field}>
-                          <SelectTrigger className="">
-                            <SelectValue placeholder="اختر واحد" />
+                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>اختر واحد</SelectLabel>
-                              {type1.map((types) => (
-                                <SelectItem key={types.value} value={String(types.value)}>
-                                  {types.label}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
+                        </FormControl>
+                        <SelectContent>
+                          {type2.map((type) => (
+                            <SelectItem key={type.value} value={String(type.value)}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -375,7 +545,7 @@ export default function AddIssueForm() {
                 <>
                   <FormField
                     control={form.control}
-                    name="governmentOfficeId"
+                    name="invitationType"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -410,50 +580,45 @@ export default function AddIssueForm() {
               <h3 className="font-bold text-[#3734a9] p-3">درجة التقاضي</h3>
             </div>
             <div className="col-span-1 ">
-              <Select onValueChange={(value) => setSelectedOption(parseInt(value, 10))}>
-                <SelectTrigger className="w-full h-[50px] rounded-xl bg-transparent border-[1px] border-transparent ">
-                  <SelectValue placeholder="الصفة" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {DegreeOfLitigationOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value.toString()}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <FormField
+                control={form.control}
+                name="level"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value)
+                        setSelectedOption(parseInt(value, 10))
+                      }}
+                      defaultValue={String(field.value)}
+                    >
+                      <FormControl className="w-full h-[50px] rounded-xl bg-transparent border-[1px] border-transparent ">
+                        <SelectTrigger>
+                          <SelectValue placeholder="الصفة" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {DegreeOfLitigationOptions.map((options) => (
+                          <SelectItem key={options.value} value={String(options.value)}>
+                            {options.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
           {selectedOption === 1 ? (
             <>
-              <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                <div className=" col-span-1 h-[40px] ">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <FormInput
-                            className="h-12  rounded-xl text-sm"
-                            placeholder="   عنوان القضية "
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                {/*  */}
-              </div>
               <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="judgment"
                     render={({ field }) => (
                       <FormItem className="col-span-2">
                         <FormControl>
@@ -478,7 +643,7 @@ export default function AddIssueForm() {
                 <div className=" col-span-1 h-auto">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="detailsDate"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -498,7 +663,7 @@ export default function AddIssueForm() {
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="refrance"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -516,7 +681,7 @@ export default function AddIssueForm() {
                 <div className="col-span-1 h-[50px]">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="Resumed"
                     render={({ field }) => (
                       <FormItem className="col-span-2 flex">
                         {Resumed.map((caseType) => (
@@ -568,32 +733,11 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 2 ? (
             <>
-              <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                <div className=" col-span-1 h-[40px] ">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <FormInput
-                            className="h-12  rounded-xl text-sm"
-                            placeholder="   عنوان القضية "
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                {/*  */}
-              </div>
               <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="judgment"
                     render={({ field }) => (
                       <FormItem className="col-span-2">
                         <FormControl>
@@ -638,7 +782,7 @@ export default function AddIssueForm() {
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="refrance"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -657,27 +801,6 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 3 ? (
             <>
-              <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                <div className=" col-span-1 h-[40px] ">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <FormInput
-                            className="h-12  rounded-xl text-sm"
-                            placeholder="   عنوان القضية "
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                {/*  */}
-              </div>
               <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField

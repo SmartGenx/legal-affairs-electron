@@ -32,6 +32,14 @@ export interface FooterItem {
   }[]
 }
 
+export interface TribunalResponse {
+  id: number
+  name: string
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
 export interface LogInResponse {
   email: string
   username: string

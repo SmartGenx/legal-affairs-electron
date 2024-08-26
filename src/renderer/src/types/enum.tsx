@@ -1,5 +1,5 @@
 export enum GevStatus {
-  Director_of_the_Department = 0
+  Director_of_the_Department = 1
 }
 export enum GovernmentFacility {
   Legal_Affairs = 1
