@@ -23,8 +23,7 @@ export default function StateAffairs() {
         }
       })
   })
-  //
-  // console.log('dsdsdfs', data)
+
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error.message
