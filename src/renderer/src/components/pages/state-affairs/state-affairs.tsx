@@ -17,7 +17,7 @@ export default function StateAffairs() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['Issues'],
     queryFn: () =>
-      getApi<Issues[]>('/issue?page=1&pageSize=2', {
+      getApi<Issues[]>('/issue?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }
