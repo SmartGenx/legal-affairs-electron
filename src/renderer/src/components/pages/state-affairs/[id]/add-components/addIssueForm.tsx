@@ -253,12 +253,12 @@ export default function AddIssueForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className=""
         >
-          {/* {process.env.NODE_ENV === 'development' && (
+          {process.env.NODE_ENV === 'development' && (
             <>
               <p>Ignore it, it just in dev mode</p>
               <div>{JSON.stringify(form.formState.errors)}</div>
             </>
-          )} */}
+          )}
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">بيانات المختص القانوني</h3>
           </div>
@@ -290,21 +290,23 @@ export default function AddIssueForm() {
                 name="postionId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                      <FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="الصفة" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {Postions.map((position) => (
-                          <SelectItem key={position.value} value={String(position.value)}>
+                          <SelectItem
+                            key={position.value}
+                            value={String(position.value) || String(position.value)}
+                          >
                             {position.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -318,8 +320,8 @@ export default function AddIssueForm() {
                 name="governmentOfficeId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                      <FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="المرفق الحكومي" />
                         </SelectTrigger>
@@ -332,7 +334,6 @@ export default function AddIssueForm() {
                         ))}
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -348,37 +349,11 @@ export default function AddIssueForm() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-12  rounded-xl text-sm"
+                        className="h-10  p-0  rounded-xl text-sm"
                         placeholder="   عنوان القضية "
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="col-span-1 ">
-              <FormField
-                control={form.control}
-                name="tribunalId"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="المحكمه" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {data.map((options) => (
-                          <SelectItem key={options.name} value={String(options.id)}>
-                            {options.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -447,8 +422,8 @@ export default function AddIssueForm() {
                   name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                        <FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -461,7 +436,6 @@ export default function AddIssueForm() {
                           ))}
                         </SelectContent>
                       </Select>
-
                       <FormMessage />
                     </FormItem>
                   )}
@@ -472,8 +446,8 @@ export default function AddIssueForm() {
                   name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                        <FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -486,7 +460,6 @@ export default function AddIssueForm() {
                           ))}
                         </SelectContent>
                       </Select>
-
                       <FormMessage />
                     </FormItem>
                   )}
@@ -497,8 +470,8 @@ export default function AddIssueForm() {
                   name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                        <FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -511,7 +484,6 @@ export default function AddIssueForm() {
                           ))}
                         </SelectContent>
                       </Select>
-
                       <FormMessage />
                     </FormItem>
                   )}
@@ -522,8 +494,8 @@ export default function AddIssueForm() {
                   name="invitationType"
                   render={({ field }) => (
                     <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
-                        <FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -536,7 +508,6 @@ export default function AddIssueForm() {
                           ))}
                         </SelectContent>
                       </Select>
-
                       <FormMessage />
                     </FormItem>
                   )}
@@ -548,23 +519,21 @@ export default function AddIssueForm() {
                     name="invitationType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormControl>
-                          <Select disabled={delayedSubmitting} {...field}>
-                            <SelectTrigger className="">
-                              <SelectValue placeholder="اختر واحد" />
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="اختار واحد" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectLabel>اختر واحد</SelectLabel>
-                                {type1.map((types) => (
-                                  <SelectItem key={types.value} value={String(types.value)}>
-                                    {types.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            {type2.map((type) => (
+                              <SelectItem key={type.value} value={String(type.value)}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -590,7 +559,7 @@ export default function AddIssueForm() {
                         field.onChange(value)
                         setSelectedOption(parseInt(value, 10))
                       }}
-                      defaultValue={String(field.value)}
+                      defaultValue={field.value}
                     >
                       <FormControl className="w-full h-[50px] rounded-xl bg-transparent border-[1px] border-transparent ">
                         <SelectTrigger>
@@ -614,6 +583,33 @@ export default function AddIssueForm() {
           </div>
           {selectedOption === 1 ? (
             <>
+              <div className="grid h-[80px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+                <div className="col-span-1 ">
+                  <FormField
+                    control={form.control}
+                    name="tribunalId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="المحكمة" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {data.map((options) => (
+                              <SelectItem key={options.name} value={String(options.id)}>
+                                {options.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
               <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
@@ -623,7 +619,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-white"
+                            className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -647,9 +643,9 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input
+                          <FormInput
                             {...field}
-                            placeholder="تاريخ الميلاد"
+                            placeholder="تاريخة"
                             type="date"
                             onChange={(e) => field.onChange(e.target.value)}
                           />
@@ -733,6 +729,33 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 2 ? (
             <>
+              <div className="grid h-[80px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+                <div className="col-span-1 ">
+                  <FormField
+                    control={form.control}
+                    name="tribunalId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="المحكمة" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {data.map((options) => (
+                              <SelectItem key={options.name} value={String(options.id)}>
+                                {options.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
               <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
@@ -742,7 +765,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-white"
+                            className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -801,6 +824,33 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 3 ? (
             <>
+              <div className="grid h-[80px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+                <div className="col-span-1 ">
+                  <FormField
+                    control={form.control}
+                    name="tribunalId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="المحكمة" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {data.map((options) => (
+                              <SelectItem key={options.name} value={String(options.id)}>
+                                {options.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
               <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
@@ -810,7 +860,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-white"
+                            className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
