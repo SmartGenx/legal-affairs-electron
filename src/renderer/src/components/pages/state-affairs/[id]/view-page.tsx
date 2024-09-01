@@ -166,7 +166,8 @@ export default function ViewPage() {
   const {
     data: issueDetailsData,
     error: issueDetailsError,
-    isLoading: isIssueDetailsLoading
+    isLoading: isIssueDetailsLoading,
+    isSuccess
   } = useQuery({
     queryKey: ['issue', id],
     queryFn: fetchIssueDetailsById,
@@ -199,7 +200,7 @@ export default function ViewPage() {
         state: issueData[0]?.state,
         tribunalId: issueDetailsData[0]?.tribunalId,
         level: issueDetailsData[0]?.level,
-        detailsDate: issueDetailsData[0]?.detailsDate,
+        detailsDate: new Date(issueDetailsData[0]?.detailsDate).toISOString().split('T')[0],
         judgment: issueDetailsData[0]?.judgment,
         refrance: issueDetailsData[0]?.refrance,
         Resumed: issueDetailsData[0]?.Resumed
@@ -621,10 +622,10 @@ export default function ViewPage() {
                                       <div className="relative">
                                         <input
                                           type="checkbox"
-                                          checked={selectedResumedValue === caseType.value}
+                                          checked={issueDetailsData[0]?.Resumed === caseType.value}
                                           onChange={() => {
                                             const newValue =
-                                              selectedResumedValue === caseType.value
+                                              issueDetailsData[0]?.Resumed === caseType.value
                                                 ? null
                                                 : caseType.value
                                             setSelectedResumedValue(newValue)
@@ -634,7 +635,7 @@ export default function ViewPage() {
                                         />
                                         <svg
                                           className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                            selectedResumedValue === caseType.value
+                                            issueDetailsData[0]?.Resumed === caseType.value
                                               ? 'block'
                                               : 'hidden'
                                           }`}
@@ -814,10 +815,10 @@ export default function ViewPage() {
                                       <div className="relative">
                                         <input
                                           type="checkbox"
-                                          checked={selectedResumedValue === caseType.value}
+                                          checked={issueDetailsData[0]?.Resumed === caseType.value}
                                           onChange={() => {
                                             const newValue =
-                                              selectedResumedValue === caseType.value
+                                              issueDetailsData[0]?.Resumed === caseType.value
                                                 ? null
                                                 : caseType.value
                                             setSelectedResumedValue(newValue)
@@ -827,7 +828,7 @@ export default function ViewPage() {
                                         />
                                         <svg
                                           className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                            selectedResumedValue === caseType.value
+                                            issueDetailsData[0]?.Resumed === caseType.value
                                               ? 'block'
                                               : 'hidden'
                                           }`}
