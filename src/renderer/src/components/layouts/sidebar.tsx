@@ -5,7 +5,6 @@ import useNavItems from '../../hooks/useNavItems'
 import useNavItemsSetting from '../../hooks/useNavItemsSetting'
 import useScreenSize from '../../hooks/useScreenSize'
 import SidebarToggleIcon from '../icons/sidebar-toggler-icon'
-import { Separator } from '../ui/separator'
 import DashboardNav from './dashboard-nav'
 
 export default function Sidebar() {

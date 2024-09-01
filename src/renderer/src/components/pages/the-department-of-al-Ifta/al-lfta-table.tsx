@@ -1,7 +1,5 @@
-'use client'
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { GevStatus, GovernmentFacility, kind_of_case } from '../../../types/enum'
 import { MoreHorizontal } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -11,20 +9,28 @@ import {
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu'
 import { OrganizationTable } from './organizationTable'
-import { InfoIssue } from '../../../types/index'
+import { ComplaintInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
+import { axiosInstance } from '@renderer/lib/http'
+import { useAuthHeader } from 'react-auth-kit'
 
 type Props = {
-  info: InfoIssue[]
+  info: ComplaintInfo[]
   page: number
   pageSize: string
   total: string
 }
-
-export default function StateTable({ info, page, total, pageSize }: Props) {
+export interface ReferenceProp {
+  id: number
+  name: string
+  isDeleted: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+export default function AlLftaTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
-
-  const columns = React.useMemo<ColumnDef<InfoIssue>[]>(
+  const authToken = useAuthHeader()
+  const columns = React.useMemo<ColumnDef<ComplaintInfo>[]>(
     () => [
       {
         accessorKey: 'id',
@@ -33,57 +39,58 @@ export default function StateTable({ info, page, total, pageSize }: Props) {
       },
       {
         accessorKey: 'name',
-        header: 'الأسم'
+        header: 'مقدم الشكوى'
       },
       {
-        accessorKey: 'id',
-        header: 'الصفة',
+        accessorKey: 'governmentOfficeId',
+        header: 'مصدر التوجية',
         cell: ({ row }) => {
-          const state = row.original.type as GevStatus
-          switch (state) {
-            case GevStatus.Director_of_the_Department:
-              return 'مدير إدارة'
-
-            default:
-              return 'sfvv'
+          const [data, setData] = useState<ReferenceProp>()
+          const fetchData = async () => {
+            try {
+              const response = await axiosInstance.get(
+                `/government-office/${row.original.governmentOfficeId}`,
+                {
+                  headers: {
+                    Authorization: `${authToken()}`
+                  }
+                }
+              )
+              setData(response.data)
+            } catch (error) {
+              console.error('Error fetching data:', error)
+            }
           }
-        }
-      },
-      {
-        accessorKey: 'id',
-        header: 'المرفق الحكومي',
-        cell: ({ row }) => {
-          const state = row.original.governmentOfficeId as GovernmentFacility
-          switch (state) {
-            case GovernmentFacility.Legal_Affairs:
-              return 'الشؤون القانونية'
+          useEffect(() => {
+            fetchData()
+          }, [])
 
-            default:
-              return 'sfvv'
-          }
-        }
-      },
-      {
-        accessorKey: 'postionId',
-        header: 'نوع القضية',
-        cell: ({ row }) => {
-          const state = row.original.postionId as kind_of_case
-          switch (state) {
-            case kind_of_case.civilian:
-              return 'مدني'
-
-            default:
-              return 'تجارية'
-          }
+          return data?.name
         }
       },
       {
         accessorKey: 'title',
-        header: 'درجة التقاضي'
+        header: 'موضوع الشكوى'
       },
       {
-        accessorKey: 'invitationType',
-        header: 'رقم الحكم'
+        accessorKey: 'date',
+        header: 'تاريخ رأي المكتب',
+        cell: ({ row }) => {
+          const date = row.original.date
+          return new Date(date).toISOString().split('T')[0]
+        }
+      },
+      {
+        accessorKey: 'officeOpinian',
+        header: 'نص رأي المكتب'
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'تاريخ الإضافة',
+        cell: ({ row }) => {
+          const date = row.original.createdAt
+          return new Date(date).toISOString().split('T')[0]
+        }
       },
 
       {
@@ -125,7 +132,7 @@ export default function StateTable({ info, page, total, pageSize }: Props) {
       page={page.toString()}
       total={Number(total)}
       onRowClick={(_, { original }) => {
-        navigate(`/state-affairs/info/${original.id}`)
+        navigate(`/the-department-of-al-lfta/info/${original.id}`)
       }}
     />
   )

@@ -1,23 +1,19 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../../../ui/form'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { number, z } from 'zod'
-import { Input } from '../../../../ui/input'
+import { z } from 'zod'
 import { axiosInstance, postApi } from '../../../../../lib/http'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useToast } from '../../../../ui/use-toast'
 import { useAuthHeader } from 'react-auth-kit'
-import { Label } from '../../../../ui/label'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { GevStatus, kind_of_case, GovernmentFacility, Level } from '@renderer/types/enum'
-import Dropdown from '@renderer/components/ui/dropdown'
+
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue
 } from '../../../../ui/select'
@@ -25,8 +21,6 @@ import {
 import { Textarea } from '@renderer/components/ui/textarea'
 import { Button } from '@renderer/components/ui/button'
 import { Link, useNavigate } from 'react-router-dom'
-import { TribunalResponse } from '@renderer/types'
-import { header } from 'express-validator'
 // import { IssuesResponse } from '@renderer/types'
 
 export type Tribunal = {

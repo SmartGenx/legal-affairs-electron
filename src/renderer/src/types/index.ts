@@ -77,6 +77,35 @@ export type Issues = {
   page: string
   pageSize: string
 }
+
+export interface ComplaintInfo {
+  id: number
+  name: string
+  refrance: string
+  governmentOfficeId: number
+  title: string
+  description: string
+  date: Date
+  officeOpinian: string
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+  governmentOffice: GovernmentOffice
+}
+
+export interface GovernmentOffice {
+  id: number
+  name: string
+  isDeleted: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+export type Complaint = {
+  info: ComplaintInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren

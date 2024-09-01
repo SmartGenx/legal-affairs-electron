@@ -18,7 +18,7 @@ export default function useNavItems() {
           arrows: 'arows'
         },
         {
-          href: '/qq',
+          href: '/the-department-of-al-lfta',
           icon: 'chart',
           label: ' إدارة الأفتاء',
           arrows: 'arows'

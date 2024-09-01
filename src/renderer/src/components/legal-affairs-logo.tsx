@@ -1,6 +1,5 @@
-import React from 'react'
 import LogoIcon from './icons/logo-icon'
-export default function YemenLogo({ className = '', ...props }) {
+export default function YemenLogo({ className = '' }) {
   return (
     <div className="w-full h-full  ">
       <div className="w-full h-[100%] flex justify-center items-center">
