@@ -13,6 +13,7 @@ import {
 import { OrganizationTable } from './organizationTable'
 import { InfoIssue } from '../../../types/index'
 import { Button } from '../../ui/button'
+import DeleteDialog from '@renderer/components/dialog/delete-dialog'
 
 type Props = {
   info: InfoIssue[]
@@ -104,11 +105,11 @@ export default function StateTable({ info, page, total, pageSize }: Props) {
                 تعديل
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                {/* <DeleteDialog
-                  url={`/Organization/${row.original?.id}`}
-                  revalidatePath={Paths.localOrg}
-                /> */}
-                حذف
+                <DeleteDialog
+                  url={`/issue/${row.original?.id}`}
+                  keys={['Issues']}
+                  path={'state-affairs'}
+                />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

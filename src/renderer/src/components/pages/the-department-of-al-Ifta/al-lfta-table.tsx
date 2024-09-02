@@ -13,6 +13,7 @@ import { ComplaintInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
 import { axiosInstance } from '@renderer/lib/http'
 import { useAuthHeader } from 'react-auth-kit'
+import DeleteDialog from '@renderer/components/dialog/delete-dialog'
 
 type Props = {
   info: ComplaintInfo[]
@@ -111,11 +112,11 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
                 تعديل
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                {/* <DeleteDialog
-                  url={`/Organization/${row.original?.id}`}
-                  revalidatePath={Paths.localOrg}
-                /> */}
-                حذف
+                <DeleteDialog
+                  url={`/complaint/${row.original?.id}`}
+                  keys={['Complaint']}
+                  path={'the-department-of-al-lfta'}
+                />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
