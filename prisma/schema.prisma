@@ -125,6 +125,7 @@ model Decision {
   attachmentPath     String
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
+  decisionDate       DateTime
 }
 
 model Generalization {

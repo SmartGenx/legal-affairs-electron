@@ -24,7 +24,7 @@ export default function useNavItems() {
           arrows: 'arows'
         },
         {
-          href: '/xx',
+          href: '/decisions',
           icon: 'bill',
           label: ' القرارات',
           arrows: 'arows'

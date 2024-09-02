@@ -106,6 +106,29 @@ export type Complaint = {
   page: string
   pageSize: string
 }
+
+export interface DecisionInfo {
+  id: number
+  decisionName: string
+  refrance: string
+  governmentOfficeId: number
+  title: string
+  description: string
+  decisionSource: string
+  nameSource: string
+  isDeleted: boolean
+  attachmentPath: string
+  createdAt: Date
+  updatedAt: Date
+  decisionDate: Date
+  governmentOffice: GovernmentOffice
+}
+export type Decision = {
+  info: DecisionInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
