@@ -1,5 +1,3 @@
-'use client'
-import * as React from 'react'
 import { Button } from '../../ui/button'
 import { Form, FormControl, FormField, FormItem } from '../../ui/form'
 import { Input } from '../../ui/input'

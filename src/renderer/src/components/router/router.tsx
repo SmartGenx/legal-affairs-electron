@@ -7,6 +7,9 @@ import ProtectedRoute from '../layouts/protected-route'
 import StateAffairs from '../pages/state-affairs/state-affairs'
 import AddIssus from '../pages/state-affairs/[id]/add'
 import ViewPage from '../pages/state-affairs/[id]/view-page'
+import TheDepartmentOfAllfta from '../pages/the-department-of-al-Ifta'
+import ComplaintIndex from '../pages/the-department-of-al-Ifta/add-complain'
+import AlLftaIndex from '../pages/the-department-of-al-Ifta/[id]'
 
 export const router = createHashRouter([
   {
@@ -34,6 +37,18 @@ export const router = createHashRouter([
       {
         path: '/state-affairs/info/add',
         element: <ProtectedRoute element={<AddIssus />} />
+      },
+      {
+        path: '/the-department-of-al-lfta',
+        element: <ProtectedRoute element={<TheDepartmentOfAllfta />} />
+      },
+      {
+        path: '/the-department-of-al-lfta/add-complaint',
+        element: <ProtectedRoute element={<ComplaintIndex />} />
+      },
+      {
+        path: '/the-department-of-al-lfta/info/:id',
+        element: <ProtectedRoute element={<AlLftaIndex />} />
       }
     ]
   }

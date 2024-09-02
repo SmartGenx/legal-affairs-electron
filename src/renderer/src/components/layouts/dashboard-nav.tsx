@@ -6,7 +6,6 @@ import {
 } from '@renderer/components/ui/tooltip'
 import { cn } from '@renderer/lib/utils'
 import { useSignOut } from 'react-auth-kit'
-import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { NavItem } from '../../types/index'
@@ -26,7 +25,7 @@ export default function DashboardNav({
   const location = useLocation()
   const signOut = useSignOut()
   const path = location.pathname
-  const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({})
+  // const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({})
 
   // const toggleGroup = (index: number) => {
   // setExpandedGroups((prev) => ({ ...prev, [index]: !prev[index] }))

@@ -2,13 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card'
 import VectorTop from '../../icons/vector-top'
 import VectorBottom from '../../icons/vector-bottom'
 import LoginForm from '../../forms/auth/login'
-import LogoIcon from '../../icons/logo-icon'
 import { Link } from 'react-router-dom'
-import { Separator } from '../../ui/separator'
 import YemenLogo from '../../legal-affairs-logo'
 
 const Login = () => {
-  const year = new Date().getFullYear()
+  // const year = new Date().getFullYear()
   return (
     <div className="flex min-h-screen flex-col bg-[#3734a9] overflow-auto md:flex-row relative">
       <div className="absolute top-0 right-0">

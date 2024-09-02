@@ -60,7 +60,7 @@ import {
   UserX2Icon,
   X
 } from 'lucide-react'
-import House from './house'
+// import House from './house'
 
 export type Icon = LucideIcon
 
