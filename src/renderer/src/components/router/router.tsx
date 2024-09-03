@@ -10,6 +10,8 @@ import ViewPage from '../pages/state-affairs/[id]/view-page'
 import TheDepartmentOfAllfta from '../pages/the-department-of-al-Ifta'
 import ComplaintIndex from '../pages/the-department-of-al-Ifta/add-complain'
 import AlLftaIndex from '../pages/the-department-of-al-Ifta/[id]'
+import DecisionsIndex from '../pages/decisions'
+import AddDecisions from '../pages/decisions/add-decisions'
 
 export const router = createHashRouter([
   {
@@ -49,6 +51,14 @@ export const router = createHashRouter([
       {
         path: '/the-department-of-al-lfta/info/:id',
         element: <ProtectedRoute element={<AlLftaIndex />} />
+      },
+      {
+        path: '/decisions',
+        element: <ProtectedRoute element={<DecisionsIndex />} />
+      },
+      {
+        path: '/decisions/add-Decision',
+        element: <ProtectedRoute element={<AddDecisions />} />
       }
     ]
   }
