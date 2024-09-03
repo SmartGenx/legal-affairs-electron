@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { axiosInstance, postApi } from '../../../../../lib/http'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '../../../../ui/use-toast'
 import { useAuthHeader } from 'react-auth-kit'
 import { FormInput } from '@renderer/components/ui/form-input'
@@ -21,6 +21,7 @@ import {
 import { Textarea } from '@renderer/components/ui/textarea'
 import { Button } from '@renderer/components/ui/button'
 import { Link, useNavigate } from 'react-router-dom'
+import { InfoIssue } from '@renderer/types'
 // import { IssuesResponse } from '@renderer/types'
 
 export type Tribunal = {
@@ -29,6 +30,21 @@ export type Tribunal = {
   createdAt: Date
   updatedAt: Date
   isDeleted: boolean
+}
+export type GovernmentOffice = {
+  id: number
+  name: string
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+export type PositionsProp = {
+  id: number
+  name: string
+  isDeleted: boolean
+  createdAt: Date
+  updatedAt: Date
+  Issue: InfoIssue[]
 }
 
 const formSchema = z.object({
@@ -103,9 +119,12 @@ const DegreeOfLitigationOptions = [
 type IssuesFormValue = z.infer<typeof formSchema>
 export default function AddIssueForm() {
   const { toast } = useToast()
+  const queryClient = useQueryClient()
   const authToken = useAuthHeader()
 
   const [data, setData] = useState<Tribunal[]>([])
+  const [dataGovernment, setGovernmentData] = useState<GovernmentOffice[]>([])
+  const [dataPosition, setPositionData] = useState<PositionsProp[]>([])
 
   const [selectedLevel, setSelectedLevel] = useState(null)
   const [selectedValue, setSelectedValue] = useState<kind_of_case | null>(null)
@@ -126,8 +145,37 @@ export default function AddIssueForm() {
       console.error('Error fetching data:', error)
     }
   }
+
+  const fetchPositionData = async () => {
+    try {
+      const response = await axiosInstance.get('/position', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setPositionData(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  const fetchGovernmentData = async () => {
+    try {
+      const response = await axiosInstance.get('/government-office', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setGovernmentData(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
   useEffect(() => {
     fetchData()
+    fetchPositionData()
+    fetchGovernmentData()
   }, [selectedOption])
 
   const form = useForm<IssuesFormValue>({
@@ -223,6 +271,7 @@ export default function AddIssueForm() {
         variant: 'success',
         description: 'تمت الاضافة بنجاح'
       })
+      queryClient.invalidateQueries({ queryKey: ['Issues'] })
       navigate('/state-affairs')
     },
     onError: (error, variables, context) => {
@@ -291,12 +340,9 @@ export default function AddIssueForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {Postions.map((position) => (
-                          <SelectItem
-                            key={position.value}
-                            value={String(position.value) || String(position.value)}
-                          >
-                            {position.label}
+                        {dataPosition.map((position) => (
+                          <SelectItem key={position.id} value={String(position.id)}>
+                            {position.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -321,9 +367,9 @@ export default function AddIssueForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {GovernmentFacilities.map((directorate) => (
-                          <SelectItem key={directorate.value} value={String(directorate.value)}>
-                            {directorate.label}
+                        {dataGovernment.map((directorate) => (
+                          <SelectItem key={directorate.name} value={String(directorate.id)}>
+                            {directorate.name}
                           </SelectItem>
                         ))}
                       </SelectContent>

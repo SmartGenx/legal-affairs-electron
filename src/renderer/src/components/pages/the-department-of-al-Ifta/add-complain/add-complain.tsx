@@ -11,7 +11,7 @@ import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 const formSchema = z.object({
   name: z.string(),
@@ -35,6 +35,7 @@ type ComplaintFormValue = z.infer<typeof formSchema>
 export default function AddComplain() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const [data, setData] = useState<GovernmentOffice[]>([])
   const fetchData = async () => {
@@ -81,6 +82,7 @@ export default function AddComplain() {
         variant: 'success',
         description: 'تمت الاضافة بنجاح'
       })
+      queryClient.invalidateQueries({ queryKey: ['Complaint'] })
       navigate('/the-department-of-al-lfta')
     },
     onError: (error) => {
@@ -276,7 +278,7 @@ export default function AddComplain() {
             {/*  */}
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-            <Link to={'/state-affairs'}>
+            <Link to={'/the-department-of-al-lfta'}>
               <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
                 إلغاء
               </Button>
