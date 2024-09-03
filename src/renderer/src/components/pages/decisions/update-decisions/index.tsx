@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
@@ -11,9 +12,24 @@ import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation } from '@tanstack/react-query'
-import FileUploader from './FileUploader'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import FileUploader from './../add-decisions/FileUploader'
 
+export type Complain = {
+  id: number
+  decisionName: string
+  refrance: string
+  governmentOfficeId: number
+  title: string
+  description: string
+  decisionSource: string
+  nameSource: string
+  isDeleted: boolean
+  attachmentPath: string
+  createdAt: Date
+  updatedAt: Date
+  decisionDate: Date
+}
 const formSchema = z.object({
   decisionName: z.string(),
   refrance: z.string(),
@@ -34,7 +50,9 @@ export type GovernmentOffice = {
   isDeleted: boolean
 }
 type DecisionsFormValue = z.infer<typeof formSchema>
-export default function AddDecisionForm() {
+export default function UpdateDecisions() {
+  const { id } = useParams<{ id: string }>()
+
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
@@ -51,9 +69,42 @@ export default function AddDecisionForm() {
       console.error('Error fetching data:', error)
     }
   }
+
+  const fetchDecisionData = async () => {
+    const response = await axiosInstance.get<Complain>(`/decision/${id}`, {
+      headers: {
+        Authorization: `${authToken()}`
+      }
+    })
+    return response.data
+  }
+  const {
+    data: DecisionData,
+    error: DecisionError,
+    isLoading: DecisionIsLoading
+  } = useQuery({
+    queryKey: ['Decisions', id],
+    queryFn: fetchDecisionData,
+    enabled: !!id
+  })
+  console.log('sdgsgdfgdfgdfgdfgd', DecisionData?.attachmentPath)
   useEffect(() => {
+    if (DecisionData && formSchema) {
+      form.reset({
+        decisionName: DecisionData.decisionName,
+        refrance: DecisionData.refrance,
+        governmentOfficeId: String(DecisionData.governmentOfficeId),
+        title: DecisionData.title,
+        description: DecisionData.description,
+        decisionSource: DecisionData.decisionSource,
+        nameSource: DecisionData.nameSource,
+        decisionDate: new Date(DecisionData.decisionDate).toISOString().split('T')[0]
+      })
+    }
+
     fetchData()
-  }, [])
+  }, [DecisionData])
+
   const form = useForm<DecisionsFormValue>({
     resolver: zodResolver(formSchema)
   })
@@ -167,7 +218,13 @@ export default function AddDecisionForm() {
                 name="governmentOfficeId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={
+                        field.value ? String(field.value) : String(DecisionData?.governmentOfficeId)
+                      }
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="مصدر التوجيه" />

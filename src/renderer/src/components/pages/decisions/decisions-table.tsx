@@ -119,7 +119,7 @@ export default function DecisionTable({ info, page, total, pageSize }: Props) {
       page={page.toString()}
       total={Number(total)}
       onRowClick={(_, { original }) => {
-        navigate(`/the-department-of-al-lfta/info/${original.id}`)
+        navigate(`/decisions/update-Decision/info/${original.id}`)
       }}
     />
   )

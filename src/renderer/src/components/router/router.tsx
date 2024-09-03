@@ -12,6 +12,7 @@ import ComplaintIndex from '../pages/the-department-of-al-Ifta/add-complain'
 import AlLftaIndex from '../pages/the-department-of-al-Ifta/[id]'
 import DecisionsIndex from '../pages/decisions'
 import AddDecisions from '../pages/decisions/add-decisions'
+import UpdateDecisions from '../pages/decisions/update-decisions'
 
 export const router = createHashRouter([
   {
@@ -59,6 +60,10 @@ export const router = createHashRouter([
       {
         path: '/decisions/add-Decision',
         element: <ProtectedRoute element={<AddDecisions />} />
+      },
+      {
+        path: '/decisions/update-Decision/info/:id',
+        element: <ProtectedRoute element={<UpdateDecisions />} />
       }
     ]
   }

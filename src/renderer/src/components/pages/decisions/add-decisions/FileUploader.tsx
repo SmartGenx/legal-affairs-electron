@@ -24,26 +24,28 @@ export default function FileUploader({
   // const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let files = null
-    if (event.target.files)
-      if (event.target.files[0] != null) {
-        files = event?.target?.files
-        setIsError(true)
-      }
+    let files: FileList | null = null // Explicitly declare the type
+
+    if (event.target.files && event.target.files.length > 0) {
+      files = event.target.files
+      setIsError(false)
+    } else {
+      setIsError(true)
+    }
+
     if (files) {
       if (isMultiple) {
-        Array.from(files).map((file) => {
+        Array.from(files).forEach((file) => {
           setUploadedFiles((prevUploadedFiles) => [...prevUploadedFiles, file.name])
         })
       } else {
-        // if (files && files[0] && files[0].name)
         setUploadedFiles([files[0].name])
       }
-      setIsError(false)
     }
 
     onChange?.(files)
   }
+
   const handleFileRemove = (fileName: string) => {
     setUploadedFiles((prevUploadedFiles) => prevUploadedFiles.filter((file) => file !== fileName))
     if (uploadedFiles.length === 1) {
