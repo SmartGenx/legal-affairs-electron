@@ -123,8 +123,25 @@ export interface DecisionInfo {
   decisionDate: Date
   governmentOffice: GovernmentOffice
 }
+
 export type Decision = {
   info: DecisionInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
+
+export interface BookInfo {
+  id: number
+  name: string
+  quantity: number
+  price: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+export type Books = {
+  info: BookInfo[]
   total: number
   page: string
   pageSize: string

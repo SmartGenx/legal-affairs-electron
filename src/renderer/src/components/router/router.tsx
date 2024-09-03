@@ -13,6 +13,10 @@ import AlLftaIndex from '../pages/the-department-of-al-Ifta/[id]'
 import DecisionsIndex from '../pages/decisions'
 import AddDecisions from '../pages/decisions/add-decisions'
 import UpdateDecisions from '../pages/decisions/update-decisions'
+import OfficialJournalIndex from '../pages/official-journal'
+import AddBookIndex from '../pages/official-journal/add-book'
+import OrderBookIndex from '../pages/official-journal/order-book'
+import ViewBook from '../pages/official-journal/add-book/view-page'
 
 export const router = createHashRouter([
   {
@@ -64,6 +68,22 @@ export const router = createHashRouter([
       {
         path: '/decisions/update-Decision/info/:id',
         element: <ProtectedRoute element={<UpdateDecisions />} />
+      },
+      {
+        path: '/official-journal',
+        element: <ProtectedRoute element={<OfficialJournalIndex />} />
+      },
+      {
+        path: '/official-journal/add-book',
+        element: <ProtectedRoute element={<AddBookIndex />} />
+      },
+      {
+        path: '/official-journal/view-book/:id',
+        element: <ProtectedRoute element={<ViewBook />} />
+      },
+      {
+        path: '/official-journal/order-book',
+        element: <ProtectedRoute element={<OrderBookIndex />} />
       }
     ]
   }

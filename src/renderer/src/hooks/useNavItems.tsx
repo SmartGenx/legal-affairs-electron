@@ -30,7 +30,7 @@ export default function useNavItems() {
           arrows: 'arows'
         },
         {
-          href: '/vv',
+          href: '/official-journal',
           icon: 'documentText',
           label: ' الجريدة الرسمية',
           arrows: 'arows'
