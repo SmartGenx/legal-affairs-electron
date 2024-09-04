@@ -48,7 +48,7 @@ export default function useNavItems() {
           arrows: 'arows'
         },
         {
-          href: '/nn',
+          href: '/personnel-affairs',
           icon: 'userSquare',
           label: ' شؤون الموظفين',
           arrows: 'arows'
