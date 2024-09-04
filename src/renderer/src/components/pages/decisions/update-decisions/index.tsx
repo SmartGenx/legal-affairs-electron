@@ -87,7 +87,7 @@ export default function UpdateDecisions() {
     queryFn: fetchDecisionData,
     enabled: !!id
   })
-  console.log('sdgsgdfgdfgdfgdfgd', DecisionData?.attachmentPath)
+
   useEffect(() => {
     if (DecisionData && formSchema) {
       form.reset({

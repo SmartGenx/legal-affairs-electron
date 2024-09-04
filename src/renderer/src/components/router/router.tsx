@@ -17,6 +17,8 @@ import OfficialJournalIndex from '../pages/official-journal'
 import AddBookIndex from '../pages/official-journal/add-book'
 import OrderBookIndex from '../pages/official-journal/order-book'
 import ViewBook from '../pages/official-journal/add-book/view-page'
+import PersonnelAffairsIndex from '../pages/personnel-affairs'
+import PersonnelIndex from '../pages/personnel-affairs/add-employee'
 
 export const router = createHashRouter([
   {
@@ -84,6 +86,14 @@ export const router = createHashRouter([
       {
         path: '/official-journal/order-book',
         element: <ProtectedRoute element={<OrderBookIndex />} />
+      },
+      {
+        path: '/personnel-affairs',
+        element: <ProtectedRoute element={<PersonnelAffairsIndex />} />
+      },
+      {
+        path: '/personnel-affairs/add-employee',
+        element: <ProtectedRoute element={<PersonnelIndex />} />
       }
     ]
   }

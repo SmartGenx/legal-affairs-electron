@@ -146,6 +146,54 @@ export type Books = {
   page: string
   pageSize: string
 }
+
+export interface EmployInfo {
+  id: number
+  name: string
+  reference: string
+  phone: string
+  address: string
+  dob: Date
+  education: string
+  megor: number
+  graduationDate: Date
+  idtype: number
+  idNumber: string
+  issuerDate: Date
+  issuerPlace: string
+  empLeaved: string
+  empDgree: number
+  position: string
+  salary: number
+  firstEmployment: Date
+  employmentDate: Date
+  currentUnit: number
+  currentEmploymentDate: Date
+  legalStatus: number
+  employeeStatus: number
+  detailsDate: Date
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+  Attachment: Attachment[]
+}
+
+export interface Attachment {
+  id: number
+  file: string
+  emploteeId: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
+export type Employ = {
+  info: EmployInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
+
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
