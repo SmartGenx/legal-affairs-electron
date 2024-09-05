@@ -33,6 +33,10 @@ export default function TopButtons() {
                 {/* <PersonAddIcon /> */}
                 <Link to="/official-journal/add-book">إضافة كتاب</Link>
               </DropdownMenuItem>
+              <DropdownMenuItem className=" flex gap-2">
+                {/* <PersonAddIcon /> */}
+                <Link to="/license/add-license">إضافة ترخيص</Link>
+              </DropdownMenuItem>
 
               <DropdownMenuItem className=" flex gap-2">
                 {/* <AccountBalanceIcon /> */}
