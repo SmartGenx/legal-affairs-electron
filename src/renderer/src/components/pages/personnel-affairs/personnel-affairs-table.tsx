@@ -100,7 +100,7 @@ export default function PersonnelAffairsTable({ info, page, total, pageSize }: P
       page={page.toString()}
       total={Number(total)}
       onRowClick={(_, { original }) => {
-        navigate(`/official-journal/view-book/${original.id}`)
+        navigate(`/personnel-affairs/update-employee/${original.id}`)
       }}
     />
   )
