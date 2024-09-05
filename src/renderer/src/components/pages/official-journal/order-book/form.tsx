@@ -11,7 +11,7 @@ import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const formSchema = z.object({
   licenseTypeId: z.string(),
@@ -26,14 +26,41 @@ const formSchema = z.object({
   referenceDate: z.string()
 })
 
+export type customer = {
+  id: number
+  name: string
+  type: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
 type BookFormValue = z.infer<typeof formSchema>
 
-export default function AddLincense() {
+export default function OrderBook() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
 
+  const [data, setData] = useState<customer[]>([])
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get('/customer', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setData(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  console.log('data', data)
+  useEffect(() => {
+    fetchData()
+  }, [])
   const form = useForm<BookFormValue>({
     resolver: zodResolver(formSchema)
   })
@@ -92,69 +119,43 @@ export default function AddLincense() {
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px]   grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <FormField
                 control={form.control}
                 name="licenseTypeId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   نوع الترخيص "
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <SelectTrigger>
+                          <SelectValue placeholder="اسم المشتري" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {data.map((options) => (
+                          <SelectItem key={options.name} value={String(options.id)}>
+                            {options.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="customerId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   اسم المشتري "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="compnayLocation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   مركز الشركة "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             {/*  */}
           </div>
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <FormField
                 control={form.control}
@@ -164,7 +165,27 @@ export default function AddLincense() {
                     <FormControl>
                       <FormInput
                         className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   مسؤول الشركة "
+                        placeholder="سعر الكتاب"
+                        {...field}
+                        disabled
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className=" col-span-1 h-[50px] ">
+              <FormField
+                control={form.control}
+                name="compnayCapital"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FormInput
+                        className="h-10 p-0  rounded-xl text-sm"
+                        placeholder="   عدد الكتب "
                         {...field}
                       />
                     </FormControl>
@@ -183,80 +204,7 @@ export default function AddLincense() {
                     <FormControl>
                       <FormInput
                         className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   رأس مال الشركة "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/*  */}
-          </div>
-
-          {/*  */}
-
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <FormField
-                control={form.control}
-                name="compnayPorpose"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormControl>
-                      <Textarea
-                        className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
-                        rows={5}
-                        {...field}
-                        placeholder="غرض الشركة ( أكتب الغرض من أنشاء الشركة )"
-                      ></Textarea>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-
-          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">معلومات الترخيص</h3>
-          </div>
-
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="licenseNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   رقم الترخيص "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="licenseYear"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   السنة "
+                        placeholder="   الإجمالي "
                         {...field}
                       />
                     </FormControl>
@@ -269,11 +217,69 @@ export default function AddLincense() {
           </div>
 
           {/*  */}
+
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-2 h-[50px] ">
               <FormField
                 control={form.control}
-                name="referenceNum"
+                name="licenseTypeId"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <SelectTrigger>
+                          <SelectValue placeholder="اسم المشتري" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {data.map((options) => (
+                          <SelectItem key={options.name} value={String(options.id)}>
+                            {options.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className=" col-span-1 h-[50px] ">
+              <Button className="text-sm w-80  mr-3 h-10 bg-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px]">
+                بحث
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid h-[80px]   grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] ">
+              <FormField
+                control={form.control}
+                name="compnayManger"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FormInput
+                        className="h-10 p-0  rounded-xl text-sm"
+                        placeholder="   رقم الصرف "
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className=" col-span-1 h-[50px] ">
+              <FormField
+                control={form.control}
+                name="compnayCapital"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -288,28 +294,30 @@ export default function AddLincense() {
                 )}
               />
             </div>
-
-            <div className=" col-span-1 h-[50px] ">
+          </div>
+          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[40px] ">
               <FormField
                 control={form.control}
-                name="referenceDate"
+                name="compnayPorpose"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-2">
                     <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   تاريخ السند "
+                      <Textarea
+                        className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
+                        rows={5}
                         {...field}
-                      />
+                        placeholder="ملاحظات"
+                      ></Textarea>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
             {/*  */}
           </div>
+
           <div className="w-full flex justify-end gap-2 mb-4">
             <Link to={'/state-affairs'}>
               <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
