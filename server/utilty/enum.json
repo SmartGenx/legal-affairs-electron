@@ -20,5 +20,21 @@
             "value": 1
         }
     ]
-   } 
+   },
+   "customer":{
+    "customerType":[
+        {
+            "label": "قطاع حكومي",
+            "value": 1
+        },        {
+            "label": " قطاع خاص",
+            "value": 2
+        },
+        {
+            "label": " قطاع تجاري",
+            "value": 3
+        }
+    ]
+   }
+
 }
