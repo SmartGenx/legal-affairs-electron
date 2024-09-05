@@ -4,18 +4,19 @@ import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, postApi } from '@renderer/lib/http'
+import { axiosInstance, patchApi, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import FileUploader from './FileUploader'
 import { Label } from '@renderer/components/ui/label'
 import TextLabel from '@renderer/components/ui/text-label'
 import { DateInput } from '@renderer/components/ui/date-input'
+import { EmployInfo } from '@renderer/types'
 
 const formSchema = z.object({
   name: z.string(),
@@ -76,33 +77,69 @@ const empStatus = [
   { label: 'azxczxczxa', value: 3 },
   { label: 'wwww', value: 4 }
 ]
-export default function AddEmployeeIndex() {
+export default function UpdateEmployeeIndex() {
+  const { id } = useParams<{ id: string }>()
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
-  //   const [data, setData] = useState<GovernmentOffice[]>([])
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axiosInstance.get('/government-office', {
-  //         headers: {
-  //           Authorization: `${authToken()}`
-  //         }
-  //       })
-  //       setData(response.data)
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error)
-  //     }
-  //   }
-  //   useEffect(() => {
-  //     fetchData()
-  //   }, [])
+
+  const fetchData = async () => {
+    const response = await axiosInstance.get<EmployInfo>(`/employ/${id}`, {
+      headers: {
+        Authorization: `${authToken()}`
+      }
+    })
+    return response.data
+  }
+
+  const {
+    data: EmployeeData,
+    error: EmployeeError,
+    isLoading: EmployeeIsLoading
+  } = useQuery({
+    queryKey: ['Employ', id],
+    queryFn: fetchData,
+    enabled: !!id
+  })
+  console.log('sdsdfsdfs', EmployeeData)
   const form = useForm<AddEmployeeValue>({
     resolver: zodResolver(formSchema)
   })
 
+  useEffect(() => {
+    if (EmployeeData) {
+      form.reset({
+        name: EmployeeData.name,
+        reference: EmployeeData.reference,
+        phone: EmployeeData.phone,
+        address: EmployeeData.address,
+        dob: new Date(EmployeeData.dob).toISOString().split('T')[0],
+        education: EmployeeData.education,
+        megor: String(EmployeeData.megor),
+        graduationDate: new Date(EmployeeData.graduationDate).toISOString().split('T')[0],
+        idtype: String(EmployeeData.idtype),
+        idNumber: EmployeeData.idNumber,
+        issuerDate: new Date(EmployeeData.issuerDate).toISOString().split('T')[0],
+        issuerPlace: EmployeeData.issuerPlace,
+        empLeaved: EmployeeData.empLeaved,
+        empDgree: String(EmployeeData.empDgree),
+        position: EmployeeData.position,
+        salary: String(EmployeeData.salary),
+        firstEmployment: new Date(EmployeeData.firstEmployment).toISOString().split('T')[0],
+        employmentDate: new Date(EmployeeData.employmentDate).toISOString().split('T')[0],
+        currentUnit: String(EmployeeData.currentUnit),
+        currentEmploymentDate: new Date(EmployeeData.currentEmploymentDate)
+          .toISOString()
+          .split('T')[0],
+        legalStatus: String(EmployeeData.legalStatus),
+        employeeStatus: String(EmployeeData.employeeStatus),
+        detailsDate: new Date(EmployeeData.detailsDate).toISOString().split('T')[0]
+      })
+    }
+  }, [EmployeeData])
   const { mutate } = useMutation({
-    mutationKey: ['AddEmployee'],
+    mutationKey: ['UpdateEmployee'],
     mutationFn: (datas: AddEmployeeValue) => {
       const formData = new FormData()
       formData.append('name', datas.name)
@@ -133,7 +170,7 @@ export default function AddEmployeeIndex() {
         formData.append('file', datas.file)
       }
 
-      return postApi('/employ/create_employ', formData, {
+      return patchApi(`/employ/${id}`, formData, {
         headers: {
           Authorization: `${authToken()}`
         }
@@ -143,7 +180,7 @@ export default function AddEmployeeIndex() {
       toast({
         title: 'اشعار',
         variant: 'success',
-        description: 'تمت الاضافة بنجاح'
+        description: 'تمت التعديل بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Employ'] })
       navigate('/personnel-affairs')
@@ -310,7 +347,11 @@ export default function AddEmployeeIndex() {
                 name="megor"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value ? String(field.value) : String(EmployeeData?.megor)}
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
                         <SelectTrigger>
                           <SelectValue placeholder="التخصص" />
@@ -356,7 +397,11 @@ export default function AddEmployeeIndex() {
                 name="idtype"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value ? String(field.value) : String(EmployeeData?.idtype)}
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
                         <SelectTrigger>
                           <SelectValue placeholder="نوع الهوية" />
@@ -570,7 +615,11 @@ export default function AddEmployeeIndex() {
                 name="currentUnit"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value ? String(field.value) : String(EmployeeData?.currentUnit)}
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
                         <SelectTrigger>
                           <SelectValue placeholder="الوحدة الحالية" />
@@ -616,7 +665,11 @@ export default function AddEmployeeIndex() {
                 name="legalStatus"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value ? String(field.value) : String(EmployeeData?.legalStatus)}
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
                         <SelectTrigger>
                           <SelectValue placeholder="المركز القانوني" />
@@ -646,7 +699,13 @@ export default function AddEmployeeIndex() {
                 name="employeeStatus"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={
+                        field.value ? String(field.value) : String(EmployeeData?.employeeStatus)
+                      }
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
                         <SelectTrigger>
                           <SelectValue placeholder="حالة الموظف" />
