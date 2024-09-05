@@ -1,20 +1,20 @@
 {
-   "Issue":{
-    "type":[
+   "issue":{
+    "issueType":[
         {
             "label": "invitationType",
             "value": 1
         }
     ],
-    "invitationType":[
+    "issueInvitationType":[
         {
             "label": "invitationType",
             "value": 1
         }
     ]
    },
-   "IssueDetails":{
-    "level":[
+   "issue-details":{
+    "issue-detailsLevel":[
         {
             "label": "level",
             "value": 1
