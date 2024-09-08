@@ -21,6 +21,9 @@ import PersonnelAffairsIndex from '../pages/personnel-affairs'
 import PersonnelIndex from '../pages/personnel-affairs/add-employee'
 import UpdateEmployeeIndex from '../pages/personnel-affairs/add-employee/update-form'
 import LicenseIndex from '../pages/official-journal/license'
+import GeneralizationIndex from '../pages/generalization'
+import AddGeneralizationForm from '../pages/generalization/add-generalization'
+import UpdateGeneralization from '../pages/generalization/update-generalization'
 
 export const router = createHashRouter([
   {
@@ -104,6 +107,18 @@ export const router = createHashRouter([
       {
         path: '/license/add-license',
         element: <ProtectedRoute element={<LicenseIndex />} />
+      },
+      {
+        path: '/generalization',
+        element: <ProtectedRoute element={<GeneralizationIndex />} />
+      },
+      {
+        path: '/generalization/add-generalization',
+        element: <ProtectedRoute element={<AddGeneralizationForm />} />
+      },
+      {
+        path: '/generalization/update-generalization/:id',
+        element: <ProtectedRoute element={<UpdateGeneralization />} />
       }
     ]
   }

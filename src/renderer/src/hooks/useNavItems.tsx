@@ -36,7 +36,7 @@ export default function useNavItems() {
           arrows: 'arows'
         },
         {
-          href: '/bb',
+          href: '/generalization',
           icon: 'save2',
           label: ' التعميمات',
           arrows: 'arows'
