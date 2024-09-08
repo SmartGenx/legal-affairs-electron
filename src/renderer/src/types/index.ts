@@ -194,6 +194,55 @@ export type Employ = {
   pageSize: string
 }
 
+export interface licenseType {
+  id: number
+  name: string
+  fees: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+  license: License[]
+}
+
+export interface License {
+  id: number
+  licenseTypeId: number
+  customerId: number
+  licenseNumber: string
+  licenseYear: number
+  compnayPorpose: string
+  compnayLocation: string
+  compnayCapital: number
+  compnayManger: string
+  referenceNum: string
+  referenceDate: Date
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
+export interface LicenseType {
+  info: licenseType[]
+  total: number
+  page: string
+  pageSize: string
+}
+
+export interface CustomerInfo {
+  id: number
+  name: string
+  type: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+export interface Customer {
+  info: CustomerInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
+
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren

@@ -7,11 +7,14 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, postApi } from '@renderer/lib/http'
+import { axiosInstance, getApi, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { LicenseType } from '@renderer/types'
+import { Customer } from '@prisma/client'
+import { DateInput } from '@renderer/components/ui/date-input'
 
 const formSchema = z.object({
   licenseTypeId: z.string(),
@@ -33,19 +36,55 @@ export default function AddLincense() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
+  const [customer, setCustomer] = useState<Customer[]>([])
 
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['license'],
+    queryFn: () =>
+      getApi<LicenseType[]>('/license-type?page=1&pageSize=30', {
+        headers: {
+          Authorization: authToken()
+        }
+      })
+  })
+
+  const infoArray = data?.data?.info || [] // Directly access the `info` array from `data.data`
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get('/customer?page=1&pageSize=2', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setCustomer(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
   const form = useForm<BookFormValue>({
     resolver: zodResolver(formSchema)
   })
   const { mutate } = useMutation({
-    mutationKey: ['AddBooks'],
+    mutationKey: ['AddLicense'],
     mutationFn: (datas: BookFormValue) =>
       postApi(
-        '/book',
+        '/license',
         {
-          //   name: datas.name,
-          //   quantity: +datas.quantity,
-          //   price: +datas.price
+          licenseTypeId: +datas.licenseTypeId,
+          customerId: +datas.customerId,
+          licenseNumber: datas.licenseNumber,
+          licenseYear: +datas.licenseYear,
+          compnayPorpose: datas.compnayPorpose,
+          compnayLocation: datas.compnayLocation,
+          compnayCapital: +datas.compnayCapital,
+          compnayManger: datas.compnayManger,
+          referenceNum: datas.referenceNum,
+          referenceDate: new Date(datas.referenceDate).toISOString()
         },
         {
           headers: {
@@ -73,11 +112,14 @@ export default function AddLincense() {
   const onSubmit = (datas: BookFormValue) => {
     mutate(datas)
   }
+  if (isLoading) return 'Loading...'
+
+  if (error) return 'An error has occurred: ' + error.message
   return (
     <div className="min-h-[50vh] w-full mt-5">
       <Form {...form}>
         <form
-          id="complainsForm"
+          id="AddLicenseForm"
           //   key={key}
           onSubmit={form.handleSubmit(onSubmit)}
           className=""
@@ -93,38 +135,52 @@ export default function AddLincense() {
           </div>
 
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
+            <div className="col-span-1 h-[50px] translate-y-2">
               <FormField
                 control={form.control}
                 name="licenseTypeId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   نوع الترخيص "
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <SelectTrigger>
+                          <SelectValue placeholder="نوع الرخصه" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {infoArray.map((options) => (
+                          <SelectItem key={options.name} value={String(options.id)}>
+                            {options.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] translate-y-2">
               <FormField
                 control={form.control}
                 name="customerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   اسم المشتري "
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <SelectTrigger>
+                          <SelectValue placeholder="اسم الشركة" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {customer.info.map((options) => (
+                          <SelectItem key={options.name} value={String(options.id)}>
+                            {options.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -296,10 +352,11 @@ export default function AddLincense() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   تاريخ السند "
+                      <DateInput
                         {...field}
+                        placeholder="تاريخ التخرج"
+                        type="date"
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -320,6 +377,7 @@ export default function AddLincense() {
             <Button
               className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
               type="submit"
+              id="AddLicenseForm"
             >
               حفظ
             </Button>
