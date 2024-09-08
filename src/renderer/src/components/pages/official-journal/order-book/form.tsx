@@ -1,4 +1,4 @@
-import { string, z } from 'zod'
+import { number, string, z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,18 +12,19 @@ import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { BookInfo } from '@renderer/types'
+import { DateInput } from '@renderer/components/ui/date-input'
+import AddCustomerDailog from '../../dailogs/add-customer'
+import AddCustomerDialog from '../../dailogs/add-customer'
 
 const formSchema = z.object({
-  licenseTypeId: z.string(),
+  bookId: z.string(),
+  quantity: z.string(),
   customerId: z.string(),
-  licenseNumber: z.string(),
-  licenseYear: z.string(),
-  compnayPorpose: z.string(),
-  compnayLocation: z.string(),
-  compnayCapital: z.string(),
-  compnayManger: z.string(),
-  referenceNum: z.string(),
-  referenceDate: z.string()
+  reference: z.string(),
+  description: z.string(),
+  sellingDate: z.string(),
+  orderNumber: z.string()
 })
 
 export type customer = {
@@ -42,8 +43,17 @@ export default function OrderBook() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
+  const [bookId, setBookId] = useState<string | null>(null)
+  const [quantity, setQuantity] = useState<number>(0)
 
   const [data, setData] = useState<customer[]>([])
+  const [order, setOrder] = useState<BookInfo[]>([])
+
+  // Find the selected book's price
+  const selectedBook = order.find((x) => bookId === String(x.id))
+  const price = selectedBook ? selectedBook.price : 0
+  const total = price * quantity
+
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get('/customer', {
@@ -56,23 +66,42 @@ export default function OrderBook() {
       console.error('Error fetching data:', error)
     }
   }
-
+  //
+  const fetchOrder = async () => {
+    try {
+      const response = await axiosInstance.get('/book', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setOrder(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+  //
+  console.log('bookId', bookId)
   console.log('data', data)
   useEffect(() => {
     fetchData()
+    fetchOrder()
   }, [])
   const form = useForm<BookFormValue>({
     resolver: zodResolver(formSchema)
   })
   const { mutate } = useMutation({
-    mutationKey: ['AddBooks'],
+    mutationKey: ['OrderBook'],
     mutationFn: (datas: BookFormValue) =>
       postApi(
-        '/book',
+        '/book-order',
         {
-          //   name: datas.name,
-          //   quantity: +datas.quantity,
-          //   price: +datas.price
+          bookId: +datas.bookId,
+          quantity: +datas.quantity,
+          customerId: +datas.customerId,
+          reference: datas.reference,
+          description: datas.description,
+          sellingDate: new Date(datas.sellingDate).toISOString(),
+          orderNumber: +datas.orderNumber
         },
         {
           headers: {
@@ -104,7 +133,7 @@ export default function OrderBook() {
     <div className="min-h-[50vh] w-full mt-5">
       <Form {...form}>
         <form
-          id="complainsForm"
+          id="OrderBookForm"
           //   key={key}
           onSubmit={form.handleSubmit(onSubmit)}
           className=""
@@ -123,21 +152,24 @@ export default function OrderBook() {
             <div className=" col-span-1 h-[50px] ">
               <FormField
                 control={form.control}
-                name="licenseTypeId"
+                name="bookId"
                 render={({ field }) => (
                   <FormItem>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value)
+                        setBookId(value)
+                      }}
                       value={field.value}
                       defaultValue={field.value}
                     >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                         <SelectTrigger>
-                          <SelectValue placeholder="اسم المشتري" />
+                          <SelectValue placeholder="اسم الكتاب" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {data.map((options) => (
+                        {order.map((options) => (
                           <SelectItem key={options.name} value={String(options.id)}>
                             {options.name}
                           </SelectItem>
@@ -157,36 +189,30 @@ export default function OrderBook() {
 
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="compnayManger"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="سعر الكتاب"
-                        {...field}
-                        disabled
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <FormInput
+                className="h-10 p-0 rounded-xl text-sm"
+                placeholder="سعر الكتاب"
+                value={order.find((x) => bookId === String(x.id))?.price || ''} // Find the price by matching the bookId
+                disabled
               />
             </div>
 
             <div className=" col-span-1 h-[50px] ">
               <FormField
                 control={form.control}
-                name="compnayCapital"
+                name="quantity"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <FormInput
+                        {...field}
                         className="h-10 p-0  rounded-xl text-sm"
                         placeholder="   عدد الكتب "
-                        {...field}
+                        onChange={(e) => {
+                          const value = Number(e.target.value)
+                          setQuantity(value)
+                          field.onChange(e)
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -196,24 +222,35 @@ export default function OrderBook() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="compnayCapital"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   الإجمالي "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <FormInput
+                className="h-10 p-0  rounded-xl text-sm"
+                disabled
+                value={total}
+                placeholder="   الإجمالي "
               />
             </div>
             {/*  */}
+          </div>
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] ">
+              <FormField
+                control={form.control}
+                name="sellingDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <DateInput
+                        {...field}
+                        placeholder="تاريخ التخرج"
+                        type="date"
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
           {/*  */}
@@ -222,7 +259,7 @@ export default function OrderBook() {
             <div className=" col-span-2 h-[50px] ">
               <FormField
                 control={form.control}
-                name="licenseTypeId"
+                name="customerId"
                 render={({ field }) => (
                   <FormItem>
                     <Select
@@ -250,9 +287,7 @@ export default function OrderBook() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
-              <Button className="text-sm w-80  mr-3 h-10 bg-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px]">
-                بحث
-              </Button>
+              <AddCustomerDialog />
             </div>
           </div>
 
@@ -260,7 +295,7 @@ export default function OrderBook() {
             <div className=" col-span-1 h-[50px] ">
               <FormField
                 control={form.control}
-                name="compnayManger"
+                name="reference"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -279,7 +314,7 @@ export default function OrderBook() {
             <div className=" col-span-1 h-[50px] ">
               <FormField
                 control={form.control}
-                name="compnayCapital"
+                name="orderNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -299,7 +334,7 @@ export default function OrderBook() {
             <div className=" col-span-1 h-[40px] ">
               <FormField
                 control={form.control}
-                name="compnayPorpose"
+                name="description"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormControl>
@@ -328,6 +363,7 @@ export default function OrderBook() {
             <Button
               className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
               type="submit"
+              form="OrderBookForm"
             >
               حفظ
             </Button>

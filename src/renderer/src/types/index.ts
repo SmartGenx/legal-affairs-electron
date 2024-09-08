@@ -146,6 +146,22 @@ export type Books = {
   page: string
   pageSize: string
 }
+export type GeneralizationInfo = {
+  id: number
+  title: string
+  refrance: string
+  description: string
+  attachmentPath: string
+  isDeleted: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+export type Generalization = {
+  info: GeneralizationInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
 
 export interface EmployInfo {
   id: number
