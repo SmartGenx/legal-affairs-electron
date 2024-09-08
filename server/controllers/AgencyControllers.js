@@ -8,7 +8,7 @@ class Agency {
   async getAllAgency(req, res, next) {
     try {
       const AgencyFilter = req.query
-      const Agency = await Agencyervice.getAllAgency(AgencyFilter)
+      const Agency = await Agencyervice.getAllAgencys(AgencyFilter)
       res.status(200).json(Agency)
     } catch (error) {
       console.error(error)

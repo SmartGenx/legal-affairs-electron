@@ -65,6 +65,37 @@ class IssueService {
       if (error instanceof NotFoundError) {
         throw error
       }
+
+      throw new DatabaseError('Error retrieving Issue.', error)
+    } finally {
+      // Optional cleanup code can be added here
+    }
+  }
+  async getIssueByGovernmentOfficeId(id, filterData) {
+    try {
+      let { include } = filterData
+      delete filterData.include
+
+      if (include) {
+        const convertTopLevel = convertTopLevelStringBooleans(include)
+        include = convertTopLevel
+      } else {
+        include = {}
+      }
+      const GovernmentOffice = await prisma.issue.findFirst({
+        where: { governmentOfficeId: id, isDeleted: false },
+        include: include
+      })
+      if (!GovernmentOffice) {
+        throw new NotFoundError(`Issue with GovernmentOffice ${id} not found.`)
+      }
+
+      return GovernmentOffice
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error
+      }
+
       throw new DatabaseError('Error retrieving Issue.', error)
     } finally {
       // Optional cleanup code can be added here
