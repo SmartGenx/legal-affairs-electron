@@ -79,6 +79,7 @@ CREATE TABLE "Issue" (
 CREATE TABLE "IssueDetails" (
     "id" SERIAL NOT NULL,
     "issueId" INTEGER NOT NULL,
+    "tribunalId" INTEGER NOT NULL,
     "level" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -122,6 +123,7 @@ CREATE TABLE "Decision" (
     "attachmentPath" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "decisionDate" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Decision_pkey" PRIMARY KEY ("id")
 );
@@ -301,6 +303,46 @@ CREATE TABLE "license" (
     CONSTRAINT "license_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Agency" (
+    "id" SERIAL NOT NULL,
+    "legalName" TEXT NOT NULL,
+    "providedDocument" TEXT,
+    "governmentOfficeId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "Agency_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StateIssueAgency" (
+    "id" SERIAL NOT NULL,
+    "issueId" INTEGER NOT NULL,
+    "dateOfPowerOfAttorney" TIMESTAMP(3),
+    "agencyId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "StateIssueAgency_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Tribunal" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "Tribunal_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Agency_governmentOfficeId_key" ON "Agency"("governmentOfficeId");
+
 -- AddForeignKey
 ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -315,6 +357,9 @@ ALTER TABLE "Issue" ADD CONSTRAINT "Issue_governmentOfficeId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "IssueDetails" ADD CONSTRAINT "IssueDetails_issueId_fkey" FOREIGN KEY ("issueId") REFERENCES "Issue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "IssueDetails" ADD CONSTRAINT "IssueDetails_tribunalId_fkey" FOREIGN KEY ("tribunalId") REFERENCES "Tribunal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Complaint" ADD CONSTRAINT "Complaint_governmentOfficeId_fkey" FOREIGN KEY ("governmentOfficeId") REFERENCES "GovernmentOffice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -348,3 +393,12 @@ ALTER TABLE "license" ADD CONSTRAINT "license_licenseTypeId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "license" ADD CONSTRAINT "license_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Agency" ADD CONSTRAINT "Agency_governmentOfficeId_fkey" FOREIGN KEY ("governmentOfficeId") REFERENCES "GovernmentOffice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StateIssueAgency" ADD CONSTRAINT "StateIssueAgency_agencyId_fkey" FOREIGN KEY ("agencyId") REFERENCES "Agency"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StateIssueAgency" ADD CONSTRAINT "StateIssueAgency_issueId_fkey" FOREIGN KEY ("issueId") REFERENCES "Issue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
