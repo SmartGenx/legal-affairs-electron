@@ -80,7 +80,7 @@ class AgencySerivces {
         throw new NotFoundError(`Government Office with ID ${governmentOfficeId} not found.`)
       }
 
-      return await prisma.Agency.create({ data: AgencyData })
+      return await prisma.agency.create({ data: { ...AgencyData } })
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error
