@@ -27,6 +27,7 @@ import UpdateGeneralization from '../pages/generalization/update-generalization'
 import AgencyIndex from '../pages/Agency'
 import AddAgency from '../pages/Agency/add-agency'
 import UpdateAgency from '../pages/Agency/update-agency'
+import AddLeave from '../pages/personnel-affairs/leave'
 
 export const router = createHashRouter([
   {
@@ -106,6 +107,10 @@ export const router = createHashRouter([
       {
         path: '/personnel-affairs/update-employee/:id',
         element: <ProtectedRoute element={<UpdateEmployeeIndex />} />
+      },
+      {
+        path: '/personnel-affairs/add-leave',
+        element: <ProtectedRoute element={<AddLeave />} />
       },
       {
         path: '/license/add-license',

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { z } from 'zod'
+import { number, z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,7 +8,7 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, postApi } from '@renderer/lib/http'
+import { axiosInstance, patchApi, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
@@ -52,7 +52,7 @@ export type GovernmentOffice = {
 type DecisionsFormValue = z.infer<typeof formSchema>
 export default function UpdateDecisions() {
   const { id } = useParams<{ id: string }>()
-
+  const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
@@ -110,7 +110,7 @@ export default function UpdateDecisions() {
   })
 
   const { mutate } = useMutation({
-    mutationKey: ['AddDecisions'],
+    mutationKey: ['UpdateDecisions'],
     mutationFn: (datas: DecisionsFormValue) => {
       const formData = new FormData()
       formData.append('decisionName', datas.decisionName) // Corrected this from decisionDate to decisionName
@@ -126,9 +126,10 @@ export default function UpdateDecisions() {
         formData.append('file', datas.file)
       }
 
-      return postApi('/decision/create_decision', formData, {
+      return patchApi(`/decision/${id}`, formData, {
         headers: {
-          Authorization: `${authToken()}`
+          Authorization: `${authToken()}`,
+          'Content-Type': 'multipart/form-data'
         }
       })
     },
@@ -138,6 +139,7 @@ export default function UpdateDecisions() {
         variant: 'success',
         description: 'تمت الاضافة بنجاح'
       })
+      queryClient.invalidateQueries({ queryKey: ['Decisions'] })
       navigate('/decisions')
     },
     onError: (error) => {
@@ -212,7 +214,7 @@ export default function UpdateDecisions() {
                 )}
               />
             </div>
-            <div className="col-span-1 ">
+            <div className="col-span-1 translate-y-2">
               <FormField
                 control={form.control}
                 name="governmentOfficeId"
@@ -223,7 +225,7 @@ export default function UpdateDecisions() {
                       value={
                         field.value ? String(field.value) : String(DecisionData?.governmentOfficeId)
                       }
-                      defaultValue={field.value}
+                      defaultValue={String(field.value)}
                     >
                       <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
                         <SelectTrigger>

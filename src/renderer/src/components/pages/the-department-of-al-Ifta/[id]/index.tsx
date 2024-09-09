@@ -188,7 +188,7 @@ export default function AlLftaIndex() {
             </div>
             {/*  */}
 
-            <div className="col-span-1 ">
+            <div className="col-span-1 translate-y-2">
               <FormField
                 control={form.control}
                 name="governmentOfficeId"

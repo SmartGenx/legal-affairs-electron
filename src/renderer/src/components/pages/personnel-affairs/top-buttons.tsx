@@ -35,7 +35,7 @@ export default function TopButtons() {
 
               <DropdownMenuItem className=" flex gap-2">
                 {/* <AccountBalanceIcon /> */}
-                <Link to="/official-journal/order-book">إدارة الأجازات</Link>
+                <Link to="/personnel-affairs/add-leave">إدارة الأجازات</Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

@@ -11,7 +11,7 @@ import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import FileUploader from './FileUploader'
 
 const formSchema = z.object({
@@ -37,6 +37,7 @@ type DecisionsFormValue = z.infer<typeof formSchema>
 export default function AddDecisionForm() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const [data, setData] = useState<GovernmentOffice[]>([])
   const fetchData = async () => {
@@ -77,7 +78,8 @@ export default function AddDecisionForm() {
 
       return postApi('/decision/create_decision', formData, {
         headers: {
-          Authorization: `${authToken()}`
+          Authorization: `${authToken()}`,
+          'Content-Type': 'multipart/form-data'
         }
       })
     },
@@ -87,6 +89,7 @@ export default function AddDecisionForm() {
         variant: 'success',
         description: 'تمت الاضافة بنجاح'
       })
+      queryClient.invalidateQueries({ queryKey: ['Decisions'] })
       navigate('/decisions')
     },
     onError: (error) => {
@@ -161,7 +164,7 @@ export default function AddDecisionForm() {
                 )}
               />
             </div>
-            <div className="col-span-1 ">
+            <div className="col-span-1 translate-y-2">
               <FormField
                 control={form.control}
                 name="governmentOfficeId"
