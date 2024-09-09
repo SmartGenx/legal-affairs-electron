@@ -259,6 +259,21 @@ export interface Customer {
   pageSize: string
 }
 
+export interface AgencyInfo {
+  id: number
+  legalName: string
+  providedDocument: number
+  governmentOfficeId: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+export interface Agency {
+  info: AgencyInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren

@@ -24,6 +24,9 @@ import LicenseIndex from '../pages/official-journal/license'
 import GeneralizationIndex from '../pages/generalization'
 import AddGeneralizationForm from '../pages/generalization/add-generalization'
 import UpdateGeneralization from '../pages/generalization/update-generalization'
+import AgencyIndex from '../pages/Agency'
+import AddAgency from '../pages/Agency/add-agency'
+import UpdateAgency from '../pages/Agency/update-agency'
 
 export const router = createHashRouter([
   {
@@ -119,6 +122,18 @@ export const router = createHashRouter([
       {
         path: '/generalization/update-generalization/:id',
         element: <ProtectedRoute element={<UpdateGeneralization />} />
+      },
+      {
+        path: '/Agency',
+        element: <ProtectedRoute element={<AgencyIndex />} />
+      },
+      {
+        path: '/Agency/add-agency',
+        element: <ProtectedRoute element={<AddAgency />} />
+      },
+      {
+        path: '/Agency/update-agency/:id',
+        element: <ProtectedRoute element={<UpdateAgency />} />
       }
     ]
   }
