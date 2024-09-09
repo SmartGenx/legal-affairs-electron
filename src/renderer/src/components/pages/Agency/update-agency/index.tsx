@@ -164,7 +164,7 @@ export default function UpdateAgency() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-10 p-0  rounded-xl text-sm "
                         placeholder="   الوثيقة المقدمه "
                         {...field}
                       />

@@ -23,6 +23,7 @@ import { z } from 'zod'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { Input } from '@renderer/components/ui/input'
+import { DateInput } from '@renderer/components/ui/date-input'
 
 export type Tribunal = {
   id: number
@@ -108,7 +109,7 @@ export default function ViewPage() {
 
   const [tribunal, setTribunal] = useState<Tribunal[]>([])
   const [selectedLevel, setSelectedLevel] = useState(null)
-  const [selectedValue, setSelectedValue] = useState<kind_of_case | null>(null)
+  const [selectedValues, setSelectedValues] = useState<string[]>([])
   const [selectedResumedValue, setSelectedResumedValue] = useState<boolean | null>(null)
   const [selectedStateValue, setSelectedStatedValue] = useState<boolean | null>(null)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
@@ -208,6 +209,12 @@ export default function ViewPage() {
     }
   }, [issueData, issueDetailsData, form])
 
+  const [selectedValue, setSelectedValue] = useState<string | null>(issueData?.[0]?.type || null)
+
+  const handleCheckboxChange = (value: string) => {
+    // Update the selected value when checkbox is clicked
+    setSelectedValue((prev) => (prev === value ? null : value))
+  }
   if (isIssueLoading && isIssueDetailsLoading) return <div>Loading...</div>
   if (issueError) return <div>Error fetching issue data</div>
   if (issueDetailsError) return <div>Error fetching issue details data</div>
@@ -262,7 +269,7 @@ export default function ViewPage() {
               </div>
               {/*  */}
 
-              <div className="col-span-1 ">
+              <div className="col-span-1 translate-y-2 ">
                 <FormField
                   control={form.control}
                   name="postionId"
@@ -297,7 +304,7 @@ export default function ViewPage() {
               </div>
               {/*  */}
 
-              <div className="col-span-1 ">
+              <div className="col-span-1 translate-y-2">
                 <FormField
                   control={form.control}
                   name="governmentOfficeId"
@@ -332,62 +339,7 @@ export default function ViewPage() {
                 />
               </div>
             </div>
-            <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[40px] ">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <FormInput
-                          className="h-12  rounded-xl text-sm"
-                          placeholder="   عنوان القضية "
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="col-span-1 ">
-                <FormField
-                  control={form.control}
-                  name="tribunalId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={
-                          field.value
-                            ? String(field.value)
-                            : String(issueDetailsData[0]?.tribunalId)
-                        }
-                        defaultValue={String(issueDetailsData[0]?.tribunalId)}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="المحكمه" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {tribunal.map((options) => (
-                            <SelectItem key={options.name} value={String(options.id)}>
-                              {options.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/*  */}
-            </div>
             {/*  */}
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
               <h3 className="font-bold text-[#3734a9] p-3">نوع القضية</h3>
@@ -406,18 +358,18 @@ export default function ViewPage() {
                               <input
                                 type="checkbox"
                                 value={caseType.value}
-                                checked={issueData[0]?.type === caseType.value}
+                                // This checks if the current issueData type matches the caseType value and reflects that in the UI
+                                checked={field.value === caseType.value}
                                 onChange={() => {
                                   const newValue =
-                                    issueData[0]?.type === caseType.value ? null : caseType.value
-                                  setSelectedValue(newValue)
-                                  field.onChange(newValue)
+                                    field.value === caseType.value ? null : caseType.value
+                                  field.onChange(newValue) // Update the form value
                                 }}
-                                className="appearance-none w-6 h-6 border border-gray-300  rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                               />
                               <svg
-                                className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none  ${
-                                  issueData[0]?.type === caseType.value ? 'block' : 'hidden'
+                                className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
+                                  field.value === caseType.value ? 'block' : 'hidden'
                                 }`}
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 20 20"
@@ -439,6 +391,7 @@ export default function ViewPage() {
                   )}
                 />
               </div>
+
               {/*  */}
 
               <div className="col-span-1 h-auto">
@@ -546,7 +499,66 @@ export default function ViewPage() {
                 if (level === 1) {
                   return (
                     <>
-                      <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className="col-span-1 ">
+                          <FormField
+                            control={form.control}
+                            name="tribunalId"
+                            render={({ field }) => (
+                              <FormItem>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={
+                                    field.value
+                                      ? String(field.value)
+                                      : String(issueDetailsData[0]?.tribunalId)
+                                  }
+                                  defaultValue={String(issueDetailsData[0]?.tribunalId)}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="المحكمه" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {tribunal.map((options) => (
+                                      <SelectItem key={options.name} value={String(options.id)}>
+                                        {options.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        {/*  */}
+                      </div>
+                      <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className=" col-span-1 h-[40px] ">
+                          <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <FormInput
+                                    className="h-12 p-0  rounded-xl text-sm"
+                                    placeholder="   عنوان القضية "
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        {/*  */}
+                      </div>
+                      <div className="grid h-[150px]   grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         <div className=" col-span-1 h-[40px] ">
                           <FormField
                             control={form.control}
@@ -579,7 +591,7 @@ export default function ViewPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
-                                  <Input
+                                  <DateInput
                                     {...field}
                                     placeholder="تاريخ الميلاد"
                                     type="date"
@@ -616,28 +628,24 @@ export default function ViewPage() {
                             name="Resumed"
                             render={({ field }) => (
                               <FormItem className="col-span-2 flex">
-                                {Resumed.map((caseType) => (
-                                  <div key={caseType.label} className="flex items-center ">
+                                {contested.map((caseType) => (
+                                  <div key={caseType.label} className="flex items-center">
                                     <FormControl>
                                       <div className="relative">
                                         <input
                                           type="checkbox"
-                                          checked={issueDetailsData[0]?.Resumed === caseType.value}
+                                          // This ensures the checkbox is checked if the form's value matches the caseType's value
+                                          checked={field.value === caseType.value}
                                           onChange={() => {
                                             const newValue =
-                                              issueDetailsData[0]?.Resumed === caseType.value
-                                                ? null
-                                                : caseType.value
-                                            setSelectedResumedValue(newValue)
-                                            field.onChange(newValue)
+                                              field.value === caseType.value ? null : caseType.value
+                                            field.onChange(newValue) // Update the form control with the new value
                                           }}
                                           className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                                         />
                                         <svg
                                           className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                            issueDetailsData[0]?.Resumed === caseType.value
-                                              ? 'block'
-                                              : 'hidden'
+                                            field.value === caseType.value ? 'block' : 'hidden'
                                           }`}
                                           xmlns="http://www.w3.org/2000/svg"
                                           viewBox="0 0 20 20"
@@ -661,6 +669,7 @@ export default function ViewPage() {
                             )}
                           />
                         </div>
+
                         {/*  */}
                         {/*  */}
                       </div>
@@ -669,6 +678,65 @@ export default function ViewPage() {
                 } else if (level === 2) {
                   return (
                     <>
+                      <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className="col-span-1 ">
+                          <FormField
+                            control={form.control}
+                            name="tribunalId"
+                            render={({ field }) => (
+                              <FormItem>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={
+                                    field.value
+                                      ? String(field.value)
+                                      : String(issueDetailsData[0]?.tribunalId)
+                                  }
+                                  defaultValue={String(issueDetailsData[0]?.tribunalId)}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="المحكمه" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {tribunal.map((options) => (
+                                      <SelectItem key={options.name} value={String(options.id)}>
+                                        {options.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        {/*  */}
+                      </div>
+                      <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className=" col-span-1 h-[40px] ">
+                          <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <FormInput
+                                    className="h-12 p-0  rounded-xl text-sm"
+                                    placeholder="   عنوان القضية "
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        {/*  */}
+                      </div>
                       <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         <div className=" col-span-1 h-[40px] ">
                           <FormField
@@ -739,6 +807,66 @@ export default function ViewPage() {
                 } else if (level === 3) {
                   return (
                     <>
+                      <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className="col-span-1 ">
+                          <FormField
+                            control={form.control}
+                            name="tribunalId"
+                            render={({ field }) => (
+                              <FormItem>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={
+                                    field.value
+                                      ? String(field.value)
+                                      : String(issueDetailsData[0]?.tribunalId)
+                                  }
+                                  defaultValue={String(issueDetailsData[0]?.tribunalId)}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="المحكمه" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {tribunal.map((options) => (
+                                      <SelectItem key={options.name} value={String(options.id)}>
+                                        {options.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        {/*  */}
+                      </div>
+                      <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className=" col-span-1 h-[40px] ">
+                          <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <FormInput
+                                    className="h-12 p-0  rounded-xl text-sm"
+                                    placeholder="   عنوان القضية "
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        {/*  */}
+                      </div>
+
                       <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         <div className=" col-span-1 h-[40px] ">
                           <FormField
@@ -810,27 +938,23 @@ export default function ViewPage() {
                             render={({ field }) => (
                               <FormItem className="col-span-2 flex">
                                 {contested.map((caseType) => (
-                                  <div key={caseType.label} className="flex items-center ">
+                                  <div key={caseType.label} className="flex items-center">
                                     <FormControl>
                                       <div className="relative">
                                         <input
                                           type="checkbox"
-                                          checked={issueDetailsData[0]?.Resumed === caseType.value}
+                                          // This ensures the checkbox is checked if the form's value matches the caseType's value
+                                          checked={field.value === caseType.value}
                                           onChange={() => {
                                             const newValue =
-                                              issueDetailsData[0]?.Resumed === caseType.value
-                                                ? null
-                                                : caseType.value
-                                            setSelectedResumedValue(newValue)
-                                            field.onChange(newValue)
+                                              field.value === caseType.value ? null : caseType.value
+                                            field.onChange(newValue) // Update the form control with the new value
                                           }}
                                           className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                                         />
                                         <svg
                                           className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                            issueDetailsData[0]?.Resumed === caseType.value
-                                              ? 'block'
-                                              : 'hidden'
+                                            field.value === caseType.value ? 'block' : 'hidden'
                                           }`}
                                           xmlns="http://www.w3.org/2000/svg"
                                           viewBox="0 0 20 20"
@@ -854,6 +978,7 @@ export default function ViewPage() {
                             )}
                           />
                         </div>
+
                         {/*  */}
                         {/*  */}
                       </div>
