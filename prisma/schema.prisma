@@ -298,7 +298,7 @@ model Agency {
   id                 Int                @id @default(autoincrement())
   legalName          String
   providedDocument   Int?
-  governmentOfficeId Int                @unique
+  governmentOfficeId Int                
     createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   isDeleted       Boolean     @default(false)
