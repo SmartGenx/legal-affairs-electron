@@ -274,6 +274,22 @@ export interface Agency {
   page: string
   pageSize: string
 }
+
+export interface LeaveInfo {
+  id: number
+  name: string
+  defaultDay: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
+export interface Leave {
+  info: LeaveInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
