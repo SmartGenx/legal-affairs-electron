@@ -156,7 +156,7 @@ class EmployServices {
     const existingattachment = await prisma.attachment.findFirst({
       where: { emploteeId: +employ.id }
     })
-    if (!existingattachment) {
+    if (!existingattachment && filePath) {
       await prisma.attachment.create({
         data: {
           file: filePath.length > 0 ? filePath : '',
@@ -166,13 +166,15 @@ class EmployServices {
       return employ
     }
 
-    await prisma.attachment.update({
-      where: { id: existingattachment.id },
-      data: {
-        file: filePath.length > 0 ? filePath : existingattachment.file,
-        emploteeId: employ.id
-      }
-    })
+    if(filePath){
+      await prisma.attachment.update({
+        where: { id: existingattachment.id },
+        data: {
+          file: filePath.length > 0 ? filePath : existingattachment.file,
+          emploteeId: employ.id
+        }
+      })
+    }
     return employ
     // } catch (error) {
     //   if (error instanceof NotFoundError) {

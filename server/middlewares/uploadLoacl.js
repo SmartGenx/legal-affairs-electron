@@ -22,16 +22,17 @@ const upload = multer({
 })
 
 const copyFileToProfileDir = () => async (req, res, next) => {
-  console.log('🚀 ~ copyFileToProfileDir ~  req.route:', req.route)
+  console.log('🚀 ~ copyFileToProfileDir ~  req.route:', req?.route)
   if (!req.file) {
     //  next(new Error('No file uploaded'));
-    return next()
+    next()
+    return
   }
 
   // Generate a filename based on upload time and original name to avoid conflicts
   const timestamp = Date.now()
-  const originalName = path.parse(req.file.originalname).name
-  const extension = path.extname(req.file.originalname)
+  const originalName = path.parse(req?.file?.originalname)?.name
+  const extension = path.extname(req?.file?.originalname)
   let fileName = ''
 
   switch (true) {
