@@ -214,6 +214,7 @@ model leaveDetails {
   employeeeId Int
   leaveTypeId Int
   dayNumber   Int
+  year Int
   startDate   DateTime
   endDate     DateTime
   leaveNote   String
@@ -298,7 +299,7 @@ model Agency {
   id                 Int                @id @default(autoincrement())
   legalName          String
   providedDocument   Int?
-  governmentOfficeId Int                
+  governmentOfficeId Int
     createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   isDeleted       Boolean     @default(false)

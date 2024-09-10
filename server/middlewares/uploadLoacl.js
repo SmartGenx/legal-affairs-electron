@@ -36,16 +36,16 @@ const copyFileToProfileDir = () => async (req, res, next) => {
 
   switch (true) {
     case req.route.path.includes('registration'):
-      fileName = `${originalName}-${timestamp}${extension}-User`
+      fileName = `${originalName}-${timestamp}-User${extension}`
       break
     case req.route.path.includes('create_decision'):
-      fileName = `${originalName}-${timestamp}${extension}-decision`
+      fileName = `${originalName}-${timestamp}-decision${extension}`
       break
     case req.route.path.includes('create_generalization'):
-      fileName = `${originalName}-${timestamp}${extension}-generalization`
+      fileName = `${originalName}-${timestamp}-generalization${extension}`
       break
     case req.route.path.includes('create_employ'):
-      fileName = `${originalName}-${timestamp}${extension}-employ`
+      fileName = `${originalName}-${timestamp}-employ${extension}`
       break
 
     default:
