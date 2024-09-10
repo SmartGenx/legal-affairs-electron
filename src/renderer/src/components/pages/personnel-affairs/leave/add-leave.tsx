@@ -16,7 +16,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Label } from '@renderer/components/ui/label'
 import TextLabel from '@renderer/components/ui/text-label'
 import { DateInput } from '@renderer/components/ui/date-input'
-import { Generalization } from '@renderer/types'
+import { Employ, Leave } from '@renderer/types'
 
 const formSchema = z.object({
   employeeeId: z.string(),
@@ -34,20 +34,40 @@ export default function AddLeaveIndex() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
-  //   const [data, setData] = useState<Generalization[]>([])
-  const { isLoading, error, data } = useQuery({
+  //   const [data, setData] = useState<Employ[]>([])
+  const {
+    data: employData,
+    isLoading: employLoading,
+    error: employError // Changed the name from employLoading to employError
+  } = useQuery({
     queryKey: ['Employ'],
     queryFn: () =>
-      getApi<Generalization[]>('/employ?page=1&pageSize=30', {
+      getApi<Employ[]>('/employ?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }
       })
   })
 
-  const infoArray = data?.data?.info || []
+  const {
+    isLoading: LeaveTypeLoading,
+    error: LeaveTypeError,
+    data: LeaveTypeData
+  } = useQuery({
+    queryKey: ['Leave'],
+    queryFn: () =>
+      getApi<Leave[]>('/leave-type?page=1&pageSize=30', {
+        headers: {
+          Authorization: authToken()
+        }
+      })
+  })
 
-  //   console.log(data)
+  // Assuming LeaveTypeData is correct and not LeaveTypeLoading in the last line
+  const infoArray = employData?.data?.info || []
+  const DataArray = LeaveTypeData?.data?.info || [] // Changed LeaveTypeLoading to LeaveTypeData here
+
+  console.log('DataArray', DataArray)
   //   useEffect(() => {
   //     fetchData()
   //   }, [])
@@ -57,21 +77,23 @@ export default function AddLeaveIndex() {
 
   const { mutate } = useMutation({
     mutationKey: ['AddLeave'],
-    mutationFn: (datas: AddEmployeeValue) => {
-      const formData = new FormData()
-      formData.append('employeeeId', datas.employeeeId)
-      formData.append('leaveTypeId', datas.leaveTypeId)
-      formData.append('dayNumber', datas.dayNumber)
-      formData.append('startDate', new Date(datas.startDate).toISOString())
-      formData.append('endDate', new Date(datas.endDate).toISOString())
-      formData.append('leaveNote', datas.leaveNote)
-
-      return postApi('/employ/create_employ', formData, {
-        headers: {
-          Authorization: `${authToken()}`
+    mutationFn: (datas: AddEmployeeValue) =>
+      postApi(
+        '/leave-details',
+        {
+          employeeeId: +datas.employeeeId,
+          leaveTypeId: +datas.leaveTypeId,
+          dayNumber: +datas.dayNumber,
+          startDate: new Date(datas.startDate).toISOString(),
+          endDate: new Date(datas.endDate).toISOString(),
+          leaveNote: datas.leaveNote
+        },
+        {
+          headers: {
+            Authorization: `${authToken()}`
+          }
         }
-      })
-    },
+      ),
     onSuccess: () => {
       toast({
         title: 'اشعار',
@@ -93,9 +115,9 @@ export default function AddLeaveIndex() {
   const onSubmit = (datas: AddEmployeeValue) => {
     mutate(datas)
   }
-  if (isLoading) return 'Loading...'
+  if (employLoading) return 'Loading...'
 
-  if (error) return 'An error has occurred: ' + error.message
+  if (employError) return 'An error has occurred: ' + employError.message
   return (
     <div className="min-h-[50vh] w-full mt-5">
       <Form {...form}>
@@ -142,19 +164,26 @@ export default function AddLeaveIndex() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] translate-y-2">
               <FormField
                 control={form.control}
                 name="leaveTypeId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
-                        placeholder="   نوع الإجازة "
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <SelectTrigger>
+                          <SelectValue placeholder="نوع الإجازة" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {DataArray.map((options) => (
+                          <SelectItem key={options.id} value={String(options.id)}>
+                            {options.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
