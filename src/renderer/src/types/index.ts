@@ -58,6 +58,28 @@ export interface IssuesResponse {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface IssuesDetailInfo {
+  id: number
+  issueId: number
+  tribunalId: number
+  level: number
+  createdAt: Date
+  updatedAt: Date
+  detailsDate: Date
+  isDeleted: boolean
+  judgment: string
+  refrance: string
+  Resumed: boolean
+  Issue: InfoIssue
+}
+
+export interface IssuesDetailResponse {
+  info: IssuesDetailInfo[]
+  total: number
+  page: string
+  pageSize: string
+}
 export interface InfoIssue {
   id: number
   name: string

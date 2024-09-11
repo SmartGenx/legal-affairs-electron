@@ -12,7 +12,7 @@ import {
 import { Button } from '@renderer/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { IssuesResponse } from '@renderer/types'
+import { IssuesDetailInfo, IssuesDetailResponse, IssuesResponse } from '@renderer/types'
 import { useAuthHeader } from 'react-auth-kit'
 import { axiosInstance } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
@@ -141,7 +141,7 @@ export default function StateAffairsInfo() {
     }
 
     fetchData()
-  }, [selectedOption, authToken]) // Include authToken as a dependency
+  }, [selectedOption]) // Include authToken as a dependency
 
   const fetchGovernmentData = async () => {
     try {
@@ -165,7 +165,7 @@ export default function StateAffairsInfo() {
     return response.data
   }
   const fetchIssueDetailsById = async () => {
-    const response = await axiosInstance.get<IssuesResponse>(`/issue-details?issueId=${id}`, {
+    const response = await axiosInstance.get<IssuesDetailInfo>(`/issue-details?issueId=${id}`, {
       headers: {
         Authorization: `${authToken()}`
       }
@@ -196,12 +196,14 @@ export default function StateAffairsInfo() {
     enabled: !!id // Only fetch if ID exists
   })
 
+  if (issueDetailsData?.length > 0) {
+    console.log('Level:', issueDetailsData[0]?.level)
+  } else {
+    console.log('No data found for issueDetailsData')
+  }
   const issueName = issueData?.[0].name
   const matchingCaseLabel = kindOfCase.find(
     (caseType) => caseType.value === issueData?.[0]?.type
-  )?.label
-  const levelLabel = DegreeOfLitigationOptions.find(
-    (caseType) => caseType.value === issueDetailsData[0]?.level
   )?.label
 
   // UseEffect to update form default values when data is available
@@ -212,30 +214,9 @@ export default function StateAffairsInfo() {
     }
   })
 
-  useEffect(() => {
-    if (issueData && issueDetailsData) {
-      //   const issueName = data[0]?.name || ''
-      const positionId = issueData?.[0].postionId || ''
-
-      const governmentOfficeId = issueData?.[0].governmentOfficeId || ''
-      form.reset({
-        name: issueData[0]?.name,
-        postionId: positionId,
-        governmentOfficeId: governmentOfficeId,
-        title: issueData[0]?.title,
-        type: issueData[0]?.type,
-        invitationType: issueData[0]?.invitationType,
-        state: issueData[0]?.state,
-        tribunalId: issueDetailsData[0]?.tribunalId,
-        level: issueDetailsData[0]?.level,
-        detailsDate: new Date(issueDetailsData[0]?.detailsDate).toISOString().split('T')[0],
-        judgment: issueDetailsData[0]?.judgment,
-        refrance: issueDetailsData[0]?.refrance,
-        Resumed: issueDetailsData[0]?.Resumed
-      })
-    }
-    fetchGovernmentData()
-  }, [issueData, issueDetailsData, form])
+  // const levelLabel = DegreeOfLitigationOptions.find(
+  //   (caseType) => caseType.value === issueDetailsData?.level
+  // )?.label
 
   const filteredGovernmentName = dataGovernment
     .filter((x) => x.id === issueData?.[0]?.governmentOfficeId)
@@ -357,557 +338,181 @@ export default function StateAffairsInfo() {
             <div className="mb-4 bg-[#dedef8] rounded-t-lg grid   grid-cols-3">
               <div className="col-span-1 ">
                 <label>درجة التقاضي</label>
-                <h1>{levelLabel}</h1>
+                <p>
+                  {issueDetailsData?.length > 0
+                    ? DegreeOfLitigationOptions.filter(
+                        (x) => x.value === issueDetailsData[0]?.level
+                      ).map((x) => x.label)
+                    : 'No data found for issueDetailsData'}
+                </p>
               </div>
             </div>
 
-            {/* <div className="col-span-1 h-auto">
-            {(() => {
-              const level = selectedOption ?? issueDetailsData?.[0]?.level
+            <div className="col-span-1 h-auto">
+              {(() => {
+                const level =
+                  issueDetailsData?.length > 0
+                    ? issueDetailsData[0]?.level // We extract the first item since .map returns an array
+                    : 'No data found for issueDetailsData'
 
-              if (level === 1) {
-                return (
-                  <>
-                    <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className="col-span-1 ">
-                        <FormField
-                          control={form.control}
-                          name="tribunalId"
-                          render={({ field }) => (
-                            <FormItem>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={
-                                  field.value
-                                    ? String(field.value)
-                                    : String(issueDetailsData[0]?.tribunalId)
-                                }
-                                defaultValue={String(issueDetailsData[0]?.tribunalId)}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="المحكمه" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {tribunal.map((options) => (
-                                    <SelectItem key={options.name} value={String(options.id)}>
-                                      {options.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                if (level === 1) {
+                  return (
+                    <>
+                      <div className="grid h-[60px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1">
+                          <label htmlFor="">المحكمه</label>
+                          <p>
+                            {tribunal
+                              .filter((x) => x.id === issueDetailsData[0]?.tribunalId)
+                              .map((x) => x.name)}
+                          </p>
+                        </div>
                       </div>
-                      
-                    </div>
-                    <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="title"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  className="h-12 p-0  rounded-xl text-sm"
-                                  placeholder="   عنوان القضية "
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      <div className="grid h-[60px] mb-3 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">عنوان القضية</label>
+                          <p>{issueData[0].title}</p>
+                        </div>
                       </div>
-
-                      
-                    </div>
-                    <div className="grid h-[150px]   grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="judgment"
-                          render={({ field }) => (
-                            <FormItem className="col-span-2">
-                              <FormControl>
-                                <Textarea
-                                  className="bg-white"
-                                  rows={5}
-                                  {...field}
-                                  placeholder="نص الحكم"
-                                ></Textarea>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      {/* Uncomment the following code if needed */}
+                      <div className="grid min-h-[70px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">نص الحكم</label>
+                          <p>{issueDetailsData[0].judgment}</p>
+                        </div>
                       </div>
-                      
-                    </div>
-
-                    <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      
-
-                      <div className=" col-span-1 h-auto">
-                        <FormField
-                          control={form.control}
-                          name="detailsDate"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <DateInput
-                                  {...field}
-                                  placeholder="تاريخ الميلاد"
-                                  type="date"
-                                  onChange={(e) => field.onChange(e.target.value)}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      {/*  */}
+                      <div className="grid min-h-[70px] grid-cols-4 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">تاريخه</label>
+                          <p>{issueDetailsData[0].detailsDate}</p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">رقم الحكم</label>
+                          <p>{issueDetailsData[0].refrance}</p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <p>
+                            {Resumed.filter((x) => x.value === issueDetailsData[0].Resumed).map(
+                              (x) => x.label
+                            )}
+                          </p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">أنجاز القضية</label>
+                          <p>
+                            {CompletionOfTheCase.filter((x) => x.value === issueData[0].state).map(
+                              (x) => x.label
+                            )}
+                          </p>
+                        </div>
                       </div>
-
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="refrance"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  className="h-12  rounded-xl text-sm"
-                                  placeholder="   رقم الحكم "
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                    </>
+                  )
+                } else if (level === 2) {
+                  return (
+                    <>
+                      <div className="grid h-[60px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1">
+                          <label htmlFor="">المحكمه</label>
+                          <p>
+                            {tribunal
+                              .filter((x) => x.id === issueDetailsData[0]?.tribunalId)
+                              .map((x) => x.name)}
+                          </p>
+                        </div>
                       </div>
-                      <div className="col-span-1 h-[50px]">
-                        <FormField
-                          control={form.control}
-                          name="Resumed"
-                          render={({ field }) => (
-                            <FormItem className="col-span-2 flex">
-                              {contested.map((caseType) => (
-                                <div key={caseType.label} className="flex items-center">
-                                  <FormControl>
-                                    <div className="relative">
-                                      <input
-                                        type="checkbox"
-                                        // This ensures the checkbox is checked if the form's value matches the caseType's value
-                                        checked={field.value === caseType.value}
-                                        onChange={() => {
-                                          const newValue =
-                                            field.value === caseType.value ? null : caseType.value
-                                          field.onChange(newValue) // Update the form control with the new value
-                                        }}
-                                        className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                      />
-                                      <svg
-                                        className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                          field.value === caseType.value ? 'block' : 'hidden'
-                                        }`}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                      >
-                                        <path
-                                          fillRule="evenodd"
-                                          d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
-                                          clipRule="evenodd"
-                                        />
-                                      </svg>
-                                    </div>
-                                  </FormControl>
-                                  <FormLabel className="font-normal ml-20 mr-2">
-                                    {caseType.label}
-                                  </FormLabel>
-                                </div>
-                              ))}
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      <div className="grid h-[60px] mb-3 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">عنوان القضية</label>
+                          <p>{issueData[0].title}</p>
+                        </div>
                       </div>
-
-                      
-                      
-                    </div>
-                  </>
-                )
-              } else if (level === 2) {
-                return (
-                  <>
-                    <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className="col-span-1 ">
-                        <FormField
-                          control={form.control}
-                          name="tribunalId"
-                          render={({ field }) => (
-                            <FormItem>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={
-                                  field.value
-                                    ? String(field.value)
-                                    : String(issueDetailsData[0]?.tribunalId)
-                                }
-                                defaultValue={String(issueDetailsData[0]?.tribunalId)}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="المحكمه" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {tribunal.map((options) => (
-                                    <SelectItem key={options.name} value={String(options.id)}>
-                                      {options.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      {/* Uncomment the following code if needed */}
+                      <div className="grid min-h-[70px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">نص الحكم</label>
+                          <p>{issueDetailsData[0].judgment}</p>
+                        </div>
                       </div>
-                      
-                    </div>
-                    <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="title"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  className="h-12 p-0  rounded-xl text-sm"
-                                  placeholder="   عنوان القضية "
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      {/*  */}
+                      <div className="grid min-h-[70px] grid-cols-4 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">تاريخه</label>
+                          <p>{issueDetailsData[0].detailsDate}</p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">رقم الحكم</label>
+                          <p>{issueDetailsData[0].refrance}</p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">أنجاز القضية</label>
+                          <p>
+                            {CompletionOfTheCase.filter((x) => x.value === issueData[0].state).map(
+                              (x) => x.label
+                            )}
+                          </p>
+                        </div>
                       </div>
-
-                      
-                    </div>
-                    <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="judgment"
-                          render={({ field }) => (
-                            <FormItem className="col-span-2">
-                              <FormControl>
-                                <Textarea
-                                  className="bg-white"
-                                  rows={5}
-                                  {...field}
-                                  placeholder="نص الحكم"
-                                ></Textarea>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                    </>
+                  )
+                } else if (level === 3) {
+                  return (
+                    <>
+                      <div className="grid h-[60px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1">
+                          <label htmlFor="">المحكمه</label>
+                          <p>
+                            {tribunal
+                              .filter((x) => x.id === issueDetailsData[0]?.tribunalId)
+                              .map((x) => x.name)}
+                          </p>
+                        </div>
                       </div>
-                      
-                    </div>
-
-                    <div className="grid h-[60px]  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      
-
-                      <div className=" col-span-1 h-auto">
-                        <FormField
-                          control={form.control}
-                          name="detailsDate"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  {...field}
-                                  placeholder="تاريخة"
-                                  type="date"
-                                  onChange={(e) => field.onChange(e.target.value)}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      <div className="grid h-[60px] mb-3 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">عنوان القضية</label>
+                          <p>{issueData[0].title}</p>
+                        </div>
                       </div>
-
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="refrance"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  className="h-12  rounded-xl text-sm"
-                                  placeholder="   رقم الحكم "
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      {/* Uncomment the following code if needed */}
+                      <div className="grid min-h-[70px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">نص الحكم</label>
+                          <p>{issueDetailsData[0].judgment}</p>
+                        </div>
                       </div>
-                    </div>
-                  </>
-                )
-              } else if (level === 3) {
-                return (
-                  <>
-                    <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className="col-span-1 ">
-                        <FormField
-                          control={form.control}
-                          name="tribunalId"
-                          render={({ field }) => (
-                            <FormItem>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={
-                                  field.value
-                                    ? String(field.value)
-                                    : String(issueDetailsData[0]?.tribunalId)
-                                }
-                                defaultValue={String(issueDetailsData[0]?.tribunalId)}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="المحكمه" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {tribunal.map((options) => (
-                                    <SelectItem key={options.name} value={String(options.id)}>
-                                      {options.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      {/*  */}
+                      <div className="grid min-h-[70px] grid-cols-4 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">تاريخه</label>
+                          <p>{issueDetailsData[0].detailsDate}</p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">رقم الحكم</label>
+                          <p>{issueDetailsData[0].refrance}</p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <p>
+                            {contested
+                              .filter((x) => x.value === issueDetailsData[0].Resumed)
+                              .map((x) => x.label)}
+                          </p>
+                        </div>
+                        <div className="col-span-1 h-[40px]">
+                          <label htmlFor="">أنجاز القضية</label>
+                          <p>
+                            {CompletionOfTheCase.filter((x) => x.value === issueData[0].state).map(
+                              (x) => x.label
+                            )}
+                          </p>
+                        </div>
                       </div>
-                      
-                    </div>
-                    <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="title"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  className="h-12 p-0  rounded-xl text-sm"
-                                  placeholder="   عنوان القضية "
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      
-                    </div>
-
-                    <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="judgment"
-                          render={({ field }) => (
-                            <FormItem className="col-span-2">
-                              <FormControl>
-                                <Textarea
-                                  className="bg-white"
-                                  rows={5}
-                                  {...field}
-                                  placeholder="نص الحكم"
-                                ></Textarea>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                    </div>
-
-                    <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                      
-
-                      <div className=" col-span-1 h-auto">
-                        <FormField
-                          name="detailsDate"
-                          control={form.control}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  {...field}
-                                  placeholder="تاريخه"
-                                  type="date"
-                                  onChange={(e) => field.onChange(e.target.value)}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className=" col-span-1 h-[40px] ">
-                        <FormField
-                          control={form.control}
-                          name="refrance"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <FormInput
-                                  className="h-12  rounded-xl text-sm"
-                                  placeholder="   رقم الحكم "
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="col-span-1 h-[50px]">
-                        <FormField
-                          control={form.control}
-                          name="Resumed"
-                          render={({ field }) => (
-                            <FormItem className="col-span-2 flex">
-                              {contested.map((caseType) => (
-                                <div key={caseType.label} className="flex items-center">
-                                  <FormControl>
-                                    <div className="relative">
-                                      <input
-                                        type="checkbox"
-                                        // This ensures the checkbox is checked if the form's value matches the caseType's value
-                                        checked={field.value === caseType.value}
-                                        onChange={() => {
-                                          const newValue =
-                                            field.value === caseType.value ? null : caseType.value
-                                          field.onChange(newValue) // Update the form control with the new value
-                                        }}
-                                        className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                      />
-                                      <svg
-                                        className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                          field.value === caseType.value ? 'block' : 'hidden'
-                                        }`}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                      >
-                                        <path
-                                          fillRule="evenodd"
-                                          d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
-                                          clipRule="evenodd"
-                                        />
-                                      </svg>
-                                    </div>
-                                  </FormControl>
-                                  <FormLabel className="font-normal ml-20 mr-2">
-                                    {caseType.label}
-                                  </FormLabel>
-                                </div>
-                              ))}
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      
-                      
-                    </div>
-                  </>
-                )
-              }
-            })()}
-          </div> */}
-
-            <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-              <h3 className="font-bold text-[#3734a9] p-3">هل تم إنجاز القضية</h3>
+                    </>
+                  )
+                }
+              })()}
             </div>
-            {/* <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className="col-span-1 h-[50px]">
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem className="col-span-2 flex">
-                    {CompletionOfTheCase.map((caseType) => (
-                      <div key={caseType.label} className="flex items-center ">
-                        <FormControl>
-                          <div className="relative">
-                            <input
-                              type="checkbox"
-                              checked={issueData?.[0].state === caseType.value}
-                              onChange={() => {
-                                const newValue =
-                                  issueData?.[0].state === caseType.value ? null : caseType.value
-                                setSelectedStatedValue(newValue)
-                                field.onChange(newValue)
-                              }}
-                              className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                            />
-                            <svg
-                              className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                issueData?.[0].state === caseType.value ? 'block' : 'hidden'
-                              }`}
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                        </FormControl>
-                        <FormLabel className="font-normal ml-20 mr-2">{caseType.label}</FormLabel>
-                      </div>
-                    ))}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-          </div> */}
           </div>
         </main>
       </div>

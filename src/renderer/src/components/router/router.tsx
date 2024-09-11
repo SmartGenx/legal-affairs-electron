@@ -34,6 +34,7 @@ import DecisionInfo from '../pages/decisions/info'
 import BookInfo from '../pages/official-journal/add-book/info'
 import GeneralizationInfo from '../pages/generalization/info'
 import ViewAgencyInfo from '../pages/Agency/info/index'
+import EmployeeInfo from '../pages/personnel-affairs/add-employee/info'
 
 export const router = createHashRouter([
   {
@@ -125,6 +126,10 @@ export const router = createHashRouter([
       {
         path: '/personnel-affairs/add-employee',
         element: <ProtectedRoute element={<PersonnelIndex />} />
+      },
+      {
+        path: '/personnel-affairs/view-employee-info/:id',
+        element: <ProtectedRoute element={<EmployeeInfo />} />
       },
       {
         path: '/personnel-affairs/update-employee/:id',
