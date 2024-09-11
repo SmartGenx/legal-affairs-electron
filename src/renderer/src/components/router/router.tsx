@@ -28,6 +28,13 @@ import AgencyIndex from '../pages/Agency'
 import AddAgency from '../pages/Agency/add-agency'
 import UpdateAgency from '../pages/Agency/update-agency'
 import AddLeave from '../pages/personnel-affairs/leave'
+import StateAffairsInfo from '../pages/state-affairs/[id]/info'
+import AllaftaInfo from '../pages/the-department-of-al-Ifta/info'
+import DecisionInfo from '../pages/decisions/info'
+import BookInfo from '../pages/official-journal/add-book/info'
+import GeneralizationInfo from '../pages/generalization/info'
+import ViewAgencyInfo from '../pages/Agency/info/index'
+import EmployeeInfo from '../pages/personnel-affairs/add-employee/info'
 
 export const router = createHashRouter([
   {
@@ -57,6 +64,10 @@ export const router = createHashRouter([
         element: <ProtectedRoute element={<AddIssus />} />
       },
       {
+        path: '/state-affairs/view-info/:id',
+        element: <ProtectedRoute element={<StateAffairsInfo />} />
+      },
+      {
         path: '/the-department-of-al-lfta',
         element: <ProtectedRoute element={<TheDepartmentOfAllfta />} />
       },
@@ -69,8 +80,16 @@ export const router = createHashRouter([
         element: <ProtectedRoute element={<AlLftaIndex />} />
       },
       {
+        path: '/the-department-of-al-lfta/view-info/:id',
+        element: <ProtectedRoute element={<AllaftaInfo />} />
+      },
+      {
         path: '/decisions',
         element: <ProtectedRoute element={<DecisionsIndex />} />
+      },
+      {
+        path: '/decisions/view-info/:id',
+        element: <ProtectedRoute element={<DecisionInfo />} />
       },
       {
         path: '/decisions/add-Decision',
@@ -89,6 +108,10 @@ export const router = createHashRouter([
         element: <ProtectedRoute element={<AddBookIndex />} />
       },
       {
+        path: '/official-journal/book-info/:id',
+        element: <ProtectedRoute element={<BookInfo />} />
+      },
+      {
         path: '/official-journal/view-book/:id',
         element: <ProtectedRoute element={<ViewBook />} />
       },
@@ -103,6 +126,10 @@ export const router = createHashRouter([
       {
         path: '/personnel-affairs/add-employee',
         element: <ProtectedRoute element={<PersonnelIndex />} />
+      },
+      {
+        path: '/personnel-affairs/view-employee-info/:id',
+        element: <ProtectedRoute element={<EmployeeInfo />} />
       },
       {
         path: '/personnel-affairs/update-employee/:id',
@@ -125,6 +152,10 @@ export const router = createHashRouter([
         element: <ProtectedRoute element={<AddGeneralizationForm />} />
       },
       {
+        path: '/generalization/view-generalization-info/:id',
+        element: <ProtectedRoute element={<GeneralizationInfo />} />
+      },
+      {
         path: '/generalization/update-generalization/:id',
         element: <ProtectedRoute element={<UpdateGeneralization />} />
       },
@@ -139,6 +170,10 @@ export const router = createHashRouter([
       {
         path: '/Agency/update-agency/:id',
         element: <ProtectedRoute element={<UpdateAgency />} />
+      },
+      {
+        path: '/Agency/view-agency-info/:id',
+        element: <ProtectedRoute element={<ViewAgencyInfo />} />
       }
     ]
   }

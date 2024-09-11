@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -104,6 +104,9 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <Link to={`/the-department-of-al-lfta/view-info/${row.original.id}`}>عرض</Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
                   url={`/complaint/${row.original?.id}`}

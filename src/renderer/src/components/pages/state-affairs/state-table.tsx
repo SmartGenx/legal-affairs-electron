@@ -3,7 +3,7 @@ import * as React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { GevStatus, GovernmentFacility, kind_of_case } from '../../../types/enum'
 import { MoreHorizontal } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -97,6 +97,9 @@ export default function StateTable({ info, page, total, pageSize }: Props) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <Link to={`/state-affairs/view-info/${row.original.id}`}>عرض</Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
                   url={`/issue/${row.original?.id}`}
