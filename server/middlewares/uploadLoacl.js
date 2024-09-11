@@ -22,30 +22,31 @@ const upload = multer({
 })
 
 const copyFileToProfileDir = () => async (req, res, next) => {
-  console.log('🚀 ~ copyFileToProfileDir ~  req.route:', req.route)
+  console.log('🚀 ~ copyFileToProfileDir ~  req.route:', req?.route)
   if (!req.file) {
     //  next(new Error('No file uploaded'));
-    return next()
+    next()
+    return
   }
 
   // Generate a filename based on upload time and original name to avoid conflicts
   const timestamp = Date.now()
-  const originalName = path.parse(req.file.originalname).name
-  const extension = path.extname(req.file.originalname)
+  const originalName = path.parse(req?.file?.originalname)?.name
+  const extension = path.extname(req?.file?.originalname)
   let fileName = ''
 
   switch (true) {
     case req.route.path.includes('registration'):
-      fileName = `${originalName}-${timestamp}${extension}-User`
+      fileName = `${originalName}-${timestamp}-User${extension}`
       break
     case req.route.path.includes('create_decision'):
-      fileName = `${originalName}-${timestamp}${extension}-decision`
+      fileName = `${originalName}-${timestamp}-decision${extension}`
       break
     case req.route.path.includes('create_generalization'):
-      fileName = `${originalName}-${timestamp}${extension}-generalization`
+      fileName = `${originalName}-${timestamp}-generalization${extension}`
       break
     case req.route.path.includes('create_employ'):
-      fileName = `${originalName}-${timestamp}${extension}-employ`
+      fileName = `${originalName}-${timestamp}-employ${extension}`
       break
 
     default:

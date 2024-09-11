@@ -219,6 +219,7 @@ CREATE TABLE "leaveDetails" (
     "employeeeId" INTEGER NOT NULL,
     "leaveTypeId" INTEGER NOT NULL,
     "dayNumber" INTEGER NOT NULL,
+    "year" INTEGER NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
     "leaveNote" TEXT NOT NULL,
@@ -307,7 +308,7 @@ CREATE TABLE "license" (
 CREATE TABLE "Agency" (
     "id" SERIAL NOT NULL,
     "legalName" TEXT NOT NULL,
-    "providedDocument" TEXT,
+    "providedDocument" INTEGER,
     "governmentOfficeId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -339,9 +340,6 @@ CREATE TABLE "Tribunal" (
 
     CONSTRAINT "Tribunal_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "Agency_governmentOfficeId_key" ON "Agency"("governmentOfficeId");
 
 -- AddForeignKey
 ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

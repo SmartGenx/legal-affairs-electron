@@ -1,10 +1,10 @@
-const { ApiError } = require('./ApiError');
+const { ApiError } = require('./ApiError')
 
 class NotFoundError extends ApiError {
-    constructor(message, originalError) {
-        // 404 is the standard response code for not found resources.
-        super(404, 'NotFoundError', message, originalError);
-    }
+  constructor(message, originalError) {
+    // 404 is the standard response code for not found resources.
+    super(404, 'NotFoundError', message, originalError)
+  }
 }
 
-module.exports = { NotFoundError };
+module.exports = { NotFoundError }
