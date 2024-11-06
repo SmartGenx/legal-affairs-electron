@@ -21,7 +21,7 @@ const formSchema = z.object({
 
 type BookFormValue = z.infer<typeof formSchema>
 
-export default function AddBook() {
+export default function AddBookForm() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()

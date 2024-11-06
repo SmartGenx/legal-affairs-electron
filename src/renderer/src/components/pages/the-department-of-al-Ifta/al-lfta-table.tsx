@@ -28,7 +28,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function AlLftaTable({ info, page, total, pageSize }: Props) {
+export default function AlLftaTable({ info, page, total }: Props) {
   const navigate = useNavigate()
   const authToken = useAuthHeader()
   const columns = React.useMemo<ColumnDef<ComplaintInfo>[]>(
@@ -100,7 +100,7 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="h-8 w-7" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">

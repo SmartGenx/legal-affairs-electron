@@ -11,7 +11,7 @@ export default function BookSearch() {
             <div className="w-full h-full relative">
               <SearchInput
                 placeholder="البحث عن..."
-                className="bg-white h-12  rounded-xl text-lg"
+                className="bg-white h-11  rounded-xl text-lg"
                 InputClassName="!h-12"
               />
               <Search className="absolute right-2 top-3" color="#757575" />
@@ -19,9 +19,9 @@ export default function BookSearch() {
           </div>
         </div>
         <div>
-          <Button className="text-sm w-28 mr-3 h-10 bg-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px]">
-            بحث
-            <Search className="text-md mr-2" size={20} />
+          <Button className="flex items-center text-xl  w-28 mr-3 h-11 bg-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px] px-4">
+            <p className="text-xl">بحث</p>
+            <Search className="text-md mr-2" size={22} />
           </Button>
         </div>
       </div>

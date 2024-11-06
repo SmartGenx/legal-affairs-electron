@@ -22,7 +22,7 @@ type Props = {
   total: string
 }
 
-export default function StateTable({ info, page, total, pageSize }: Props) {
+export default function StateTable({ info, page, total }: Props) {
   const navigate = useNavigate()
 
   const columns = React.useMemo<ColumnDef<InfoIssue>[]>(
@@ -93,7 +93,7 @@ export default function StateTable({ info, page, total, pageSize }: Props) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="h-8 w-7" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">

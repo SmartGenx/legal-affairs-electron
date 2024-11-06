@@ -114,7 +114,6 @@ export default function ViewPage() {
   const [selectedStateValue, setSelectedStatedValue] = useState<boolean | null>(null)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
 
-  const navigate = useNavigate()
 
   // Fetch tribunal data
   useEffect(() => {
@@ -168,7 +167,6 @@ export default function ViewPage() {
     data: issueDetailsData,
     error: issueDetailsError,
     isLoading: isIssueDetailsLoading,
-    isSuccess
   } = useQuery({
     queryKey: ['issue', id],
     queryFn: fetchIssueDetailsById,
@@ -210,11 +208,13 @@ export default function ViewPage() {
   }, [issueData, issueDetailsData, form])
 
   const [selectedValue, setSelectedValue] = useState<string | null>(issueData?.[0]?.type || null)
+  const levelString = String(issueDetailsData?.[0]?.level ?? '');
+  const tribunalIdString = String(issueDetailsData?.[0]?.tribunalId ?? '')
 
-  const handleCheckboxChange = (value: string) => {
-    // Update the selected value when checkbox is clicked
-    setSelectedValue((prev) => (prev === value ? null : value))
-  }
+  // const handleCheckboxChange = (value: string) => {
+  //   // Update the selected value when checkbox is clicked
+  //   setSelectedValue((prev) => (prev === value ? null : value))
+  // }
   if (isIssueLoading && isIssueDetailsLoading) return <div>Loading...</div>
   if (issueError) return <div>Error fetching issue data</div>
   if (issueDetailsError) return <div>Error fetching issue details data</div>
@@ -467,9 +467,11 @@ export default function ViewPage() {
                           setSelectedOption(parseInt(value, 10))
                         }}
                         value={
-                          field.value ? String(field.value) : String(issueDetailsData[0]?.level)
+                          field.value
+                            ? String(field.value)
+                            : levelString
                         }
-                        defaultValue={String(issueDetailsData[0]?.level)}
+                        defaultValue={levelString}
                       >
                         <FormControl className="w-full h-[50px] rounded-xl bg-transparent border-[1px] border-transparent ">
                           <SelectTrigger>
@@ -511,9 +513,9 @@ export default function ViewPage() {
                                   value={
                                     field.value
                                       ? String(field.value)
-                                      : String(issueDetailsData[0]?.tribunalId)
+                                      : tribunalIdString
                                   }
-                                  defaultValue={String(issueDetailsData[0]?.tribunalId)}
+                                  defaultValue={tribunalIdString}
                                 >
                                   <FormControl>
                                     <SelectTrigger>
@@ -690,9 +692,9 @@ export default function ViewPage() {
                                   value={
                                     field.value
                                       ? String(field.value)
-                                      : String(issueDetailsData[0]?.tribunalId)
+                                      : tribunalIdString
                                   }
-                                  defaultValue={String(issueDetailsData[0]?.tribunalId)}
+                                  defaultValue={tribunalIdString}
                                 >
                                   <FormControl>
                                     <SelectTrigger>
@@ -819,9 +821,9 @@ export default function ViewPage() {
                                   value={
                                     field.value
                                       ? String(field.value)
-                                      : String(issueDetailsData[0]?.tribunalId)
+                                      : tribunalIdString
                                   }
-                                  defaultValue={String(issueDetailsData[0]?.tribunalId)}
+                                  defaultValue={tribunalIdString}
                                 >
                                   <FormControl>
                                     <SelectTrigger>

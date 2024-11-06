@@ -1,23 +1,23 @@
 'use client'
 
 // import AsyncSelect from 'react-select/async'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useQuery } from '@tanstack/react-query'
-import { getApi } from '@/lib/http'
-import { useState } from 'react'
+// import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+// import { useQuery } from '@tanstack/react-query'
+// import { getApi } from '@/lib/http'
+// import { useState } from 'react'
 import { Search } from 'lucide-react'
 
-interface Organization {
-  arabicName: string
-}
+// interface Organization {
+//   arabicName: string
+// }
 
 const LocalOrgAsyncSearch = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const pathname = usePathname()
-  const { replace } = useRouter()
-  const searchParams = useSearchParams()
+  // const [isMenuOpen, setIsMenuOpen] = useState(false)
+  // const pathname = usePathname()
+  // const { replace } = useRouter()
+  // const searchParams = useSearchParams()
 
-  const selectedVal = searchParams?.getAll('search')
+  // const selectedVal = searchParams?.getAll('search')
 
   //   const { data: organizations } = useQuery<Organization[]>({
   //     queryKey: ['organizations'],
@@ -32,45 +32,45 @@ const LocalOrgAsyncSearch = () => {
   //     return data || []
   //   }
 
-  const customComponents = {
-    DropdownIndicator: () => null,
-    IndicatorSeparator: () => null
-  }
+  // const customComponents = {
+  //   DropdownIndicator: () => null,
+  //   IndicatorSeparator: () => null
+  // }
 
-  const onChange = (val: { arabicName: string } | null) => {
-    const params = new URLSearchParams(searchParams.toString())
-    if (val?.arabicName) {
-      params.set('search', val.arabicName)
-    } else {
-      params.delete('search')
-    }
-    replace(`${pathname}?${params.toString()}`)
-  }
+  // const onChange = (val: { arabicName: string } | null) => {
+  //   const params = new URLSearchParams(searchParams.toString())
+  //   if (val?.arabicName) {
+  //     params.set('search', val.arabicName)
+  //   } else {
+  //     params.delete('search')
+  //   }
+  //   replace(`${pathname}?${params.toString()}`)
+  // }
 
-  const customStyles = {
-    control: (provided: any) => ({
-      ...provided,
-      border: 'none',
-      boxShadow: 'none',
-      backgroundColor: '#f4f4f5'
-    }),
-    input: (provided: any) => ({
-      ...provided,
-      margin: 0
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      zIndex: 9999
-    }),
-    placeholder: (provided: any) => ({
-      ...provided,
-      fontWeight: 'bold',
-      color: '#4B4846'
-    }),
-    singleValue: (provided: any) => ({
-      ...provided
-    })
-  }
+  // const customStyles = {
+  //   control: (provided: any) => ({
+  //     ...provided,
+  //     border: 'none',
+  //     boxShadow: 'none',
+  //     backgroundColor: '#f4f4f5'
+  //   }),
+  //   input: (provided: any) => ({
+  //     ...provided,
+  //     margin: 0
+  //   }),
+  //   menu: (provided: any) => ({
+  //     ...provided,
+  //     zIndex: 9999
+  //   }),
+  //   placeholder: (provided: any) => ({
+  //     ...provided,
+  //     fontWeight: 'bold',
+  //     color: '#4B4846'
+  //   }),
+  //   singleValue: (provided: any) => ({
+  //     ...provided
+  //   })
+  // }
 
   return (
     <section className="flex w-full items-center justify-center rounded border border-[#7d7875]">

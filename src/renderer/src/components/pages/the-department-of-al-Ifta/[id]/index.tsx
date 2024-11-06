@@ -84,8 +84,8 @@ export default function AlLftaIndex() {
   }
   const {
     data: complaintData,
-    error: complaintError,
-    isLoading: complaintIsLoading
+    error: _complaintError,
+    isLoading: _complaintIsLoading
   } = useQuery({
     queryKey: ['complaint', id],
     queryFn: fetchData,
@@ -107,7 +107,7 @@ export default function AlLftaIndex() {
     fetchDataGovernment()
   }, [complaintData])
 
-  const { mutate, isError, isSuccess, isPending } = useMutation({
+  const { mutate } = useMutation({
     mutationKey: ['editComplaint'],
     mutationFn: (datas: ComplaintFormValue) =>
       patchApi(

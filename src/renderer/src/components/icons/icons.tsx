@@ -324,6 +324,7 @@ export const Icons = {
       />
     </svg>
   ),
+ 
   bill: ({ ...props }: LucideProps) => (
     <svg
       width="20"

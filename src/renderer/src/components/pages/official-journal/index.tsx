@@ -1,34 +1,64 @@
-import React from 'react'
-import BookSearch from './search'
-import TopButtons from './top-buttons'
-import { useAuthHeader } from 'react-auth-kit'
-import { useQuery } from '@tanstack/react-query'
-import { Books } from '@renderer/types'
-import { getApi } from '@renderer/lib/http'
-import BookTable from './Book-table'
-
+import React, { useRef, useState } from 'react'
+import AddBookIndex from './add-book'
+import LicenseIndex from './license'
+import OrderBookIndex from './order-book'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
+import NoteStack from '@renderer/components/icons/noteStack'
+import Assignment from '@renderer/components/icons/assignment'
+import AccountBalanceWallet from '@renderer/components/icons/account_balance_wallet'
+const subTabs = [
+  {
+    value: 'Medical-allocations',
+    title: 'إدارة الكتب',
+    content: <AddBookIndex />,
+    icon: <NoteStack />
+  },
+  {
+    value: 'Follow-the-recipes',
+    title: 'إدارة التراخيص',
+    content: <LicenseIndex />,
+    icon: <Assignment />,
+  },
+  {
+    value: 'waiting-list',
+    title: 'مبيعات الكتب',
+    content: <OrderBookIndex />,
+    icon: <AccountBalanceWallet />,
+  }
+]
 export default function OfficialJournalIndex() {
-  const authToken = useAuthHeader()
-  const { isLoading, error, data } = useQuery({
-    queryKey: ['Books'],
-    queryFn: () =>
-      getApi<Books[]>('/book?page=1&pageSize=30', {
-        headers: {
-          Authorization: authToken()
-        }
-      })
-  })
-
-  if (isLoading) return 'Loading...'
-
-  if (error) return 'An error has occurred: ' + error.message
-  const infoArray = data?.data?.info || []
-  console.log('infoArray:', infoArray)
+  const [activeTab, setActiveTab] = useState<string>(subTabs[0].value)
+  const firstTabRef = useRef<HTMLButtonElement>(null)
   return (
-    <section className="relative space-y-4 ">
-      <BookSearch />
-      <TopButtons />
-      <BookTable info={infoArray || []} page={1} pageSize="0" total="0" />
-    </section>
+    <div className="flex flex-col gap-6  ">
+      <div className="flex  flex-col justify-center px-6 gap-5  rounded-[8px] pb-20 ">
+        <section className="rounded-xl bg-background  ">
+          <Tabs
+            defaultValue={activeTab}
+            onValueChange={(value) => setActiveTab(value)}
+            className=" dark:bg-[#3734a9]"
+          >
+            <TabsList className="p-0 flex justify-start">
+              {subTabs.map((tab, index) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="gap-x-2 font-black text-lg"
+                  ref={index === 0 ? firstTabRef : null}
+                >
+                  <span>{tab.icon}</span>
+                  {tab.title}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {subTabs.map((tab) => (
+              <TabsContent key={tab.value} value={tab.value} className="p-4 ">
+                {tab.content}
+              </TabsContent>
+            ))}
+          </Tabs>
+        </section>
+      </div>
+    </div>
   )
 }
