@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
-
 import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table'
 import { cn } from '../../../lib/utils'
-import TablePagination from '../../ui/table-pagination'
 import { ScrollArea, ScrollBar } from '../../ui/scroll-area'
 
 interface DataTableProps<TData, TValue> {
@@ -26,8 +24,8 @@ export function OrganizationTable<TData, TValue>({
   compact,
   lastHeaderStyle,
   lightHeader = false,
-  total,
-  page,
+  // total,
+  // page,
   shadow = true,
   containerClaasName
 }: DataTableProps<TData, TValue>) {
@@ -112,7 +110,7 @@ export function OrganizationTable<TData, TValue>({
                     }
                   )}
                 >
-                  {row.getVisibleCells().map((cell, idx) => (
+                  {row.getVisibleCells().map((cell, _idx) => (
                     <TableCell
                       key={cell.id}
                       className={cn(

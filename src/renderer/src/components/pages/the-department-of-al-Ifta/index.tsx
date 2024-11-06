@@ -11,7 +11,7 @@ export default function TheDepartmentOfAllfta() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['Complaint'],
     queryFn: () =>
-      getApi<Complaint[]>('/complaint?page=1&pageSize=30', {
+      getApi<Complaint>('/complaint?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

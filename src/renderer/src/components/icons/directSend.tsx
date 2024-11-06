@@ -3,8 +3,8 @@ import { LucideProps } from 'lucide-react'
 export default function DirectSend({ ...props }: LucideProps) {
   return (
     <svg
-      width="21"
-      height="20"
+      width="29"
+      height="28"
       viewBox="0 0 21 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

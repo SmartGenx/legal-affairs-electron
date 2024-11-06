@@ -1,20 +1,13 @@
-import { axiosInstance, patchApi } from '@renderer/lib/http'
-
+import { axiosInstance } from '@renderer/lib/http'
 import { useState, useEffect } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useParams } from 'react-router-dom'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
+import {  useParams } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@renderer/components/ui/button'
-import { Textarea } from '@renderer/components/ui/textarea'
-import { FormInput } from '../../../ui/form-input'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useToast } from '@renderer/components/ui/use-toast'
+import { useQuery } from '@tanstack/react-query'
 import { Separator } from '@renderer/components/ui/separator'
+import { LoaderIcon } from 'lucide-react'
 
 export type complaint = {
   id: number
@@ -49,10 +42,7 @@ export type GovernmentOffice = {
 
 type ComplaintFormValue = z.infer<typeof formSchema>
 export default function AllaftaInfo() {
-  const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
-  const { toast } = useToast()
-  const navigate = useNavigate()
   const [data, setData] = useState<GovernmentOffice[]>([])
   const authToken = useAuthHeader()
 
@@ -86,7 +76,7 @@ export default function AllaftaInfo() {
   const {
     data: complaintData,
     error: complaintError,
-    isLoading: complaintIsLoading
+    isPending:complaintIsPending
   } = useQuery({
     queryKey: ['complaint', id],
     queryFn: fetchData,
@@ -107,48 +97,13 @@ export default function AllaftaInfo() {
     }
     fetchDataGovernment()
   }, [complaintData])
-
-  const { mutate, isError, isSuccess, isPending } = useMutation({
-    mutationKey: ['editComplaint'],
-    mutationFn: (datas: ComplaintFormValue) =>
-      patchApi(
-        `/complaint/${id}`,
-        {
-          name: datas.name,
-          refrance: datas.refrance,
-          governmentOfficeId: +datas.governmentOfficeId,
-          title: datas.title,
-          description: datas.description,
-          date: new Date(datas.date),
-          officeOpinian: datas.officeOpinian
-        },
-        {
-          headers: {
-            Authorization: `${authToken()}`
-          }
-        }
-      ),
-    onSuccess: () => {
-      toast({
-        title: 'اشعار',
-        variant: 'success',
-        description: 'تمت الاضافة بنجاح'
-      })
-      queryClient.invalidateQueries({ queryKey: ['Complaint'] })
-      navigate('/the-department-of-al-lfta')
-    },
-    onError: (error) => {
-      toast({
-        title: 'لم تتم العملية',
-        description: error.message,
-        variant: 'destructive'
-      })
-    }
-  })
-  const onSubmit = (datas: ComplaintFormValue) => {
-    mutate(datas)
-  }
-
+  if (complaintIsPending)
+    return (
+      <div className="flex justify-center items-center w-full ">
+        <LoaderIcon className="mt-12 flex animate-spin items-center justify-end duration-1000" />
+      </div>
+    )
+  if (complaintError) return 'An error has occurred: ' + complaintError.message
   return (
     <div className="min-h-[50vh] w-full mt-5">
       <div>

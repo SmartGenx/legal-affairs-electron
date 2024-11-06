@@ -1,12 +1,6 @@
-import React from 'react'
-import LocalOrgAsyncSearch from './local-orgs-async-search'
-import { Input } from '@renderer/components/ui/input'
-import { Button } from '@renderer/components/ui/button'
-import { Eye, EyeOff, Plus, Search } from 'lucide-react'
 import SearchAffairs from './search'
 import { Issues } from '../../../types/index'
 import TopButtons from './top-buttons'
-import { OrganizationTable } from './organizationTable'
 import { getApi } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import StateTable from './state-table'
@@ -17,7 +11,7 @@ export default function StateAffairs() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['Issues'],
     queryFn: () =>
-      getApi<Issues[]>('/issue?page=1&pageSize=30', {
+      getApi<Issues>('/issue?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

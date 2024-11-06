@@ -80,8 +80,8 @@ export default function OrderBook() {
     }
   }
   //
-  console.log('bookId', bookId)
-  console.log('data', data)
+  // console.log('bookId', bookId)
+  // console.log('data', data)
   useEffect(() => {
     fetchData()
     fetchOrder()
@@ -115,7 +115,7 @@ export default function OrderBook() {
         variant: 'success',
         description: 'تمت الاضافة بنجاح'
       })
-      queryClient.invalidateQueries({ queryKey: ['Books'] })
+      queryClient.invalidateQueries({ queryKey: ['OrderBookResponse'] })
       navigate('/official-journal')
     },
     onError: (error) => {

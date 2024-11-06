@@ -14,13 +14,10 @@ import DecisionsIndex from '../pages/decisions'
 import AddDecisions from '../pages/decisions/add-decisions'
 import UpdateDecisions from '../pages/decisions/update-decisions'
 import OfficialJournalIndex from '../pages/official-journal'
-import AddBookIndex from '../pages/official-journal/add-book'
-import OrderBookIndex from '../pages/official-journal/order-book'
 import ViewBook from '../pages/official-journal/add-book/view-page'
 import PersonnelAffairsIndex from '../pages/personnel-affairs'
 import PersonnelIndex from '../pages/personnel-affairs/add-employee'
 import UpdateEmployeeIndex from '../pages/personnel-affairs/add-employee/update-form'
-import LicenseIndex from '../pages/official-journal/license'
 import GeneralizationIndex from '../pages/generalization'
 import AddGeneralizationForm from '../pages/generalization/add-generalization'
 import UpdateGeneralization from '../pages/generalization/update-generalization'
@@ -35,6 +32,9 @@ import BookInfo from '../pages/official-journal/add-book/info'
 import GeneralizationInfo from '../pages/generalization/info'
 import ViewAgencyInfo from '../pages/Agency/info/index'
 import EmployeeInfo from '../pages/personnel-affairs/add-employee/info'
+import AddBookForm from '../pages/official-journal/add-book/add-book'
+import HeaderFormLicense from '../pages/official-journal/license/header-form'
+import OrderBookFormIndex from '../pages/official-journal/order-book/header-form'
 
 export const router = createHashRouter([
   {
@@ -105,7 +105,7 @@ export const router = createHashRouter([
       },
       {
         path: '/official-journal/add-book',
-        element: <ProtectedRoute element={<AddBookIndex />} />
+        element: <ProtectedRoute element={<AddBookForm />} />
       },
       {
         path: '/official-journal/book-info/:id',
@@ -117,7 +117,7 @@ export const router = createHashRouter([
       },
       {
         path: '/official-journal/order-book',
-        element: <ProtectedRoute element={<OrderBookIndex />} />
+        element: <ProtectedRoute element={<OrderBookFormIndex />} />
       },
       {
         path: '/personnel-affairs',
@@ -141,7 +141,7 @@ export const router = createHashRouter([
       },
       {
         path: '/license/add-license',
-        element: <ProtectedRoute element={<LicenseIndex />} />
+        element: <ProtectedRoute element={<HeaderFormLicense />} />
       },
       {
         path: '/generalization',
