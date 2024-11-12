@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../../ui/form'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue
 } from '../../../ui/select'
 import { Button } from '@renderer/components/ui/button'
 import { ArrowRight } from 'lucide-react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { IssuesResponse } from '@renderer/types'
 import { useAuthHeader } from 'react-auth-kit'
 import { axiosInstance } from '@renderer/lib/http'
@@ -22,7 +20,6 @@ import { GevStatus, kind_of_case, GovernmentFacility, Level } from '@renderer/ty
 import { z } from 'zod'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { Input } from '@renderer/components/ui/input'
 import { DateInput } from '@renderer/components/ui/date-input'
 
 export type Tribunal = {
@@ -81,10 +78,7 @@ const kindOfCase = [
   { label: 'إدارية', value: kind_of_case.administrative }
 ] as const
 
-const Resumed = [
-  { label: 'مستأنف عليه', value: false },
-  { label: 'مستأنف', value: true }
-] as const
+
 
 const contested = [
   { label: 'طاعن عليه', value: false },
@@ -108,10 +102,7 @@ export default function ViewPage() {
   const authToken = useAuthHeader()
 
   const [tribunal, setTribunal] = useState<Tribunal[]>([])
-  const [selectedLevel, setSelectedLevel] = useState(null)
-  const [selectedValues, setSelectedValues] = useState<string[]>([])
-  const [selectedResumedValue, setSelectedResumedValue] = useState<boolean | null>(null)
-  const [selectedStateValue, setSelectedStatedValue] = useState<boolean | null>(null)
+  const [_selectedStateValue, setSelectedStatedValue] = useState<boolean | null>(null)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
 
 
@@ -207,7 +198,7 @@ export default function ViewPage() {
     }
   }, [issueData, issueDetailsData, form])
 
-  const [selectedValue, setSelectedValue] = useState<string | null>(issueData?.[0]?.type || null)
+  const [selectedValue, _setSelectedValue] = useState<string | null>(issueData?.[0]?.type || null)
   const levelString = String(issueDetailsData?.[0]?.level ?? '');
   const tribunalIdString = String(issueDetailsData?.[0]?.tribunalId ?? '')
 

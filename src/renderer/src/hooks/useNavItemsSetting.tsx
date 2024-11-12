@@ -5,7 +5,7 @@ export default function useNavItemsSetting() {
     {
       list: [
         {
-          href: '/backup',
+          href: '/settings',
           icon: 'gear',
           label: 'الأعدادات',
           disabled: false,
