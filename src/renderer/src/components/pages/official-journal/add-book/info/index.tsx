@@ -1,23 +1,10 @@
 import { z } from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../../ui/form'
-import { useEffect, useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useEffect } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Button } from '@renderer/components/ui/button'
-import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, patchApi } from '@renderer/lib/http'
-import { useToast } from '@renderer/components/ui/use-toast'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
-import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
-const formSchema = z.object({
-  name: z.string(),
-  quantity: z.string(),
-  price: z.string()
-})
+import { useParams } from 'react-router-dom'
+import { axiosInstance, getApi } from '@renderer/lib/http'
+import { useQuery } from '@tanstack/react-query'
+import { LoaderIcon } from 'lucide-react'
 
 export type BookResp = {
   id: number
@@ -29,36 +16,51 @@ export type BookResp = {
   isDeleted: boolean
 }
 
-type BookFormValue = z.infer<typeof formSchema>
-
 export default function BookInfo() {
   const { id } = useParams<{ id: string }>()
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
   const authToken = useAuthHeader()
-  const navigate = useNavigate()
 
-  const fetchData = async () => {
-    const response = await axiosInstance.get<BookResp>(`/book/${id}`, {
-      headers: {
-        Authorization: `${authToken()}`
-      }
-    })
-    return response.data
-  }
+  // const fetchData = async () => {
+  //   const response = await axiosInstance.get<BookResp>(`/book/${id}`, {
+  //     headers: {
+  //       Authorization: `${authToken()}`
+  //     }
+  //   })
+  //   return response.data
+  // }
+  // const {
+  //   data: BookData,
+  //   error: BookError,
+  //   isLoading: BookIsLoading
+  // } = useQuery({
+  //   queryKey: ['Books', id],
+  //   queryFn: fetchData,
+  //   enabled: !!id
+  // })
+
   const {
     data: BookData,
     error: BookError,
     isLoading: BookIsLoading
   } = useQuery({
-    queryKey: ['Books', id],
-    queryFn: fetchData,
-    enabled: !!id
+    queryKey: ['BooksInfo'],
+    queryFn: () =>
+      getApi<BookResp>(`/book-order/${id}`, {
+        headers: {
+          Authorization: authToken()
+        }
+      })
   })
 
-  console.log('sdsdfsdfs', BookData)
-
   useEffect(() => {}, [BookData])
+  console.log('BookData', BookData)
+  if (BookIsLoading)
+    return (
+      <div className="flex justify-center items-center w-full ">
+        <LoaderIcon className="mt-12 flex animate-spin items-center justify-end duration-1000" />
+      </div>
+    )
+  if (BookError) return 'An error has occurred: ' + BookError.message
 
   return (
     <div className="min-h-[50vh] w-full mt-5">
@@ -74,17 +76,17 @@ export default function BookInfo() {
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="">اسم الكتاب</label>
-              <p>{BookData?.name}</p>
+              <p>{BookData?.data.name}</p>
             </div>
 
             <div className=" col-span-1 h-[50px] ">
               <label>الكميه</label>
-              <p>{BookData?.quantity}</p>
+              <p>{BookData?.data.quantity}</p>
             </div>
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="">سعر النسخة</label>
-              <p>{BookData?.price}</p>
+              <p>{BookData?.data.price}</p>
             </div>
             {/*  */}
           </div>

@@ -35,6 +35,7 @@ import EmployeeInfo from '../pages/personnel-affairs/add-employee/info'
 import AddBookForm from '../pages/official-journal/add-book/add-book'
 import HeaderFormLicense from '../pages/official-journal/license/header-form'
 import OrderBookFormIndex from '../pages/official-journal/order-book/header-form'
+import SettingsIndex from '../pages/settings'
 
 export const router = createHashRouter([
   {
@@ -174,6 +175,10 @@ export const router = createHashRouter([
       {
         path: '/Agency/view-agency-info/:id',
         element: <ProtectedRoute element={<ViewAgencyInfo />} />
+      },
+      {
+        path: '/settings',
+        element: <ProtectedRoute element={<SettingsIndex />} />
       }
     ]
   }

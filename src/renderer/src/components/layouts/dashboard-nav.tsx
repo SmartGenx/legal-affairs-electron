@@ -140,11 +140,12 @@ export default function DashboardNav({
                   <TooltipProvider delayDuration={0}>
                     <Tooltip disableHoverableContent>
                       <TooltipTrigger asChild>
-                        <div
+                        <Link
+                          to={nav.href}
                           className={cn(
-                            'group mb-1 flex items-center px-4 py-3 text-sm font-medium text-white hover:bg-[#fff] hover:text-[#3734a9] w-[90%] hover:rounded-l-2xl cursor-pointer ',
+                            'group mb-1 flex items-center px-4 py-3 text-sm font-medium text-white rounded-l-2xl hover:bg-[#fff] hover:text-[#3734a9] w-[90%] hover:rounded-l-2xl cursor-pointer ',
                             isSelected(nav.href)
-                              ? 'bg-white text-[#3734a9] border-l-4 border-primary'
+                              ? 'bg-white text-[#3734a9] '
                               : 'transparent',
                             !expanded && 'justify-center',
                             nav.disabled && 'cursor-not-allowed opacity-80'
@@ -162,7 +163,7 @@ export default function DashboardNav({
                               {nav.label}
                             </span>
                           )}
-                        </div>
+                        </Link>
                       </TooltipTrigger>
                       {!expanded && (
                         <TooltipContent side="left">
