@@ -1,4 +1,3 @@
-import React from 'react'
 import TopButtons from './top-button'
 import { useAuthHeader } from 'react-auth-kit'
 import { useQuery } from '@tanstack/react-query'
@@ -13,7 +12,7 @@ export default function GeneralizationIndex() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['generalization'],
     queryFn: () =>
-      getApi<Generalization[]>('/generalization?page=1&pageSize=30', {
+      getApi<Generalization>('/generalization?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,12 +8,10 @@ import {
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu'
 import { OrganizationTable } from './organizationTable'
-import { BookInfo, ComplaintInfo } from '../../../types/index'
+import { BookInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
-import { axiosInstance } from '@renderer/lib/http'
-import { useAuthHeader } from 'react-auth-kit'
 import DeleteDialog from '@renderer/components/dialog/delete-dialog'
-
+import React from 'react'
 type Props = {
   info: BookInfo[]
   page: number
@@ -28,9 +25,8 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function BookTable({ info, page, total, pageSize }: Props) {
+export default function BookTable({ info, page, total }: Props) {
   const navigate = useNavigate()
-  const authToken = useAuthHeader()
   const columns = React.useMemo<ColumnDef<BookInfo>[]>(
     () => [
       {

@@ -3,6 +3,8 @@ import { ColumnDef } from '@tanstack/react-table'
 // import DeleteDialog from './delete-dailog'
 import { SettingTable } from '@renderer/components/ui/settings-table'
 import DeleteSettingDialog from '../delete-dailog.-settings'
+import EditDialog from '../edit-dailog'
+import EditPosition from './edit-position'
 
 type Props = {
   info: Info[]
@@ -40,7 +42,7 @@ export default function PostionTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            {/* <EditDialog content={<EditCategoryForm id={row.original.globalId} />} />*/}
+            <EditDialog content={<EditPosition id={row.original.id} />} />
             <DeleteSettingDialog
               url={`/position/${row.original?.id}`}
               keys={['PotionsRespTable']}

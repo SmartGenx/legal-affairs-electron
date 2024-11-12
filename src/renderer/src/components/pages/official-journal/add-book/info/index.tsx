@@ -1,8 +1,7 @@
-import { z } from 'zod'
 import { useEffect } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
 import { useParams } from 'react-router-dom'
-import { axiosInstance, getApi } from '@renderer/lib/http'
+import {  getApi } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import { LoaderIcon } from 'lucide-react'
 

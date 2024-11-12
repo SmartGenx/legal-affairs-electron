@@ -1,24 +1,10 @@
-import { z } from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Button } from '@renderer/components/ui/button'
-import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, patchApi, postApi } from '@renderer/lib/http'
-import { useToast } from '@renderer/components/ui/use-toast'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
-import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import { axiosInstance } from '@renderer/lib/http'
+import { useQuery } from '@tanstack/react-query'
 import { AgencyInfo } from '@renderer/types'
 
-const formSchema = z.object({
-  legalName: z.string(),
-  providedDocument: z.string(),
-  governmentOfficeId: z.string()
-})
 export type GovernmentOffice = {
   id: number
   name: string
@@ -26,19 +12,11 @@ export type GovernmentOffice = {
   updatedAt: Date
   isDeleted: boolean
 }
-type BookFormValue = z.infer<typeof formSchema>
 
 export default function ViewAgencyInfo() {
   const { id } = useParams<{ id: string }>()
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
   const authToken = useAuthHeader()
-  const navigate = useNavigate()
   const [dataGovernment, setGovernmentData] = useState<GovernmentOffice[]>([])
-
-  const form = useForm<BookFormValue>({
-    resolver: zodResolver(formSchema)
-  })
 
   const fetchGovernmentData = async () => {
     try {
@@ -63,8 +41,8 @@ export default function ViewAgencyInfo() {
   }
   const {
     data: AgencyData,
-    error: AgencyError,
-    isLoading: AgencyIsLoading
+    error: _AgencyError,
+    isLoading: _AgencyIsLoading
   } = useQuery({
     queryKey: ['Agency', id],
     queryFn: fetchAgencyData,

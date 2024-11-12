@@ -104,8 +104,8 @@ export default function TribunalIndex() {
                 <FormItem>
                   <FormControl>
                     <FormInput
-                      label="اسم المنصب"
-                      placeholder="اسم المنصب"
+                      label="اسم المحكمة"
+                      placeholder="اسم المحكمة"
                       type="text"
                       {...field}
                       className="w-full h-11 rounded-xl -translate-y-0 px-2"

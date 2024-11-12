@@ -3,6 +3,8 @@ import { ColumnDef } from '@tanstack/react-table'
 // import DeleteDialog from './delete-dailog'
 import { SettingTable } from '@renderer/components/ui/settings-table'
 import DeleteSettingDialog from '../delete-dailog.-settings'
+import EditDialog from '../edit-dailog'
+import GovernmentOfficesEdit from './government-offices-edit'
 
 type Props = {
   info: Info[]
@@ -40,7 +42,7 @@ export default function GovernmentOfficesTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            {/* <EditDialog content={<EditCategoryForm id={row.original.globalId} />} />*/}
+            <EditDialog content={<GovernmentOfficesEdit id={row.original.id} />} />
             <DeleteSettingDialog
               url={`/government-office/${row.original?.id}`}
               keys={['governmentOfficeTable']}

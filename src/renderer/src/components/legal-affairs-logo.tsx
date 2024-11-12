@@ -1,5 +1,5 @@
 import LogoIcon from './icons/logo-icon'
-export default function YemenLogo({ className = '' }) {
+export default function YemenLogo() {
   return (
     <div className="w-full h-full  ">
       <div className="w-full h-[100%] flex justify-center items-center">

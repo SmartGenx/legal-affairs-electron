@@ -1,27 +1,13 @@
 import { z } from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../../ui/form'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
-import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, patchApi, postApi } from '@renderer/lib/http'
+import { axiosInstance, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '../../../../ui/select'
-import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-// import FileUploader from './FileUploader'
-import { Label } from '@renderer/components/ui/label'
-import TextLabel from '@renderer/components/ui/text-label'
-import { DateInput } from '@renderer/components/ui/date-input'
 import { EmployInfo } from '@renderer/types'
 
 const formSchema = z.object({
@@ -101,8 +87,8 @@ export default function EmployeeInfo() {
 
   const {
     data: EmployeeData,
-    error: EmployeeError,
-    isLoading: EmployeeIsLoading
+    error: _EmployeeError,
+    isLoading: _EmployeeIsLoading
   } = useQuery({
     queryKey: ['Employ', id],
     queryFn: fetchData,

@@ -7,10 +7,9 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, patchApi, postApi } from '@renderer/lib/http'
+import { axiosInstance, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
-import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AgencyInfo } from '@renderer/types'
 
@@ -63,8 +62,8 @@ export default function UpdateAgency() {
   }
   const {
     data: AgencyData,
-    error: AgencyError,
-    isLoading: AgencyIsLoading
+    error: _AgencyError,
+    isLoading: _AgencyIsLoading
   } = useQuery({
     queryKey: ['Agency', id],
     queryFn: fetchAgencyData,

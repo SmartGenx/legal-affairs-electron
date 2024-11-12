@@ -1,4 +1,3 @@
-import React from 'react'
 import BookSearch from '../search'
 import TopButtons from './top-buttons'
 import { useAuthHeader } from 'react-auth-kit'
@@ -12,7 +11,7 @@ export default function AddBookIndex() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['Books'],
     queryFn: () =>
-      getApi<Books[]>('/book?page=1&pageSize=30', {
+      getApi<Books>('/book?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

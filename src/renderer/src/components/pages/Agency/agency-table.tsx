@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu'
 import { OrganizationTable } from './organizationTable'
-import { AgencyInfo, DecisionInfo } from '../../../types/index'
+import { AgencyInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
 import { axiosInstance } from '@renderer/lib/http'
 import { useAuthHeader } from 'react-auth-kit'
@@ -28,7 +28,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function AgencyTable({ info, page, total, pageSize }: Props) {
+export default function AgencyTable({ info, page, total }: Props) {
   const navigate = useNavigate()
   const authToken = useAuthHeader()
   const columns = React.useMemo<ColumnDef<AgencyInfo>[]>(

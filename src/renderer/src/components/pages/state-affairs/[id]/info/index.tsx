@@ -1,14 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../../../ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '../../../../ui/select'
+import  { useEffect, useState } from 'react'
 import { Button } from '@renderer/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
@@ -20,11 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { GevStatus, kind_of_case, GovernmentFacility, Level } from '@renderer/types/enum'
 import { z } from 'zod'
-import { FormInput } from '@renderer/components/ui/form-input'
-import { Textarea } from '@renderer/components/ui/textarea'
-import { Input } from '@renderer/components/ui/input'
-import { DateInput } from '@renderer/components/ui/date-input'
-import { Label } from '@renderer/components/ui/label'
 import { Separator } from '@renderer/components/ui/separator'
 
 export type Tribunal = {

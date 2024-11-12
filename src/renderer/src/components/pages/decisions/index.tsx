@@ -1,4 +1,3 @@
-import React from 'react'
 import DecisionsSearch from './search'
 import TopButtons from './top-buttons'
 import DecisionTable from './decisions-table'

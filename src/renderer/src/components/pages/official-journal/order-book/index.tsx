@@ -1,10 +1,7 @@
-import React from 'react'
 import BookSearch from '../search'
 import { useAuthHeader } from 'react-auth-kit'
 import { useQuery } from '@tanstack/react-query'
-import { Books } from '@renderer/types'
 import { getApi } from '@renderer/lib/http'
-import BookTable from '../Book-table'
 import OrderBookTable from './orderTable'
 import TopButtons from './top-button'
 
@@ -55,7 +52,7 @@ export default function OrderBookIndex() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['OrderBookResponse'],
     queryFn: () =>
-      getApi<OrderBookResponse[]>(
+      getApi<OrderBookResponse>(
         '/book-order?page=1&pageSize=4&include[Customer]=true&include[Book]=true',
         {
           headers: {

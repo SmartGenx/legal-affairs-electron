@@ -44,7 +44,7 @@ export default function LicenseIndex() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['LicenseResponse'],
     queryFn: () =>
-      getApi<LicenseResp[]>('/license?page=1&pageSize=2&include[licenseType]=true', {
+      getApi<LicenseResp>('/license?page=1&pageSize=2&include[licenseType]=true', {
         headers: {
           Authorization: authToken()
         }

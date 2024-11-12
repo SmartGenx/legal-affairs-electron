@@ -10,7 +10,6 @@ import { FormInput } from '@renderer/components/ui/form-input'
 import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
-import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 const formSchema = z.object({
