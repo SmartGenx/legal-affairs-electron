@@ -1,4 +1,4 @@
-import { number, string, z } from 'zod'
+import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,10 +11,9 @@ import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation,  useQueryClient } from '@tanstack/react-query'
 import { BookInfo } from '@renderer/types'
 import { DateInput } from '@renderer/components/ui/date-input'
-import AddCustomerDailog from '../../dailogs/add-customer'
 import AddCustomerDialog from '../../dailogs/add-customer'
 
 const formSchema = z.object({

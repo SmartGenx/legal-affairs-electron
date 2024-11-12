@@ -29,7 +29,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function UsersTable({ info, page, total, pageSize }: Props) {
+export default function UsersTable({ info, page, total }: Props) {
   const navigate = useNavigate()
   const authToken = useAuthHeader()
   const columns = React.useMemo<ColumnDef<DecisionInfo>[]>(

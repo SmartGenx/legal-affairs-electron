@@ -1,6 +1,5 @@
 import { Button } from '../../../../ui/button'
 import { ArrowRight } from 'lucide-react'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Header() {

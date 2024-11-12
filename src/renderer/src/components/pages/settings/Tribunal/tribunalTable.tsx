@@ -3,6 +3,8 @@ import { ColumnDef } from '@tanstack/react-table'
 // import DeleteDialog from './delete-dailog'
 import { SettingTable } from '@renderer/components/ui/settings-table'
 import DeleteSettingDialog from '../delete-dailog.-settings'
+import EditDialog from '../edit-dailog'
+import TribunalEdit from './tribunal-edit'
 
 type Props = {
   info: Info[]
@@ -31,7 +33,7 @@ export default function TribunalResTable({ info, page, total }: Props) {
       },
       {
         accessorKey: 'name',
-        header: 'اسم المنصب'
+        header: 'اسم المحكمة'
       },
 
       {
@@ -40,7 +42,7 @@ export default function TribunalResTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            {/* <EditDialog content={<EditCategoryForm id={row.original.globalId} />} />*/}
+            <EditDialog content={<TribunalEdit id={row.original.id} />} />
             <DeleteSettingDialog
               url={`/tribunal/${row.original?.id}`}
               keys={['TribunalTable']}

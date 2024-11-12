@@ -3,6 +3,8 @@ import { ColumnDef } from '@tanstack/react-table'
 // import DeleteDialog from './delete-dailog'
 import { SettingTable } from '@renderer/components/ui/settings-table'
 import DeleteSettingDialog from '../delete-dailog.-settings'
+import EditDialog from '../edit-dailog'
+import LicenseTypeEdit from './licenseTypeEdit'
 
 type Props = {
   info: Info[]
@@ -44,7 +46,7 @@ export default function LicenseTypeTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            {/* <EditDialog content={<EditCategoryForm id={row.original.globalId} />} />*/}
+            <EditDialog content={<LicenseTypeEdit id={row.original.id} />} />
             <DeleteSettingDialog
               url={`/license-type/${row.original?.id}`}
               keys={['LicenseTypeTable']}

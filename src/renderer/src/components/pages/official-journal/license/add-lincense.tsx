@@ -1,4 +1,4 @@
-import { string, z } from 'zod'
+import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -41,7 +41,7 @@ export default function AddLincense() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['license'],
     queryFn: () =>
-      getApi<LicenseType[]>('/license-type?page=1&pageSize=30', {
+      getApi<LicenseType>('/license-type?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

@@ -1,19 +1,8 @@
 import { useParams } from 'react-router-dom'
-import { number, z } from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '@renderer/components/ui/button'
-import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, patchApi, postApi } from '@renderer/lib/http'
-import { useToast } from '@renderer/components/ui/use-toast'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
-import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import FileUploader from './../add-decisions/FileUploader'
+import { axiosInstance } from '@renderer/lib/http'
+import {  useQuery } from '@tanstack/react-query'
 import { Separator } from '@renderer/components/ui/separator'
 
 export type Complain = {
@@ -31,17 +20,7 @@ export type Complain = {
   updatedAt: Date
   decisionDate: Date
 }
-const formSchema = z.object({
-  decisionName: z.string(),
-  refrance: z.string(),
-  governmentOfficeId: z.string(),
-  title: z.string(),
-  description: z.string(),
-  decisionSource: z.string(),
-  nameSource: z.string(),
-  decisionDate: z.string(),
-  file: z.instanceof(File).optional()
-})
+
 
 export type GovernmentOffice = {
   id: number
@@ -50,13 +29,10 @@ export type GovernmentOffice = {
   updatedAt: Date
   isDeleted: boolean
 }
-type DecisionsFormValue = z.infer<typeof formSchema>
+
 export default function DecisionInfo() {
   const { id } = useParams<{ id: string }>()
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
   const authToken = useAuthHeader()
-  const navigate = useNavigate()
   const [data, setData] = useState<GovernmentOffice[]>([])
   const fetchData = async () => {
     try {
@@ -81,8 +57,8 @@ export default function DecisionInfo() {
   }
   const {
     data: DecisionData,
-    error: DecisionError,
-    isLoading: DecisionIsLoading
+    error: _DecisionError,
+    isLoading: _DecisionIsLoading
   } = useQuery({
     queryKey: ['Decisions', id],
     queryFn: fetchDecisionData,

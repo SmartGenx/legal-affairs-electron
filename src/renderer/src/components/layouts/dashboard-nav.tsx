@@ -6,7 +6,6 @@ import {
 } from '@renderer/components/ui/tooltip'
 import { cn } from '@renderer/lib/utils'
 import { useSignOut } from 'react-auth-kit'
-import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { NavItem } from '../../types/index'
 import { Icons } from '../icons/icons'

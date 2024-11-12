@@ -3,6 +3,8 @@ import { ColumnDef } from '@tanstack/react-table'
 // import DeleteDialog from './delete-dailog'
 import { SettingTable } from '@renderer/components/ui/settings-table'
 import DeleteSettingDialog from '../delete-dailog.-settings'
+import EditDialog from '../edit-dailog'
+import LeaveTypeEdit from './LeaveType-edit'
 
 type Props = {
   info: Info[]
@@ -44,7 +46,7 @@ export default function LeaveTypeTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            {/* <EditDialog content={<EditCategoryForm id={row.original.globalId} />} />*/}
+            <EditDialog content={<LeaveTypeEdit id={row.original.id} />} />
             <DeleteSettingDialog
               url={`/leave-type/${row.original?.id}`}
               keys={['LeaveTypeTable']}

@@ -1,5 +1,4 @@
 import { LucideProps } from 'lucide-react'
-import React from 'react'
 export default function AccountBalanceWallet({ ...props }: LucideProps) {
   return (
     <svg

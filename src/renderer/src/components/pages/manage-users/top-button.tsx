@@ -1,4 +1,3 @@
-import DirectSend from '@renderer/components/icons/directSend'
 import { Button } from '@renderer/components/ui/button'
 import { Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'

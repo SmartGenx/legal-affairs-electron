@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { number, z } from 'zod'
+import {  z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
 import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,7 +8,7 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, patchApi, postApi } from '@renderer/lib/http'
+import { axiosInstance, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
@@ -80,8 +80,8 @@ export default function UpdateDecisions() {
   }
   const {
     data: DecisionData,
-    error: DecisionError,
-    isLoading: DecisionIsLoading
+    error: _DecisionError,
+    isLoading: _DecisionIsLoading
   } = useQuery({
     queryKey: ['Decisions', id],
     queryFn: fetchDecisionData,

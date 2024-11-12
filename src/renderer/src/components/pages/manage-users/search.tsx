@@ -1,7 +1,6 @@
 import { Button } from '@renderer/components/ui/button'
 import { SearchInput } from '@renderer/components/ui/search-input'
 import { Search } from 'lucide-react'
-import React from 'react'
 
 export default function DecisionsSearch() {
   return (

@@ -3,12 +3,10 @@ import { Form, FormControl, FormField, FormItem } from '../../ui/form'
 import { Input } from '../../ui/input'
 import { useToast } from '../../ui/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
-// import { signIn } from "next-auth/react";
-// import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { cn } from '../../../lib/utils'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../../lib/http'
 import { Eye, EyeOff } from 'lucide-react'
@@ -33,7 +31,7 @@ export default function LoginForm() {
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema)
   })
-  const [delayedSubmitting, setDelayedSubmitting] = useState(form.formState.isSubmitting)
+  const [delayedSubmitting, _setDelayedSubmitting] = useState(form.formState.isSubmitting)
   const [showPassword, setShowPassword] = useState(false)
 
   const onSubmit = async (data: UserFormValue) => {

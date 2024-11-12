@@ -1,4 +1,3 @@
-import React from 'react'
 import DecisionsSearch from './search'
 import TopButtons from './top-buttons'
 import AgencyTable from './agency-table'
@@ -12,7 +11,7 @@ export default function AgencyIndex() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['Agency'],
     queryFn: () =>
-      getApi<Agency[]>('/agency?page=1&pageSize=30', {
+      getApi<Agency>('/agency?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

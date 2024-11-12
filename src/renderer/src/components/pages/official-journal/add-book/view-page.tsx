@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
@@ -9,8 +9,6 @@ import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { axiosInstance, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
-import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const formSchema = z.object({
@@ -48,8 +46,8 @@ export default function ViewBook() {
   }
   const {
     data: BookData,
-    error: BookError,
-    isLoading: BookIsLoading
+    error: _BookError,
+    isLoading: _BookIsLoading
   } = useQuery({
     queryKey: ['Books', id],
     queryFn: fetchData,
