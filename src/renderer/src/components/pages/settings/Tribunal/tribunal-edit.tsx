@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getApi, patchApi } from '@renderer/lib/http'
 import { useAuthHeader } from 'react-auth-kit'
 import { toast } from '@renderer/components/ui/use-toast'
-import { AlertDialogAction, AlertDialogCancel } from '@renderer/components/ui/alert-dialog'
+import { AlertDialogCancel } from '@renderer/components/ui/alert-dialog'
 import { useEffect } from 'react'
 const formSchema = z.object({
   name: z.string()
@@ -25,7 +25,7 @@ export interface tribunalById {
   updatedAt: Date
 }
 export default function TribunalEdit({ id }: Props) {
-    const authToken = useAuthHeader()
+  const authToken = useAuthHeader()
   const queryClient = useQueryClient()
   const { data: tribunalByIdData, isSuccess } = useQuery({
     queryKey: ['tribunalById', id],

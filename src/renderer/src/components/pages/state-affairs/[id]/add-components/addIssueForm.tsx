@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '../../../../ui/use-toast'
 import { useAuthHeader } from 'react-auth-kit'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { GevStatus, kind_of_case, GovernmentFacility, Level } from '@renderer/types/enum'
+import { kind_of_case, Level } from '@renderer/types/enum'
 
 import {
   Select,
@@ -83,10 +83,6 @@ const type2 = [
   }
 ]
 
-const Postions = [{ label: 'مدير إدارة', value: GevStatus.Director_of_the_Department }] as const
-const GovernmentFacilities = [
-  { label: 'الشؤون القانونية', value: GovernmentFacility.Legal_Affairs }
-] as const
 
 const kindOfCase = [
   { label: 'جنائية', value: kind_of_case.criminal },
@@ -121,14 +117,12 @@ export default function AddIssueForm() {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const authToken = useAuthHeader()
+  const navigate = useNavigate()
 
   const [data, setData] = useState<Tribunal[]>([])
   const [dataGovernment, setGovernmentData] = useState<GovernmentOffice[]>([])
   const [dataPosition, setPositionData] = useState<PositionsProp[]>([])
-
-  const [selectedLevel, setSelectedLevel] = useState(null)
   const [selectedValue, setSelectedValue] = useState<kind_of_case | null>(null)
-  const navigate = useNavigate()
   const [selectedResumedValue, setSelectedResumedValue] = useState<boolean | null>(null)
   const [selectedStateValue, setSelectedStatedValue] = useState<boolean | null>(null)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
@@ -181,13 +175,13 @@ export default function AddIssueForm() {
   const form = useForm<IssuesFormValue>({
     resolver: zodResolver(formSchema)
   })
-  const [delayedSubmitting, setDelayedSubmitting] = useState(form.formState.isSubmitting)
+
 
   const {
     mutate: firstMutate,
-    isError: firstIsError,
-    isSuccess: firstIsSuccess,
-    isPending: firstIsPending
+    isError: _firstIsError,
+    isSuccess: _firstIsSuccess,
+    isPending: _firstIsPending
   } = useMutation({
     mutationKey: ['issue'],
     mutationFn: (datas: IssuesFormValue) =>
@@ -208,7 +202,7 @@ export default function AddIssueForm() {
           }
         }
       ),
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables) => {
       console.log('Response data:', data)
 
       // Trigger the second mutation using the ID from the first mutation's response
@@ -223,7 +217,7 @@ export default function AddIssueForm() {
         Resumed: variables.Resumed
       })
     },
-    onError: (error, variables, context) => {
+    onError: (error) => {
       toast({
         title: 'لم تتم العملية',
         description: error.message,
@@ -234,9 +228,9 @@ export default function AddIssueForm() {
 
   const {
     mutate: secondMutate,
-    isError: secondIsError,
-    isSuccess: secondIsSuccess,
-    isPending: secondIsPending
+    isError: _secondIsError,
+    isSuccess: _secondIsSuccess,
+    isPending: _secondIsPending
   } = useMutation({
     mutationKey: ['judgment'],
     mutationFn: (datas: {
@@ -265,7 +259,7 @@ export default function AddIssueForm() {
           }
         }
       ),
-    onSuccess: (data, variables, context) => {
+    onSuccess: () => {
       toast({
         title: 'اشعار',
         variant: 'success',
@@ -274,7 +268,7 @@ export default function AddIssueForm() {
       queryClient.invalidateQueries({ queryKey: ['Issues'] })
       navigate('/state-affairs')
     },
-    onError: (error, variables, context) => {
+    onError: (error) => {
       toast({
         title: 'لم تتم العملية',
         description: error.message,
@@ -390,7 +384,7 @@ export default function AddIssueForm() {
                     <FormControl>
                       <FormInput
                         className="h-10  p-0  rounded-xl text-sm"
-                        placeholder="   عنوان القضية "
+                        placeholder="عنوان القضية"
                         {...field}
                       />
                     </FormControl>

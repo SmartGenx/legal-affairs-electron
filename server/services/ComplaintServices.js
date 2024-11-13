@@ -111,8 +111,8 @@ class ComplaintService {
         const existingGovernmentOffice = await prisma.governmentOffice.findUnique({
           where: { id: governmentOfficeId }
         })
-        if (existingGovernmentOffice) {
-          throw new NotFoundError(`Government Office with ID ${governmentOfficeId}   is exist.`)
+        if (!existingGovernmentOffice) {
+          throw new NotFoundError(`Government Office with ID ${governmentOfficeId}   is not exist.`)
         }
       }
 

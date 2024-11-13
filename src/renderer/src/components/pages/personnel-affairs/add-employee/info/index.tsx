@@ -9,6 +9,7 @@ import { axiosInstance, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { EmployInfo } from '@renderer/types'
+import { LoaderIcon } from 'lucide-react'
 
 const formSchema = z.object({
   name: z.string(),
@@ -77,7 +78,7 @@ export default function EmployeeInfo() {
   const navigate = useNavigate()
 
   const fetchData = async () => {
-    const response = await axiosInstance.get<EmployInfo>(`/employ/${id}`, {
+    const response = await axiosInstance.get<EmployInfo>(`/employ/${id}?include[Attachment]=true`, {
       headers: {
         Authorization: `${authToken()}`
       }
@@ -88,7 +89,8 @@ export default function EmployeeInfo() {
   const {
     data: EmployeeData,
     error: _EmployeeError,
-    isLoading: _EmployeeIsLoading
+    isLoading: _EmployeeIsLoading,
+    isPending: EmployeeIsPending
   } = useQuery({
     queryKey: ['Employ', id],
     queryFn: fetchData,
@@ -98,7 +100,7 @@ export default function EmployeeInfo() {
   const form = useForm<AddEmployeeValue>({
     resolver: zodResolver(formSchema)
   })
-
+console.log("EmployeeData",EmployeeData)
   useEffect(() => {
     if (EmployeeData) {
       form.reset({
@@ -185,7 +187,13 @@ export default function EmployeeInfo() {
       })
     }
   })
-
+  if (EmployeeIsPending) {
+    return (
+      <div className="flex w-full items-center justify-center ">
+        <LoaderIcon className="mt-12 flex animate-spin items-center justify-end duration-1000" />
+      </div>
+    );
+  }
   const onSubmit = (datas: AddEmployeeValue) => {
     mutate(datas)
   }
@@ -370,7 +378,7 @@ export default function EmployeeInfo() {
 
         <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
           <div className=" col-span-1 h-[40px] bg-black">
-            <img src={EmployeeData?.Attachment} alt="" />
+            <img src={EmployeeData?.Attachment[0].file} alt="" />
           </div>
         </div>
         <div className="w-full flex justify-end gap-2 mb-4">

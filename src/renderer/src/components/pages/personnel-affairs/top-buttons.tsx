@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@renderer/components/ui/dropdown-menu'
-import { ChevronDown, Plus } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function TopButtons() {

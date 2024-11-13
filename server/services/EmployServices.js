@@ -51,10 +51,18 @@ class EmployServices {
       // Optional cleanup code can be added here
     }
   }
-  async getEmployById(id) {
+  async getEmployById(id,EmployFiltetr) {
     try {
+      let { include } = EmployFiltetr
+      delete EmployFiltetr.include
+      if (include) {
+        const convertTopLevel = convertTopLevelStringBooleans(include)
+        include = convertTopLevel
+      } else {
+        include = {}
+      }
       const employ = await prisma.employ.findUnique({
-        where: { id, isDeleted: false }
+        where: { id, isDeleted: false },include
       })
       if (!employ) {
         throw new NotFoundError(`employ with id ${id} not found.`)

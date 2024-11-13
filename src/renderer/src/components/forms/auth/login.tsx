@@ -24,10 +24,6 @@ export default function LoginForm() {
   const singIn = useSignIn()
   const { toast } = useToast()
   const navigate = useNavigate()
-  // const { push, replace } = useRouter()
-  // const pathname = usePathname()
-  // const searchParams = useSearchParams()
-  // const callbackUrl = searchParams.get('callbackUrl')
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema)
   })
@@ -38,56 +34,43 @@ export default function LoginForm() {
     try {
       const payload = {
         email: data.email,
-        password: data.password
-      }
-
-      const response = await axiosInstance.post<LogInResponse>('/auth/login', payload)
+        password: data.password,
+      };
+  
+      const response = await axiosInstance.post<LogInResponse>('/auth/login', payload);
       if (response.status === 200 || response.status === 201) {
         const singInResult = singIn({
           token: response.data.token,
           expiresIn: 10080,
           tokenType: 'Beaere',
-          authState: response.data
-        })
+          authState: response.data,
+        });
         if (singInResult) {
           toast({
             title: 'مرحبا مجددا',
             description: 'تم تسجيل الدخول بنجاح',
-            variant: 'success'
-          })
-          navigate('/')
+            variant: 'success',
+          });
+          navigate('/');
         } else {
           toast({
             title: 'حصل خطا ما',
             description: 'حاول تسجيل الدخول مجددا',
-            variant: 'destructive'
-          })
+            variant: 'destructive',
+          });
         }
       }
     } catch (error) {
-      console.error('Error occurred:', error)
-      return JSON.stringify(error)
+      console.error('Error occurred:', error);
+      return JSON.stringify(error);
     }
-  }
+    
+    // Ensure all code paths return a value
+    return;
+  };
+  
 
-  // React.useEffect(() => {
-  // const params = new URLSearchParams(searchParams.toString())
-  // if (callbackUrl?.includes('/dashboard/logout')) {
-  // params.set('callbackUrl', '/dashboard')
-  // replace(`${pathname}?${params.toString()}`)
-  // }
-  // }, [callbackUrl, pathname, replace, searchParams])
-  // useEffect(() => {
-  // if (form.formState.isSubmitting) {
-  // const timer = setTimeout(() => {
-  // setDelayedSubmitting(form.formState.isSubmitting)
-  // }, 2000)
-  // return () => clearTimeout(timer) // Cleanup timeout on component unmount or when effect re-runs
-  // } else {
-  // setDelayedSubmitting(form.formState.isSubmitting)
-  // }
-  // }, [form.formState.isSubmitting])
-  //
+  
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev)
   }

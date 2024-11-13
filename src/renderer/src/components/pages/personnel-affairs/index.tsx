@@ -1,4 +1,3 @@
-import React from 'react'
 import PersonnelAffairsSearch from './search'
 import TopButtons from './top-buttons'
 import { useAuthHeader } from 'react-auth-kit'
@@ -12,7 +11,7 @@ export default function PersonnelAffairsIndex() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['Employ'],
     queryFn: () =>
-      getApi<Employ[]>('/employ?page=1&pageSize=30', {
+      getApi<Employ>('/employ?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

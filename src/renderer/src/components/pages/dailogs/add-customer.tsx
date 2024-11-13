@@ -1,82 +1,82 @@
-import { zodResolver } from '@hookform/resolvers/zod'
+// import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@renderer/components/ui/button'
 import {
   Dialog,
-  DialogClose,
+  // DialogClose,
   DialogContent,
-  DialogFooter,
+  // DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from '@renderer/components/ui/dialog'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage
-} from '@renderer/components/ui/form'
-import { FormInput } from '@renderer/components/ui/form-input'
-import { useToast } from '@renderer/components/ui/use-toast'
-import { postApi } from '@renderer/lib/http'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+// import {
+//   Form,
+//   FormControl,
+//   FormField,
+//   FormItem,
+//   FormMessage
+// } from '@renderer/components/ui/form'
+// import { FormInput } from '@renderer/components/ui/form-input'
+// import { useToast } from '@renderer/components/ui/use-toast'
+// import { postApi } from '@renderer/lib/http'
+// import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
-import { useAuthHeader } from 'react-auth-kit'
-import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+// import { useAuthHeader } from 'react-auth-kit'
+// import { useForm } from 'react-hook-form'
+// import { useNavigate } from 'react-router-dom'
+// import { z } from 'zod'
 
-const formSchema = z.object({
-  name: z.string(),
-  type: z.string()
-})
+// const formSchema = z.object({
+//   name: z.string(),
+//   type: z.string()
+// })
 
-type BookFormValue = z.infer<typeof formSchema>
+// type BookFormValue = z.infer<typeof formSchema>
 
 export default function AddCustomerDialog() {
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
-  const authToken = useAuthHeader()
-  const navigate = useNavigate()
-  const form = useForm<BookFormValue>({
-    resolver: zodResolver(formSchema)
-  })
+  // const queryClient = useQueryClient()
+  // const { toast } = useToast()
+  // const authToken = useAuthHeader()
+  // const navigate = useNavigate()
+  // const form = useForm<BookFormValue>({
+  //   resolver: zodResolver(formSchema)
+  // })
 
-  const { mutate } = useMutation({
-    mutationKey: ['AddCustomer'],
-    mutationFn: (datas: BookFormValue) =>
-      postApi(
-        '/customer',
-        {
-          name: datas.name,
-          type: +datas.type
-        },
-        {
-          headers: {
-            Authorization: `${authToken()}`
-          }
-        }
-      ),
-    onSuccess: () => {
-      toast({
-        title: 'اشعار',
-        variant: 'success',
-        description: 'تمت الاضافة بنجاح'
-      })
-      queryClient.invalidateQueries({ queryKey: ['OrderBook'] })
-      navigate('/official-journal/order-book')
-    },
-    onError: (error) => {
-      toast({
-        title: 'لم تتم العملية',
-        description: error.message,
-        variant: 'destructive'
-      })
-    }
-  })
-  const onSubmit = (datas: BookFormValue) => {
-    // mutate(datas)
-  }
+  // const { mutate } = useMutation({
+  //   mutationKey: ['AddCustomer'],
+  //   mutationFn: (datas: BookFormValue) =>
+  //     postApi(
+  //       '/customer',
+  //       {
+  //         name: datas.name,
+  //         type: +datas.type
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `${authToken()}`
+  //         }
+  //       }
+  //     ),
+  //   onSuccess: () => {
+  //     toast({
+  //       title: 'اشعار',
+  //       variant: 'success',
+  //       description: 'تمت الاضافة بنجاح'
+  //     })
+  //     queryClient.invalidateQueries({ queryKey: ['OrderBook'] })
+  //     navigate('/official-journal/order-book')
+  //   },
+  //   onError: (error) => {
+  //     toast({
+  //       title: 'لم تتم العملية',
+  //       description: error.message,
+  //       variant: 'destructive'
+  //     })
+  //   }
+  // })
+  // const onSubmit = (datas: BookFormValue) => {
+  //   // mutate(datas)
+  // }
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -94,7 +94,7 @@ export default function AddCustomerDialog() {
             إضافة مشتري
           </DialogTitle>
         </DialogHeader>
-        <Form {...form}>
+        {/* <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="" id="AddCustomerForm">
             <div className="grid grid-cols-1 p-4  text-right">
               <div className="col-span-1 h-auto">
@@ -150,7 +150,7 @@ export default function AddCustomerDialog() {
               </div>
             </div>
           </form>
-        </Form>
+        </Form> */}
       </DialogContent>
     </Dialog>
   )

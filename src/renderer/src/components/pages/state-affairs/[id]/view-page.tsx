@@ -977,6 +977,12 @@ export default function ViewPage() {
                       </div>
                     </>
                   )
+                }else {
+                  return (
+                    <div>
+                      <p>No data available for this level.</p>
+                    </div>
+                  );
                 }
               })()}
             </div>
