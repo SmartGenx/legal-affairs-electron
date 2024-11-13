@@ -99,24 +99,6 @@ class IssueDetailsService {
 
     async updateIssueDetails(id, issueDetailsData) {
         try {
-            const { issueId } = issueDetailsData;
-           
-            const existingIssueDetails = await prisma.issueDetails.findUnique({ where: { id } });
-            if (!existingIssueDetails) {
-                throw new NotFoundError(`IssueDetails with id ${id} not found.`);
-            }
-            if(issueId){
-            const existingIssue = await prisma.issue.findFirst({ where: { id: issueId } });
-            if (!existingIssue) {
-                throw new NotFoundError(`Issue with id ${issueId} not found.`);
-            }
-            const issueDetails = await prisma.issueDetails.findFirst({ where:{issueId:issueId, isDeleted: false} });
-            if (issueDetails) {
-                throw new NotFoundError(`IssueDetails with issueId ${issueId} already exists.`);
-            }
-            
-        }
-
             return await prisma.issueDetails.update({ where: { id }, data: issueDetailsData });
         } catch (error) {
             if (error instanceof NotFoundError) {
