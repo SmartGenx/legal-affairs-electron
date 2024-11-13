@@ -22,6 +22,7 @@ import { Textarea } from '@renderer/components/ui/textarea'
 import { Button } from '@renderer/components/ui/button'
 import { Link, useNavigate } from 'react-router-dom'
 import { InfoIssue } from '@renderer/types'
+import { Plus } from 'lucide-react'
 // import { IssuesResponse } from '@renderer/types'
 
 export type Tribunal = {
@@ -60,7 +61,7 @@ const formSchema = z.object({
   detailsDate: z.string(),
   judgment: z.string(),
   refrance: z.string(),
-  Resumed: z.boolean()
+  Resumed: z.boolean().optional()
 })
 const type1 = [
   {
@@ -82,7 +83,6 @@ const type2 = [
     value: 2
   }
 ]
-
 
 const kindOfCase = [
   { label: 'جنائية', value: kind_of_case.criminal },
@@ -176,7 +176,6 @@ export default function AddIssueForm() {
     resolver: zodResolver(formSchema)
   })
 
-
   const {
     mutate: firstMutate,
     isError: _firstIsError,
@@ -240,7 +239,7 @@ export default function AddIssueForm() {
       detailsDate: string
       judgment: string
       refrance: string
-      Resumed: boolean
+      Resumed?: boolean
     }) =>
       postApi(
         '/issue-details',
@@ -309,7 +308,7 @@ export default function AddIssueForm() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   الإسم "
                         {...field}
                       />
@@ -328,7 +327,7 @@ export default function AddIssueForm() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="الصفة" />
                         </SelectTrigger>
@@ -355,7 +354,7 @@ export default function AddIssueForm() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="المرفق الحكومي" />
                         </SelectTrigger>
@@ -374,33 +373,12 @@ export default function AddIssueForm() {
               />
             </div>
           </div>
-          <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-10  p-0  rounded-xl text-sm"
-                        placeholder="عنوان القضية"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
 
-            {/*  */}
-          </div>
           {/*  */}
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">نوع القضية</h3>
           </div>
-          <div className="grid h-[100px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right mt-4 ">
+          <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right mt-4 ">
             <div className="col-span-2 h-[50px] ">
               <FormField
                 control={form.control}
@@ -421,7 +399,7 @@ export default function AddIssueForm() {
                                 setSelectedValue(newValue)
                                 field.onChange(newValue)
                               }}
-                              className="appearance-none w-6 h-6 border border-gray-300  rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                              className="appearance-none w-6 h-6 border-[3px] border-[#595959]  rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                             />
                             <svg
                               className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none  ${
@@ -439,7 +417,7 @@ export default function AddIssueForm() {
                             </svg>
                           </div>
                         </FormControl>
-                        <FormLabel className="font-normal ml-20 mr-2">{caseType.label}</FormLabel>
+                        <FormLabel className="font-normal ml-20 mr-2 relative -top-1">{caseType.label}</FormLabel>
                       </div>
                     ))}
                     <FormMessage />
@@ -457,7 +435,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -481,7 +459,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -505,7 +483,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -529,7 +507,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -554,7 +532,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                          <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="اختار واحد" />
                             </SelectTrigger>
@@ -617,7 +595,7 @@ export default function AddIssueForm() {
           </div>
           {selectedOption === 1 ? (
             <>
-              <div className="grid h-[80px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+              <div className="grid h-[50px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
                   <FormField
                     control={form.control}
@@ -625,7 +603,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="المحكمة" />
                             </SelectTrigger>
@@ -644,7 +622,29 @@ export default function AddIssueForm() {
                   />
                 </div>
               </div>
-              <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[70px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                <div className=" col-span-1 h-[50px] ">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <FormInput
+                            className="h-11 placeholder:text-[#757575] px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            placeholder="عنوان القضية"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/*  */}
+              </div>
+              <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
                     control={form.control}
@@ -653,7 +653,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
+                            className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -667,7 +667,7 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
 
-              <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid min-h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
@@ -681,6 +681,7 @@ export default function AddIssueForm() {
                             {...field}
                             placeholder="تاريخة"
                             type="date"
+                            className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             onChange={(e) => field.onChange(e.target.value)}
                           />
                         </FormControl>
@@ -698,7 +699,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-12  rounded-xl text-sm"
+                            className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="   رقم الحكم "
                             {...field}
                           />
@@ -708,7 +709,7 @@ export default function AddIssueForm() {
                     )}
                   />
                 </div>
-                <div className="col-span-1 h-[50px]">
+                <div className="col-span-1 h-[50px] translate-y-3">
                   <FormField
                     control={form.control}
                     name="Resumed"
@@ -729,7 +730,7 @@ export default function AddIssueForm() {
                                     setSelectedResumedValue(newValue)
                                     field.onChange(newValue)
                                   }}
-                                  className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  className="appearance-none w-6 h-6 border-[3px] border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                                 />
                                 <svg
                                   className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
@@ -747,7 +748,7 @@ export default function AddIssueForm() {
                                 </svg>
                               </div>
                             </FormControl>
-                            <FormLabel className="font-normal ml-20 mr-2">
+                            <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
                               {caseType.label}
                             </FormLabel>
                           </div>
@@ -763,7 +764,7 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 2 ? (
             <>
-              <div className="grid h-[80px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+              <div className="grid h-[50px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
                   <FormField
                     control={form.control}
@@ -771,7 +772,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="المحكمة" />
                             </SelectTrigger>
@@ -790,7 +791,29 @@ export default function AddIssueForm() {
                   />
                 </div>
               </div>
-              <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[70px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                <div className=" col-span-1 h-[50px] ">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <FormInput
+                            className="h-11 px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            placeholder="عنوان القضية"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/*  */}
+              </div>
+              <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
                     control={form.control}
@@ -799,7 +822,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
+                            className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -813,7 +836,7 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
 
-              <div className="grid h-[60px]  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[75px]  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
@@ -827,6 +850,7 @@ export default function AddIssueForm() {
                             {...field}
                             placeholder="تاريخة"
                             type="date"
+                            className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             onChange={(e) => field.onChange(e.target.value)}
                           />
                         </FormControl>
@@ -844,7 +868,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-12  rounded-xl text-sm"
+                            className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="   رقم الحكم "
                             {...field}
                           />
@@ -858,7 +882,7 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 3 ? (
             <>
-              <div className="grid h-[80px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+              <div className="grid h-[50px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
                   <FormField
                     control={form.control}
@@ -866,7 +890,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="المحكمة" />
                             </SelectTrigger>
@@ -885,7 +909,29 @@ export default function AddIssueForm() {
                   />
                 </div>
               </div>
-              <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[70px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                <div className=" col-span-1 h-[50px] ">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <FormInput
+                            className="h-11 px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            placeholder="عنوان القضية"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/*  */}
+              </div>
+              <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
                   <FormField
                     control={form.control}
@@ -894,7 +940,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
+                            className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -908,7 +954,7 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
 
-              <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
@@ -922,6 +968,7 @@ export default function AddIssueForm() {
                             {...field}
                             placeholder="تاريخه"
                             type="date"
+                            className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             onChange={(e) => field.onChange(e.target.value)}
                           />
                         </FormControl>
@@ -939,7 +986,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-12  rounded-xl text-sm"
+                            className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="   رقم الحكم "
                             {...field}
                           />
@@ -949,7 +996,7 @@ export default function AddIssueForm() {
                     )}
                   />
                 </div>
-                <div className="col-span-1 h-[50px]">
+                <div className="col-span-1 h-[50px] translate-y-3">
                   <FormField
                     control={form.control}
                     name="Resumed"
@@ -970,7 +1017,7 @@ export default function AddIssueForm() {
                                     setSelectedResumedValue(newValue)
                                     field.onChange(newValue)
                                   }}
-                                  className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  className="appearance-none w-6 h-6 border-[3px] border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                                 />
                                 <svg
                                   className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
@@ -988,7 +1035,7 @@ export default function AddIssueForm() {
                                 </svg>
                               </div>
                             </FormControl>
-                            <FormLabel className="font-normal ml-20 mr-2">
+                            <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
                               {caseType.label}
                             </FormLabel>
                           </div>
@@ -1029,7 +1076,7 @@ export default function AddIssueForm() {
                                 setSelectedStatedValue(newValue)
                                 field.onChange(newValue)
                               }}
-                              className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                              className="appearance-none w-6 h-6 border-[3px] border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                             />
                             <svg
                               className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
@@ -1047,7 +1094,7 @@ export default function AddIssueForm() {
                             </svg>
                           </div>
                         </FormControl>
-                        <FormLabel className="font-normal ml-20 mr-2">{caseType.label}</FormLabel>
+                        <FormLabel className="font-normal ml-20 relative -top-1 mr-2">{caseType.label}</FormLabel>
                       </div>
                     ))}
                     <FormMessage />
@@ -1059,16 +1106,17 @@ export default function AddIssueForm() {
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
             <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
+              <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
             </Link>
 
             <Button
-              className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
+              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              حفظ
+              <p className='font-bold text-base'>حفظ</p>
+              <Plus className='mr-2'/>
             </Button>
           </div>
         </form>

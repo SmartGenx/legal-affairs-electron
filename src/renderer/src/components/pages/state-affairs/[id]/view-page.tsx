@@ -1,26 +1,19 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../../ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '../../../ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Button } from '@renderer/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { useParams, Link } from 'react-router-dom'
-import { IssuesResponse } from '@renderer/types'
+import { InfoIssue, IssuesResponse } from '@renderer/types'
 import { useAuthHeader } from 'react-auth-kit'
 import { axiosInstance } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { GevStatus, kind_of_case, GovernmentFacility, Level } from '@renderer/types/enum'
+import {  kind_of_case, Level } from '@renderer/types/enum'
 import { z } from 'zod'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { DateInput } from '@renderer/components/ui/date-input'
 
 export type Tribunal = {
   id: number
@@ -29,7 +22,14 @@ export type Tribunal = {
   updatedAt: Date
   isDeleted: boolean
 }
-
+export type PositionsProp = {
+  id: number
+  name: string
+  isDeleted: boolean
+  createdAt: Date
+  updatedAt: Date
+  Issue: InfoIssue[]
+}
 const formSchema = z.object({
   name: z.string(),
   postionId: z.string(),
@@ -66,10 +66,13 @@ const type2 = [
   }
 ]
 
-const Postions = [{ label: 'مدير إدارة', value: GevStatus.Director_of_the_Department }] as const
-const GovernmentFacilities = [
-  { label: 'الشؤون القانونية', value: GovernmentFacility.Legal_Affairs }
-] as const
+export type GovernmentOffice = {
+  id: number
+  name: string
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
 
 const kindOfCase = [
   { label: 'جنائية', value: kind_of_case.criminal },
@@ -77,8 +80,6 @@ const kindOfCase = [
   { label: 'تجارية', value: kind_of_case.business },
   { label: 'إدارية', value: kind_of_case.administrative }
 ] as const
-
-
 
 const contested = [
   { label: 'طاعن عليه', value: false },
@@ -102,9 +103,35 @@ export default function ViewPage() {
   const authToken = useAuthHeader()
 
   const [tribunal, setTribunal] = useState<Tribunal[]>([])
+  const [dataGovernment, setGovernmentData] = useState<GovernmentOffice[]>([])
   const [_selectedStateValue, setSelectedStatedValue] = useState<boolean | null>(null)
+  const [dataPosition, setPositionData] = useState<PositionsProp[]>([])
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const fetchPositionData = async () => {
+    try {
+      const response = await axiosInstance.get('/position', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setPositionData(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
 
+  const fetchGovernmentData = async () => {
+    try {
+      const response = await axiosInstance.get('/government-office', {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      })
+      setGovernmentData(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
 
   // Fetch tribunal data
   useEffect(() => {
@@ -120,7 +147,8 @@ export default function ViewPage() {
         console.error('Error fetching data:', error)
       }
     }
-
+    fetchGovernmentData()
+    fetchPositionData()
     fetchData()
   }, [selectedOption, authToken]) // Include authToken as a dependency
 
@@ -157,7 +185,7 @@ export default function ViewPage() {
   const {
     data: issueDetailsData,
     error: issueDetailsError,
-    isLoading: isIssueDetailsLoading,
+    isLoading: isIssueDetailsLoading
   } = useQuery({
     queryKey: ['issue', id],
     queryFn: fetchIssueDetailsById,
@@ -199,7 +227,7 @@ export default function ViewPage() {
   }, [issueData, issueDetailsData, form])
 
   const [selectedValue, _setSelectedValue] = useState<string | null>(issueData?.[0]?.type || null)
-  const levelString = String(issueDetailsData?.[0]?.level ?? '');
+  const levelString = String(issueDetailsData?.[0]?.level ?? '')
   const tribunalIdString = String(issueDetailsData?.[0]?.tribunalId ?? '')
 
   // const handleCheckboxChange = (value: string) => {
@@ -248,7 +276,7 @@ export default function ViewPage() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-10 p-0  rounded-xl text-sm"
+                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   الإسم "
                           {...field}
                         />
@@ -271,18 +299,18 @@ export default function ViewPage() {
                         value={field.value ? String(field.value) : String(issueData?.[0].postionId)}
                         defaultValue={String(issueData?.[0].postionId)}
                       >
-                        <FormControl>
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="الصفة" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Postions.map((position) => (
+                          {dataPosition.map((position) => (
                             <SelectItem
-                              key={position.value}
-                              value={String(position.value) || String(issueData?.[0].postionId)}
+                              key={position.id}
+                              value={String(position.id) || String(issueData?.[0].postionId)}
                             >
-                              {position.label}
+                              {position.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -310,15 +338,15 @@ export default function ViewPage() {
                         }
                         defaultValue={String(issueData?.[0].governmentOfficeId)}
                       >
-                        <FormControl>
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="المرفق الحكومي" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {GovernmentFacilities.map((directorate) => (
-                            <SelectItem key={directorate.value} value={String(directorate.value)}>
-                              {directorate.label}
+                          {dataGovernment.map((directorate) => (
+                            <SelectItem key={directorate.name} value={String(directorate.id)}>
+                              {directorate.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -356,7 +384,7 @@ export default function ViewPage() {
                                     field.value === caseType.value ? null : caseType.value
                                   field.onChange(newValue) // Update the form value
                                 }}
-                                className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                className="appearance-none w-6 h-6 border-[3px] border-[#595959] rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                               />
                               <svg
                                 className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
@@ -374,7 +402,9 @@ export default function ViewPage() {
                               </svg>
                             </div>
                           </FormControl>
-                          <FormLabel className="font-normal ml-20 mr-2">{caseType.label}</FormLabel>
+                          <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
+                            {caseType.label}
+                          </FormLabel>
                         </div>
                       ))}
                       <FormMessage />
@@ -417,7 +447,7 @@ export default function ViewPage() {
                             value={String(field.value)}
                             defaultValue={String(field.value)}
                           >
-                            <FormControl>
+                            <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
                               <SelectTrigger>
                                 <SelectValue placeholder="اختار واحد" />
                               </SelectTrigger>
@@ -457,11 +487,7 @@ export default function ViewPage() {
                           field.onChange(value)
                           setSelectedOption(parseInt(value, 10))
                         }}
-                        value={
-                          field.value
-                            ? String(field.value)
-                            : levelString
-                        }
+                        value={field.value ? String(field.value) : levelString}
                         defaultValue={levelString}
                       >
                         <FormControl className="w-full h-[50px] rounded-xl bg-transparent border-[1px] border-transparent ">
@@ -501,14 +527,10 @@ export default function ViewPage() {
                               <FormItem>
                                 <Select
                                   onValueChange={field.onChange}
-                                  value={
-                                    field.value
-                                      ? String(field.value)
-                                      : tribunalIdString
-                                  }
+                                  value={field.value ? String(field.value) : tribunalIdString}
                                   defaultValue={tribunalIdString}
                                 >
-                                  <FormControl>
+                                  <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                                     <SelectTrigger>
                                       <SelectValue placeholder="المحكمه" />
                                     </SelectTrigger>
@@ -538,7 +560,7 @@ export default function ViewPage() {
                               <FormItem>
                                 <FormControl>
                                   <FormInput
-                                    className="h-12 p-0  rounded-xl text-sm"
+                                    className="h-11 px-2 placeholder:text-base text-[#757575]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     placeholder="   عنوان القضية "
                                     {...field}
                                   />
@@ -551,7 +573,7 @@ export default function ViewPage() {
 
                         {/*  */}
                       </div>
-                      <div className="grid h-[150px]   grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[130px]   grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         <div className=" col-span-1 h-[40px] ">
                           <FormField
                             control={form.control}
@@ -560,7 +582,7 @@ export default function ViewPage() {
                               <FormItem className="col-span-2">
                                 <FormControl>
                                   <Textarea
-                                    className="bg-white"
+                                    className="bg-transparent placeholder:text-base text-[#757575] rounded-xl border-[3px] border-[#E5E7EB]"
                                     rows={5}
                                     {...field}
                                     placeholder="نص الحكم"
@@ -574,7 +596,7 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         {/*  */}
 
                         <div className=" col-span-1 h-auto">
@@ -584,10 +606,11 @@ export default function ViewPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
-                                  <DateInput
+                                  <FormInput
                                     {...field}
-                                    placeholder="تاريخ الميلاد"
+                                    placeholder="تاريخة"
                                     type="date"
+                                    className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     onChange={(e) => field.onChange(e.target.value)}
                                   />
                                 </FormControl>
@@ -605,7 +628,7 @@ export default function ViewPage() {
                               <FormItem>
                                 <FormControl>
                                   <FormInput
-                                    className="h-12  rounded-xl text-sm"
+                                    className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     placeholder="   رقم الحكم "
                                     {...field}
                                   />
@@ -615,7 +638,7 @@ export default function ViewPage() {
                             )}
                           />
                         </div>
-                        <div className="col-span-1 h-[50px]">
+                        <div className="col-span-1 h-[50px] translate-y-3">
                           <FormField
                             control={form.control}
                             name="Resumed"
@@ -634,7 +657,7 @@ export default function ViewPage() {
                                               field.value === caseType.value ? null : caseType.value
                                             field.onChange(newValue) // Update the form control with the new value
                                           }}
-                                          className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                          className="appearance-none w-6 h-6 border-[3px] border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                                         />
                                         <svg
                                           className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
@@ -652,7 +675,7 @@ export default function ViewPage() {
                                         </svg>
                                       </div>
                                     </FormControl>
-                                    <FormLabel className="font-normal ml-20 mr-2">
+                                    <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
                                       {caseType.label}
                                     </FormLabel>
                                   </div>
@@ -680,14 +703,10 @@ export default function ViewPage() {
                               <FormItem>
                                 <Select
                                   onValueChange={field.onChange}
-                                  value={
-                                    field.value
-                                      ? String(field.value)
-                                      : tribunalIdString
-                                  }
+                                  value={field.value ? String(field.value) : tribunalIdString}
                                   defaultValue={tribunalIdString}
                                 >
-                                  <FormControl>
+                                  <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                                     <SelectTrigger>
                                       <SelectValue placeholder="المحكمه" />
                                     </SelectTrigger>
@@ -717,7 +736,7 @@ export default function ViewPage() {
                               <FormItem>
                                 <FormControl>
                                   <FormInput
-                                    className="h-12 p-0  rounded-xl text-sm"
+                                    className="h-11 placeholder:text-[#757575] px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     placeholder="   عنوان القضية "
                                     {...field}
                                   />
@@ -730,7 +749,7 @@ export default function ViewPage() {
 
                         {/*  */}
                       </div>
-                      <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         <div className=" col-span-1 h-[40px] ">
                           <FormField
                             control={form.control}
@@ -739,7 +758,7 @@ export default function ViewPage() {
                               <FormItem className="col-span-2">
                                 <FormControl>
                                   <Textarea
-                                    className="bg-white"
+                                    className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                                     rows={5}
                                     {...field}
                                     placeholder="نص الحكم"
@@ -767,6 +786,7 @@ export default function ViewPage() {
                                     {...field}
                                     placeholder="تاريخة"
                                     type="date"
+                                    className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     onChange={(e) => field.onChange(e.target.value)}
                                   />
                                 </FormControl>
@@ -784,7 +804,7 @@ export default function ViewPage() {
                               <FormItem>
                                 <FormControl>
                                   <FormInput
-                                    className="h-12  rounded-xl text-sm"
+                                    className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     placeholder="   رقم الحكم "
                                     {...field}
                                   />
@@ -809,14 +829,10 @@ export default function ViewPage() {
                               <FormItem>
                                 <Select
                                   onValueChange={field.onChange}
-                                  value={
-                                    field.value
-                                      ? String(field.value)
-                                      : tribunalIdString
-                                  }
+                                  value={field.value ? String(field.value) : tribunalIdString}
                                   defaultValue={tribunalIdString}
                                 >
-                                  <FormControl>
+                                  <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                                     <SelectTrigger>
                                       <SelectValue placeholder="المحكمه" />
                                     </SelectTrigger>
@@ -846,7 +862,7 @@ export default function ViewPage() {
                               <FormItem>
                                 <FormControl>
                                   <FormInput
-                                    className="h-12 p-0  rounded-xl text-sm"
+                                    className="h-11 placeholder:text-[#757575] px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     placeholder="   عنوان القضية "
                                     {...field}
                                   />
@@ -860,7 +876,7 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         <div className=" col-span-1 h-[40px] ">
                           <FormField
                             control={form.control}
@@ -869,7 +885,7 @@ export default function ViewPage() {
                               <FormItem className="col-span-2">
                                 <FormControl>
                                   <Textarea
-                                    className="bg-white"
+                                    className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                                     rows={5}
                                     {...field}
                                     placeholder="نص الحكم"
@@ -883,7 +899,7 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         {/*  */}
 
                         <div className=" col-span-1 h-auto">
@@ -897,6 +913,7 @@ export default function ViewPage() {
                                     {...field}
                                     placeholder="تاريخه"
                                     type="date"
+                                    className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     onChange={(e) => field.onChange(e.target.value)}
                                   />
                                 </FormControl>
@@ -914,7 +931,7 @@ export default function ViewPage() {
                               <FormItem>
                                 <FormControl>
                                   <FormInput
-                                    className="h-12  rounded-xl text-sm"
+                                    className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                                     placeholder="   رقم الحكم "
                                     {...field}
                                   />
@@ -924,7 +941,7 @@ export default function ViewPage() {
                             )}
                           />
                         </div>
-                        <div className="col-span-1 h-[50px]">
+                        <div className="col-span-1 h-[50px] translate-y-3">
                           <FormField
                             control={form.control}
                             name="Resumed"
@@ -943,7 +960,7 @@ export default function ViewPage() {
                                               field.value === caseType.value ? null : caseType.value
                                             field.onChange(newValue) // Update the form control with the new value
                                           }}
-                                          className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                          className="appearance-none w-6 h-6 border-[3px] border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                                         />
                                         <svg
                                           className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
@@ -961,7 +978,7 @@ export default function ViewPage() {
                                         </svg>
                                       </div>
                                     </FormControl>
-                                    <FormLabel className="font-normal ml-20 mr-2">
+                                    <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
                                       {caseType.label}
                                     </FormLabel>
                                   </div>
@@ -977,12 +994,12 @@ export default function ViewPage() {
                       </div>
                     </>
                   )
-                }else {
+                } else {
                   return (
                     <div>
                       <p>No data available for this level.</p>
                     </div>
-                  );
+                  )
                 }
               })()}
             </div>
@@ -1010,7 +1027,7 @@ export default function ViewPage() {
                                   setSelectedStatedValue(newValue)
                                   field.onChange(newValue)
                                 }}
-                                className="appearance-none w-6 h-6 border border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                className="appearance-none w-6 h-6 border-[3px] border-gray-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                               />
                               <svg
                                 className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
@@ -1028,7 +1045,7 @@ export default function ViewPage() {
                               </svg>
                             </div>
                           </FormControl>
-                          <FormLabel className="font-normal ml-20 mr-2">{caseType.label}</FormLabel>
+                          <FormLabel className="font-normal ml-20 mr-2 relative -top-1">{caseType.label}</FormLabel>
                         </div>
                       ))}
                       <FormMessage />
@@ -1040,16 +1057,17 @@ export default function ViewPage() {
             </div>
             <div className="w-full flex justify-end gap-2 mb-4">
               <Link to={'/state-affairs'}>
-                <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
+                <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                   إلغاء
                 </Button>
               </Link>
 
               <Button
-                className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
+                className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
                 type="submit"
               >
-                حفظ
+                <p className="font-bold text-base">تعديل</p>
+                
               </Button>
             </div>
           </form>

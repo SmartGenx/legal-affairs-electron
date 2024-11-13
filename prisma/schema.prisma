@@ -92,7 +92,7 @@ model IssueDetails {
   isDeleted   Boolean  @default(false)
   judgment    String
   refrance    String
-  Resumed     Boolean
+  Resumed     Boolean?
   Tribunal           Tribunal          @relation(fields: [tribunalId], references: [id])
 }
 
