@@ -81,10 +81,10 @@ const Resumed = [
   { label: 'مستأنف', value: true }
 ] as const
 
-// const contested = [
-//   { label: 'طاعن عليه', value: false },
-//   { label: 'مطعون', value: true }
-// ] as const
+const contested = [
+  { label: 'طاعن عليه', value: false },
+  { label: 'مطعون', value: true }
+] as const
 
 const CompletionOfTheCase = [
   { label: 'نعم', value: true },
@@ -376,11 +376,17 @@ export default function StateAffairsInfo() {
 
                       <div className="grid min-h-[10vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
                         <div className="text-[#757575] col-span-1">
-                          <label htmlFor="" className="font-bold text-lg">تاريخه</label>
-                          <p className="mt-2">{String(issueDetailsData?.[0]?.detailsDate).split('T')[0]}</p>
+                          <label htmlFor="" className="font-bold text-lg">
+                            تاريخه
+                          </label>
+                          <p className="mt-2">
+                            {String(issueDetailsData?.[0]?.detailsDate).split('T')[0]}
+                          </p>
                         </div>
                         <div className="text-[#757575] col-span-1">
-                          <label htmlFor="" className="font-bold text-lg">رقم الحكم</label>
+                          <label htmlFor="" className="font-bold text-lg">
+                            رقم الحكم
+                          </label>
                           <p className="mt-2">{issueDetailsData?.[0]?.refrance}</p>
                         </div>
                         <div className="text-[#757575] col-span-1">
@@ -392,12 +398,14 @@ export default function StateAffairsInfo() {
                         </div>
                       </div>
                       <div className="grid min-h-[10vh] mt-10 grid-cols-3  items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                      <div className="text-[#757575] col-span-1 ">
-                          <label htmlFor="" className="font-bold text-lg">أنجاز القضية</label>
+                        <div className="text-[#757575] col-span-1 ">
+                          <label htmlFor="" className="font-bold text-lg">
+                            أنجاز القضية
+                          </label>
                           <p className="mt-2">
-                            {CompletionOfTheCase.filter((x) => x.value === issueData?.[0]?.state).map(
-                              (x) => x.label
-                            )}
+                            {CompletionOfTheCase.filter(
+                              (x) => x.value === issueData?.[0]?.state
+                            ).map((x) => x.label)}
                           </p>
                         </div>
                       </div>
@@ -406,46 +414,53 @@ export default function StateAffairsInfo() {
                 } else if (level === 2) {
                   return (
                     <>
-                      <div className="grid h-[60px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1">
-                          <label htmlFor="">المحكمه</label>
-                          {/* <p>
+                      <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            المحكمه
+                          </label>
+                          <p className="mt-2">
                             {tribunal
-                              .filter((x) => x.id === issueDetailsData[0]?.tribunalId)
+                              .filter((x) => x.id === issueDetailsData?.[0]?.tribunalId)
                               .map((x) => x.name)}
-                          </p> */}
+                          </p>
+                        </div>
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            عنوان القضية
+                          </label>
+                          <p className="mt-2">{issueData?.[0]?.title}</p>
+                        </div>
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            نص الحكم
+                          </label>
+                          <p className="mt-2">{issueDetailsData?.[0]?.judgment}</p>
                         </div>
                       </div>
-                      <div className="grid h-[60px] mb-3 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">عنوان القضية</label>
-                          {/* <p>{issueData[0].title}</p> */}
+
+                      <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            تاريخه
+                          </label>
+                          <p className='mt-2'>{String(issueDetailsData?.[0]?.detailsDate).split('T')[0]}</p>
                         </div>
-                      </div>
-                      {/* Uncomment the following code if needed */}
-                      <div className="grid min-h-[70px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">نص الحكم</label>
-                          {/* <p>{issueDetailsData[0].judgment}</p> */}
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            رقم الحكم
+                          </label>
+                          <p className="mt-2">{issueDetailsData?.[0]?.refrance}</p>
                         </div>
-                      </div>
-                      {/*  */}
-                      <div className="grid min-h-[70px] grid-cols-4 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">تاريخه</label>
-                          {/* <p>{issueDetailsData[0].detailsDate}</p> */}
-                        </div>
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">رقم الحكم</label>
-                          {/* <p>{issueDetailsData[0].refrance}</p> */}
-                        </div>
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">أنجاز القضية</label>
-                          {/* <p>
-                            {CompletionOfTheCase.filter((x) => x.value === issueData[0].state).map(
-                              (x) => x.label
-                            )}
-                          </p> */}
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            أنجاز القضية
+                          </label>
+                          <p className="mt-2">
+                            {CompletionOfTheCase.filter(
+                              (x) => x.value === issueData?.[0]?.state
+                            ).map((x) => x.label)}
+                          </p>
                         </div>
                       </div>
                     </>
@@ -453,53 +468,65 @@ export default function StateAffairsInfo() {
                 } else if (level === 3) {
                   return (
                     <>
-                      <div className="grid h-[60px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1">
-                          <label htmlFor="">المحكمه</label>
-                          {/* <p>
+                      <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            المحكمه
+                          </label>
+                          <p className="mt-2">
                             {tribunal
-                              .filter((x) => x.id === issueDetailsData[0]?.tribunalId)
+                              .filter((x) => x.id === issueDetailsData?.[0]?.tribunalId)
                               .map((x) => x.name)}
-                          </p> */}
+                          </p>
+                        </div>
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            عنوان القضية
+                          </label>
+                          <p className="mt-2">{issueData?.[0]?.title}</p>
+                        </div>
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            نص الحكم
+                          </label>
+                          <p className="mt-2">{issueDetailsData?.[0]?.judgment}</p>
                         </div>
                       </div>
-                      <div className="grid h-[60px] mb-3 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">عنوان القضية</label>
-                          {/* <p>{issueData[0].title}</p> */}
-                        </div>
-                      </div>
-                      {/* Uncomment the following code if needed */}
-                      <div className="grid min-h-[70px] grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">نص الحكم</label>
-                          {/* <p>{issueDetailsData[0].judgment}</p> */}
-                        </div>
-                      </div>
+
                       {/*  */}
-                      <div className="grid min-h-[70px] grid-cols-4 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">تاريخه</label>
-                          {/* <p>{issueDetailsData[0].detailsDate}</p> */}
+                      <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            تاريخه
+                          </label>
+                          <p className="mt-2">
+                            {String(issueDetailsData?.[0]?.detailsDate).split('T')[0]}
+                          </p>
                         </div>
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">رقم الحكم</label>
-                          {/* <p>{issueDetailsData[0].refrance}</p> */}
+                        <div className="col-span-1 text-[#757575]">
+                          <label htmlFor="" className="font-bold text-lg">
+                            رقم الحكم
+                          </label>
+                          <p className="mt-2">{issueDetailsData?.[0]?.refrance}</p>
                         </div>
-                        <div className="col-span-1 h-[40px]">
-                          {/* <p>
+                        <div className="col-span-1 text-[#757575]">
+                          <p className="mt-10">
                             {contested
-                              .filter((x) => x.value === issueDetailsData[0].Resumed)
+                              .filter((x) => x.value === issueDetailsData?.[0]?.Resumed)
                               .map((x) => x.label)}
-                          </p> */}
+                          </p>
                         </div>
-                        <div className="col-span-1 h-[40px]">
-                          <label htmlFor="">أنجاز القضية</label>
-                          {/* <p>
-                            {CompletionOfTheCase.filter((x) => x.value === issueData[0].state).map(
-                              (x) => x.label
-                            )}
-                          </p> */}
+                      </div>
+                      <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+                        <div className="text-[#757575] col-span-1 ">
+                          <label htmlFor="" className="font-bold text-lg">
+                            أنجاز القضية
+                          </label>
+                          <p className="mt-2">
+                            {CompletionOfTheCase.filter(
+                              (x) => x.value === issueData?.[0]?.state
+                            ).map((x) => x.label)}
+                          </p>
                         </div>
                       </div>
                     </>
@@ -509,7 +536,7 @@ export default function StateAffairsInfo() {
                     <div>
                       <p>No data available for this level.</p>
                     </div>
-                  );
+                  )
                 }
               })()}
             </div>
