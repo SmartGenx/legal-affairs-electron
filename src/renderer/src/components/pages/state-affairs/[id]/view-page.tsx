@@ -3,17 +3,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Button } from '@renderer/components/ui/button'
 import { ArrowRight } from 'lucide-react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { InfoIssue, IssuesResponse } from '@renderer/types'
 import { useAuthHeader } from 'react-auth-kit'
-import { axiosInstance } from '@renderer/lib/http'
-import { useQuery } from '@tanstack/react-query'
+import { axiosInstance, patchApi, putApi } from '@renderer/lib/http'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import {  kind_of_case, Level } from '@renderer/types/enum'
+import { kind_of_case, Level } from '@renderer/types/enum'
 import { z } from 'zod'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { Textarea } from '@renderer/components/ui/textarea'
+import { useToast } from '@renderer/components/ui/use-toast'
 
 export type Tribunal = {
   id: number
@@ -43,7 +44,7 @@ const formSchema = z.object({
   detailsDate: z.string(),
   judgment: z.string(),
   refrance: z.string(),
-  Resumed: z.boolean()
+  Resumed: z.boolean().nullable().optional()
 })
 const type1 = [
   {
@@ -101,6 +102,9 @@ type IssuesFormValue = z.infer<typeof formSchema>
 export default function ViewPage() {
   const { id } = useParams<{ id: string }>()
   const authToken = useAuthHeader()
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const [tribunal, setTribunal] = useState<Tribunal[]>([])
   const [dataGovernment, setGovernmentData] = useState<GovernmentOffice[]>([])
@@ -150,7 +154,7 @@ export default function ViewPage() {
     fetchGovernmentData()
     fetchPositionData()
     fetchData()
-  }, [selectedOption, authToken]) // Include authToken as a dependency
+  }, [selectedOption]) // Include authToken as a dependency
 
   // Fetch issue by ID
   const fetchIssueById = async () => {
@@ -210,34 +214,136 @@ export default function ViewPage() {
       const governmentOfficeId = issueData?.[0].governmentOfficeId || ''
       form.reset({
         name: issueData[0]?.name,
-        postionId: positionId,
-        governmentOfficeId: governmentOfficeId,
+        postionId: String(positionId),
+        governmentOfficeId: String(governmentOfficeId),
         title: issueData[0]?.title,
         type: issueData[0]?.type,
-        invitationType: issueData[0]?.invitationType,
+        invitationType: String(issueData[0]?.invitationType),
         state: issueData[0]?.state,
-        tribunalId: issueDetailsData[0]?.tribunalId,
-        level: issueDetailsData[0]?.level,
+        tribunalId: String(issueDetailsData[0]?.tribunalId),
+        level: String(issueDetailsData[0]?.level),
         detailsDate: new Date(issueDetailsData[0]?.detailsDate).toISOString().split('T')[0],
         judgment: issueDetailsData[0]?.judgment,
         refrance: issueDetailsData[0]?.refrance,
-        Resumed: issueDetailsData[0]?.Resumed
+        Resumed: issueDetailsData[0]?.Resumed ?? null
       })
     }
-  }, [issueData, issueDetailsData, form])
+  }, [issueDetailsData])
 
-  const [selectedValue, _setSelectedValue] = useState<string | null>(issueData?.[0]?.type || null)
+  const [selectedValue, setSelectedValue] = useState<kind_of_case | null>()
+
+  useEffect(() => {
+    setSelectedValue((issueData?.[0]?.type as kind_of_case) || null)
+  }, [issueData])
+
   const levelString = String(issueDetailsData?.[0]?.level ?? '')
   const tribunalIdString = String(issueDetailsData?.[0]?.tribunalId ?? '')
 
-  // const handleCheckboxChange = (value: string) => {
-  //   // Update the selected value when checkbox is clicked
-  //   setSelectedValue((prev) => (prev === value ? null : value))
-  // }
+  const {
+    mutate: firstMutate,
+    isError: _firstIsError,
+    isSuccess: _firstIsSuccess,
+    isPending: _firstIsPending
+  } = useMutation({
+    mutationKey: ['issue'],
+    mutationFn: (datas: IssuesFormValue) =>
+      patchApi(
+        `/issue/${id}`,
+        {
+          name: datas.name,
+          postionId: +datas.postionId,
+          governmentOfficeId: +datas.governmentOfficeId,
+          title: datas.title,
+          type: datas.type,
+          invitationType: +datas.invitationType,
+          state: datas.state
+        },
+        {
+          headers: {
+            Authorization: `${authToken()}`
+          }
+        }
+      ),
+    onSuccess: (data, variables) => {
+      console.log('Response data:', data)
+
+      // Trigger the second mutation using the ID from the first mutation's response
+      secondMutate({
+        //@ts-ignore
+        issueId: data.data.id,
+        level: variables.level,
+        tribunalId: variables.tribunalId,
+        detailsDate: variables.detailsDate,
+        judgment: variables.judgment,
+        refrance: variables.refrance,
+        Resumed: variables.Resumed ?? undefined
+      })
+    },
+    onError: (error) => {
+      toast({
+        title: 'لم تتم العملية',
+        description: error.message,
+        variant: 'destructive'
+      })
+    }
+  })
+
+  const {
+    mutate: secondMutate,
+    isError: _secondIsError,
+    isSuccess: _secondIsSuccess,
+    isPending: _secondIsPending
+  } = useMutation({
+    mutationKey: ['judgment'],
+    mutationFn: (datas: {
+      issueId: number
+      level: string
+      tribunalId: string
+      detailsDate: string
+      judgment: string
+      refrance: string
+      Resumed?: boolean
+    }) =>
+      patchApi(
+        `/issue-details/${id}`,
+        {
+          issueId: datas.issueId, // Use the issueId passed from the first mutation's response
+          tribunalId: +datas.tribunalId,
+          level: +datas.level,
+          detailsDate: new Date(datas.detailsDate),
+          judgment: datas.judgment,
+          refrance: datas.refrance,
+          Resumed: datas.Resumed
+        },
+        {
+          headers: {
+            Authorization: `${authToken()}`
+          }
+        }
+      ),
+    onSuccess: () => {
+      toast({
+        title: 'اشعار',
+        variant: 'success',
+        description: 'تمت الاضافة بنجاح'
+      })
+      queryClient.invalidateQueries({ queryKey: ['Issues'] })
+      navigate('/state-affairs')
+    },
+    onError: (error) => {
+      toast({
+        title: 'لم تتم العملية',
+        description: error.message,
+        variant: 'destructive'
+      })
+    }
+  })
+  const onSubmit = (datas: IssuesFormValue) => {
+    firstMutate(datas)
+  }
   if (isIssueLoading && isIssueDetailsLoading) return <div>Loading...</div>
   if (issueError) return <div>Error fetching issue data</div>
   if (issueDetailsError) return <div>Error fetching issue details data</div>
-  // const [delayedSubmitting, setDelayedSubmitting] = useState(form.formState.isSubmitting)
   return (
     <>
       <div className="flex items-center text-3xl">
@@ -254,7 +360,7 @@ export default function ViewPage() {
           <form
             id="governoratesForm"
             //   key={key}
-            // onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className=""
           >
             {process.env.NODE_ENV === 'development' && (
@@ -363,7 +469,7 @@ export default function ViewPage() {
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
               <h3 className="font-bold text-[#3734a9] p-3">نوع القضية</h3>
             </div>
-            <div className="grid h-[100px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right mt-4 ">
+            <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right mt-4 ">
               <div className="col-span-2 h-[50px] ">
                 <FormField
                   control={form.control}
@@ -377,18 +483,18 @@ export default function ViewPage() {
                               <input
                                 type="checkbox"
                                 value={caseType.value}
-                                // This checks if the current issueData type matches the caseType value and reflects that in the UI
-                                checked={field.value === caseType.value}
+                                checked={selectedValue === caseType.value}
                                 onChange={() => {
                                   const newValue =
-                                    field.value === caseType.value ? null : caseType.value
-                                  field.onChange(newValue) // Update the form value
+                                    selectedValue === caseType.value ? null : caseType.value
+                                  setSelectedValue(newValue)
+                                  field.onChange(newValue)
                                 }}
-                                className="appearance-none w-6 h-6 border-[3px] border-[#595959] rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                className="appearance-none w-6 h-6 border-[3px] border-[#595959]  rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
                               />
                               <svg
-                                className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none ${
-                                  field.value === caseType.value ? 'block' : 'hidden'
+                                className={`w-4 h-4 text-white absolute top-1 left-1 pointer-events-none  ${
+                                  selectedValue === caseType.value ? 'block' : 'hidden'
                                 }`}
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 20 20"
@@ -412,48 +518,120 @@ export default function ViewPage() {
                   )}
                 />
               </div>
-
               {/*  */}
 
-              <div className="col-span-1 h-auto">
-                {(() => {
-                  // Initialize options as an empty array of the correct type
-                  let options = [] as typeof type1 | typeof type2
-
-                  // Determine which options to use based on issue type
-                  if (selectedValue || issueData?.[0]?.type === kind_of_case.civilian) {
-                    options = type2
-                  } else if (selectedValue || issueData?.[0]?.type === kind_of_case.business) {
-                    options = type2
-                  } else if (selectedValue || issueData?.[0]?.type === kind_of_case.criminal) {
-                    options = type1
-                  } else if (
-                    selectedValue ||
-                    issueData?.[0]?.type === kind_of_case.administrative
-                  ) {
-                    options = type2
-                  } else {
-                    options = type1 // Default or fallback options
-                  }
-
-                  return (
+              <div className=" col-span-1 h-auto">
+                {selectedValue === kind_of_case.civilian ? (
+                  <FormField
+                    control={form.control}
+                    name="invitationType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="اختار واحد" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {type2.map((type) => (
+                              <SelectItem key={type.value} value={String(type.value)}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : selectedValue === kind_of_case.business ? (
+                  <FormField
+                    control={form.control}
+                    name="invitationType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="اختار واحد" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {type2.map((type) => (
+                              <SelectItem key={type.value} value={String(type.value)}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : selectedValue === kind_of_case.criminal ? (
+                  <FormField
+                    control={form.control}
+                    name="invitationType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="اختار واحد" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {type1.map((type) => (
+                              <SelectItem key={type.value} value={String(type.value)}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : selectedValue === kind_of_case.administrative ? (
+                  <FormField
+                    control={form.control}
+                    name="invitationType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="اختار واحد" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {type2.map((type) => (
+                              <SelectItem key={type.value} value={String(type.value)}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : (
+                  <>
                     <FormField
                       control={form.control}
                       name="invitationType"
                       render={({ field }) => (
                         <FormItem>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={String(field.value)}
-                            defaultValue={String(field.value)}
-                          >
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
                               <SelectTrigger>
                                 <SelectValue placeholder="اختار واحد" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {options.map((type) => (
+                              {type2.map((type) => (
                                 <SelectItem key={type.value} value={String(type.value)}>
                                   {type.label}
                                 </SelectItem>
@@ -464,10 +642,9 @@ export default function ViewPage() {
                         </FormItem>
                       )}
                     />
-                  )
-                })()}
+                  </>
+                )}
               </div>
-
               {/*  */}
             </div>
             {/*  */}
@@ -1045,7 +1222,9 @@ export default function ViewPage() {
                               </svg>
                             </div>
                           </FormControl>
-                          <FormLabel className="font-normal ml-20 mr-2 relative -top-1">{caseType.label}</FormLabel>
+                          <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
+                            {caseType.label}
+                          </FormLabel>
                         </div>
                       ))}
                       <FormMessage />
@@ -1067,7 +1246,6 @@ export default function ViewPage() {
                 type="submit"
               >
                 <p className="font-bold text-base">تعديل</p>
-                
               </Button>
             </div>
           </form>
