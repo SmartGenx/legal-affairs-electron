@@ -5,11 +5,10 @@ import { Button } from '@renderer/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@renderer/components/ui/form'
 import { Input } from '@renderer/components/ui/input'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
 import { getApi, patchApi } from '@renderer/lib/http'
 import { useAuthHeader } from 'react-auth-kit'
 import { toast } from '@renderer/components/ui/use-toast'
-import { AlertDialogAction, AlertDialogCancel } from '@renderer/components/ui/alert-dialog'
+import {  AlertDialogCancel } from '@renderer/components/ui/alert-dialog'
 import { useEffect } from 'react'
 const formSchema = z.object({
   name: z.string()

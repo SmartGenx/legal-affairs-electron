@@ -1,20 +1,16 @@
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
-import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, getApi, postApi } from '@renderer/lib/http'
+import { getApi, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
-import { Label } from '@renderer/components/ui/label'
-import TextLabel from '@renderer/components/ui/text-label'
 import { DateInput } from '@renderer/components/ui/date-input'
 import { Employ, Leave } from '@renderer/types'
 
@@ -42,7 +38,7 @@ export default function AddLeaveIndex() {
   } = useQuery({
     queryKey: ['Employ'],
     queryFn: () =>
-      getApi<Employ[]>('/employ?page=1&pageSize=30', {
+      getApi<Employ>('/employ?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }
@@ -50,13 +46,13 @@ export default function AddLeaveIndex() {
   })
 
   const {
-    isLoading: LeaveTypeLoading,
-    error: LeaveTypeError,
+    isLoading: _LeaveTypeLoading,
+    error: _LeaveTypeError,
     data: LeaveTypeData
   } = useQuery({
     queryKey: ['Leave'],
     queryFn: () =>
-      getApi<Leave[]>('/leave-type?page=1&pageSize=30', {
+      getApi<Leave>('/leave-type?page=1&pageSize=30', {
         headers: {
           Authorization: authToken()
         }

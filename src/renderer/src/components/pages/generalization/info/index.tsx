@@ -7,12 +7,11 @@ import { useParams } from 'react-router-dom'
 import { axiosInstance } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 
-
 const formSchema = z.object({
   title: z.string(),
   refrance: z.string(),
   description: z.string(),
-  file: z.instanceof(File).optional()
+  attachmentPath: z.string()
 })
 
 export type Generalization = {
@@ -20,7 +19,10 @@ export type Generalization = {
   title: string
   refrance: string
   description: string
-  file: File
+  attachmentPath: string
+  isDeleted: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 type BookFormValue = z.infer<typeof formSchema>
@@ -59,7 +61,7 @@ export default function GeneralizationInfo() {
         title: GeneralizationData.title,
         refrance: GeneralizationData.refrance,
         description: GeneralizationData.description,
-        file: GeneralizationData.file
+        attachmentPath: GeneralizationData.attachmentPath
       })
     }
   }, [GeneralizationData])
@@ -102,7 +104,7 @@ export default function GeneralizationInfo() {
 
           <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[40px] bg-black">
-              <img src={GeneralizationData?.file} alt="" />
+              <img src={GeneralizationData?.attachmentPath} alt="" />
             </div>
             {/*  */}
           </div>

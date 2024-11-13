@@ -92,8 +92,8 @@ export default function UpdateEmployeeIndex() {
 
   const {
     data: EmployeeData,
-    error: EmployeeError,
-    isLoading: EmployeeIsLoading
+    error: _EmployeeError,
+    isLoading: _EmployeeIsLoading
   } = useQuery({
     queryKey: ['Employ', id],
     queryFn: fetchData,

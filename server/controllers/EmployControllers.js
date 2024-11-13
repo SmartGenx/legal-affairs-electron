@@ -17,8 +17,10 @@ class EmployControllers {
 
   async getEmployById(req, res, next) {
     const id = Number(req.params.id)
+    const EmployFiltetr = req.query
     try {
-      const Employ = await EmployServices.getEmployById(id)
+
+      const Employ = await EmployServices.getEmployById(id,EmployFiltetr)
       if (!Employ) {
         return next(new NotFoundError(`Employ with id ${id} not found.`))
       }

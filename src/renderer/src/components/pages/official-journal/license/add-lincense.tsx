@@ -13,8 +13,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { LicenseType } from '@renderer/types'
-import { Customer } from '@prisma/client'
 import { DateInput } from '@renderer/components/ui/date-input'
+export interface Customer {
+  id:        number;
+  name:      string;
+  type:      number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+}
 
 const formSchema = z.object({
   licenseTypeId: z.string(),
@@ -38,6 +45,7 @@ export default function AddLincense() {
   const navigate = useNavigate()
   const [customer, setCustomer] = useState<Customer[]>([])
 
+  console.log("customer",customer)
   const { isLoading, error, data } = useQuery({
     queryKey: ['license'],
     queryFn: () =>
@@ -52,7 +60,7 @@ export default function AddLincense() {
 
   const fetchData = async () => {
     try {
-      const response = await axiosInstance.get('/customer?page=1&pageSize=2', {
+      const response = await axiosInstance.get('/customer', {
         headers: {
           Authorization: `${authToken()}`
         }
@@ -174,7 +182,7 @@ export default function AddLincense() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {customer.info.map((options) => (
+                        {customer.map((options) => (
                           <SelectItem key={options.name} value={String(options.id)}>
                             {options.name}
                           </SelectItem>
