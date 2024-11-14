@@ -1,22 +1,109 @@
 import { Button } from '@renderer/components/ui/button'
-import { SearchInput } from '@renderer/components/ui/search-input'
+import { getApi } from '@renderer/lib/http'
+import { useQuery } from '@tanstack/react-query'
 import { Search } from 'lucide-react'
+import { useState } from 'react'
+import { useAuthHeader } from 'react-auth-kit'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import AsyncSelect from 'react-select/async'
 
-export default function DecisionsSearch() {
+interface data {
+  legalName: string
+}
+const DecisionsSearch = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const authToken = useAuthHeader()
+  const pathname = location.pathname
+  const selectedVal = searchParams.get('query')
+  const { data: issuesSearch } = useQuery({
+    queryKey: ['Agency'],
+    queryFn: () =>
+      getApi<data[]>('/agency', {
+        headers: {
+          Authorization: authToken()
+        }
+      })
+  })
+  const loadOptions = async (value: string) => {
+    if (!value) return []
+    const data = await getApi<data[]>('/agency', {
+      params: {
+        'legalName[contains]': value
+      },
+      headers: {
+        Authorization: authToken()
+      }
+    })
+    return data.data || []
+  }
+  const customComponents = {
+    DropdownIndicator: () => null,
+    IndicatorSeparator: () => null
+  }
+  const onChange = (val: { legalName: string } | null) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (val?.legalName) {
+      params.set('query', val.legalName)
+    } else {
+      params.delete('query')
+    }
+    params.set('page', '1')
+    // queryClient.invalidateQueries({ queryKey: ['products'] })
+    navigate(`${pathname}?${params.toString()}`, { replace: true })
+  }
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      border: 'none',
+      boxShadow: 'none',
+      backgroundColor: '#fff'
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      margin: 0
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      zIndex: 9999
+    }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      fontWeight: 'bold',
+      color: '#757575'
+    }),
+    singleValue: (provided: any) => ({
+      ...provided
+    })
+  }
   return (
     <div>
       <div className="!my-10 flex flex-col items-center justify-between sm:flex-row">
-        <div className="w-full gap-4 ml-2">
-          <div className=" w-full">
-            <div className="w-full h-full relative">
-              <SearchInput
-                placeholder="البحث عن..."
-                className="bg-white h-11  rounded-xl text-lg"
-                InputClassName="!h-12"
-              />
-              <Search className="absolute right-2 top-3" color="#757575" />
-            </div>
-          </div>
+        <div className="flex w-full items-center justify-center rounded-xl border-[3px] border-[#E5E7EB] ">
+          <Search className="mr-2 text-gray-500" />
+          <AsyncSelect<data>
+            placeholder="ابحث باسم صاحب القرار.."
+            loadingMessage={() => 'جارٍ البحث ...'}
+            noOptionsMessage={() => 'لا توجد نتائج'}
+            cacheOptions
+            instanceId="products-search"
+            value={selectedVal?.length ? { legalName: selectedVal } : undefined}
+            defaultOptions={issuesSearch?.data}
+            loadOptions={loadOptions}
+            onChange={onChange}
+            getOptionLabel={({ legalName }) => legalName}
+            getOptionValue={({ legalName }) => legalName}
+            components={customComponents}
+            isClearable
+            menuIsOpen={isMenuOpen}
+            onInputChange={(value) => {
+              setIsMenuOpen(value.length > 0)
+            }}
+            styles={customStyles}
+            className="flex-grow"
+          />
         </div>
         <div>
           <Button className="flex items-center text-xl  w-28 mr-3 h-11 bg-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px] px-4">
@@ -28,3 +115,4 @@ export default function DecisionsSearch() {
     </div>
   )
 }
+export default DecisionsSearch

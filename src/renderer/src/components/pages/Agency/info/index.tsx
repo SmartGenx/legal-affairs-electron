@@ -59,21 +59,21 @@ export default function ViewAgencyInfo() {
         <div className="mb-4 bg-[#dedef8] rounded-t-lg">
           <h3 className="font-bold text-[#3734a9] p-3">المعلومات</h3>
         </div>
-        <div className="bg-[#3734A9]/[.1] w-[90%] min-h-[50vh] m-auto rounded-md px-4 py-2">
+        <div className="bg-[#dedef8] w-[95%] min-h-[40vh] m-auto rounded-2xl px-4 py-2">
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">اسم القانوني</label>
-              <p>{AgencyData?.legalName}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">اسم القانوني</label>
+              <p className="mt-2">{AgencyData?.legalName}</p>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">الوثيقة المقدمه</label>
-              <p>{AgencyData?.providedDocument}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">الوثيقة المقدمه</label>
+              <p className="mt-2">{AgencyData?.providedDocument}</p>
             </div>
 
-            <div className="col-span-1 ">
-              <label htmlFor="">المرفق الحكومي</label>
-              <p>
+            <div className="col-span-1 text-[#757575]">
+              <label htmlFor="" className="font-bold text-lg">المرفق الحكومي</label>
+              <p className="mt-2">
                 {dataGovernment
                   .filter((x) => x.id === AgencyData?.governmentOfficeId)
                   .map((x) => x.name)}

@@ -305,6 +305,7 @@ export interface AgencyInfo {
   createdAt: Date
   updatedAt: Date
   isDeleted: boolean
+  governmentOffice: GovernmentOffice
 }
 export interface Agency {
   info: AgencyInfo[]

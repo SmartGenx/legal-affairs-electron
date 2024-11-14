@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,8 +11,6 @@ import {
 import { OrganizationTable } from './organizationTable'
 import { AgencyInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
-import { axiosInstance } from '@renderer/lib/http'
-import { useAuthHeader } from 'react-auth-kit'
 import DeleteDialog from '@renderer/components/dialog/delete-dialog'
 
 type Props = {
@@ -30,7 +28,6 @@ export interface ReferenceProp {
 }
 export default function AgencyTable({ info, page, total }: Props) {
   const navigate = useNavigate()
-  const authToken = useAuthHeader()
   const columns = React.useMemo<ColumnDef<AgencyInfo>[]>(
     () => [
       {
@@ -50,30 +47,16 @@ export default function AgencyTable({ info, page, total }: Props) {
         accessorKey: 'governmentOfficeId',
         header: 'المرفق الحكومي',
         cell: ({ row }) => {
-          const [data, setData] = useState<ReferenceProp>()
-          const fetchData = async () => {
-            try {
-              const response = await axiosInstance.get(
-                `/government-office/${row.original.governmentOfficeId}`,
-                {
-                  headers: {
-                    Authorization: `${authToken()}`
-                  }
-                }
-              )
-              setData(response.data)
-            } catch (error) {
-              console.error('Error fetching data:', error)
-            }
-          }
-          useEffect(() => {
-            fetchData()
-          }, [])
-
-          return data?.name
+          return row.original.governmentOffice.name
         }
       },
-
+      {
+        accessorKey: 'createdAt',
+        header: 'تاريخ الإضافة',
+        cell: ({ row }) => {
+          return new Date(row.original.createdAt).toISOString().split('T')[0]
+        }
+      },
       {
         id: 'actions',
         cell: ({ row }) => (
