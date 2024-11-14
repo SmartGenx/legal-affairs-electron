@@ -1,23 +1,36 @@
-import SearchAffairs from './search'
 import { Issues } from '../../../types/index'
 import TopButtons from './top-buttons'
 import { getApi } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import StateTable from './state-table'
 import { useAuthHeader } from 'react-auth-kit'
+import SearchStateAffairs from './searchState-affairs'
+import { useSearchParams } from 'react-router-dom'
 
 export default function StateAffairs() {
   const authToken = useAuthHeader()
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get('query')
+  const page = searchParams.get('page')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Issues'],
+    queryKey: ['Issues', query,page],
     queryFn: () =>
-      getApi<Issues>('/issue?page=1&pageSize=40', {
+      getApi<Issues>('/issue', {
+        params: {
+          'name[contains]': query,
+          "include[IssueDetails]":true,
+          "include[governmentOffice]":true,
+          "include[postion]":true,
+          page: page || 1,
+          pageSize: 5
+        },
         headers: {
           Authorization: authToken()
         }
       })
   })
 
+  // console.log("datadatadatadatadatadatadata",data?.data.info[0].IssueDetails[0].level)
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error.message
@@ -26,8 +39,8 @@ export default function StateAffairs() {
 
   return (
     <section className="relative space-y-4 ">
-      <SearchAffairs />
-      <TopButtons />
+      <SearchStateAffairs />
+      <TopButtons data={data?.data.info || []}/>
       <StateTable info={infoArray || []} page={1} pageSize="0" total="0" />
     </section>
   )

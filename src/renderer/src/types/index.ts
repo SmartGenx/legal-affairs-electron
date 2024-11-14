@@ -92,6 +92,22 @@ export interface InfoIssue {
   state: boolean
   createdAt: Date
   updatedAt: Date
+  IssueDetails: IssueDetail
+  governmentOffice: GovernmentOffice
+  postion: GovernmentOffice
+}
+export interface IssueDetail {
+  id: number
+  issueId: number
+  tribunalId: number
+  level: number
+  createdAt: Date
+  updatedAt: Date
+  detailsDate: Date
+  isDeleted: boolean
+  judgment: string
+  refrance: string
+  Resumed: boolean
 }
 export type Issues = {
   info: InfoIssue[]

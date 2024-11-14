@@ -1,7 +1,7 @@
 'use client'
 import * as React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { GevStatus, GovernmentFacility, kind_of_case } from '../../../types/enum'
+import { kind_of_case, Level } from '../../../types/enum'
 import { MoreHorizontal } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
@@ -37,55 +37,89 @@ export default function StateTable({ info, page, total }: Props) {
         header: 'الأسم'
       },
       {
-        accessorKey: 'id',
+        accessorKey: 'postion.name',
         header: 'الصفة',
         cell: ({ row }) => {
-          const state = row.original.type as GevStatus
-          switch (state) {
-            case GevStatus.Director_of_the_Department:
-              return 'مدير إدارة'
-
-            default:
-              return 'sfvv'
-          }
+          return row.original.postion.name
         }
       },
       {
-        accessorKey: 'id',
+        accessorKey: 'governmentOffice.name',
         header: 'المرفق الحكومي',
         cell: ({ row }) => {
-          const state = row.original.governmentOfficeId as GovernmentFacility
-          switch (state) {
-            case GovernmentFacility.Legal_Affairs:
-              return 'الشؤون القانونية'
-
-            default:
-              return 'sfvv'
-          }
+          return row.original.governmentOffice.name
         }
       },
       {
-        accessorKey: 'postionId',
+        accessorKey: 'type',
         header: 'نوع القضية',
         cell: ({ row }) => {
-          const state = row.original.postionId as kind_of_case
+          const state = row.original.type as kind_of_case
           switch (state) {
             case kind_of_case.civilian:
               return 'مدني'
-
-            default:
+            case kind_of_case.criminal:
+              return 'جنائية'
+            case kind_of_case.administrative:
+              return 'إدارية'
+            case kind_of_case.business:
               return 'تجارية'
+            default:
+              return ''
           }
         }
       },
       {
-        accessorKey: 'title',
-        header: 'درجة التقاضي'
+        accessorKey: 'IssueDetails[0].level',
+        header: 'درجة التقاضي',
+        cell({ row }) {
+          const levels = row.original.IssueDetails[0].level as Level
+          switch (levels) {
+            case Level.appeal:
+              return 'إستئناف'
+            case Level.elementary:
+              return 'ابتدائي'
+            case Level.high:
+              return 'عليا'
+
+            default:
+              return undefined;
+          }
+          
+        }
       },
       {
-        accessorKey: 'invitationType',
-        header: 'رقم الحكم'
+        accessorKey: 'IssueDetails[0].level',
+        header: 'رقم الحكم',
+        cell({ row }) {
+          return row.original.IssueDetails[0].refrance
+        }
       },
+      // {
+      //   accessorKey: 'invitationType',
+      //   header: 'نوع القضية',
+      //   cell({ row }) {
+      //     const { type, invitationType } = row.original
+
+      //     // Define the options based on the 'type' value
+      //     const optionsArray =
+      //       type === 1
+      //         ? [
+      //             { label: 'جاني', value: 1 },
+      //             { label: 'مجني عليه', value: 2 }
+      //           ]
+      //         : [
+      //             { label: 'مدعي', value: 1 },
+      //             { label: 'مدعي عليه', value: 2 }
+      //           ]
+
+      //     // Find the matching label
+      //     const option = optionsArray.find((opt) => opt.value === invitationType)
+
+      //     // Return the label or a default value
+      //     return option ? option.label : ''
+      //   }
+      // },
 
       {
         id: 'actions',
