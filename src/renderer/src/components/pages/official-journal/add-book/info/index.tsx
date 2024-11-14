@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
 import { useParams } from 'react-router-dom'
-import {  getApi } from '@renderer/lib/http'
+import { getApi } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import { LoaderIcon } from 'lucide-react'
 
@@ -19,32 +19,14 @@ export default function BookInfo() {
   const { id } = useParams<{ id: string }>()
   const authToken = useAuthHeader()
 
-  // const fetchData = async () => {
-  //   const response = await axiosInstance.get<BookResp>(`/book/${id}`, {
-  //     headers: {
-  //       Authorization: `${authToken()}`
-  //     }
-  //   })
-  //   return response.data
-  // }
-  // const {
-  //   data: BookData,
-  //   error: BookError,
-  //   isLoading: BookIsLoading
-  // } = useQuery({
-  //   queryKey: ['Books', id],
-  //   queryFn: fetchData,
-  //   enabled: !!id
-  // })
-
   const {
     data: BookData,
     error: BookError,
-    isLoading: BookIsLoading
+    isPending: BookIsPending
   } = useQuery({
-    queryKey: ['BooksInfo'],
+    queryKey: ['BooksInfo',id],
     queryFn: () =>
-      getApi<BookResp>(`/book-order/${id}`, {
+      getApi<BookResp>(`/book/${id}`, {
         headers: {
           Authorization: authToken()
         }
@@ -52,8 +34,8 @@ export default function BookInfo() {
   })
 
   useEffect(() => {}, [BookData])
-  console.log('BookData', BookData)
-  if (BookIsLoading)
+
+  if (BookIsPending)
     return (
       <div className="flex justify-center items-center w-full ">
         <LoaderIcon className="mt-12 flex animate-spin items-center justify-end duration-1000" />
@@ -67,25 +49,21 @@ export default function BookInfo() {
         <div className="mb-4 bg-[#dedef8] rounded-t-lg">
           <h3 className="font-bold text-[#3734a9] p-3">المعلومات</h3>
         </div>
-        <div className="bg-[#3734A9]/[.1] w-[90%] min-h-[50vh] m-auto rounded-md px-4 py-2">
-          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
-          </div>
-
+        <div className="bg-[#dedef8] w-[95%] min-h-[40vh] m-auto rounded-2xl px-4 py-2">
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">اسم الكتاب</label>
-              <p>{BookData?.data.name}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">اسم الكتاب</label>
+              <p className="mt-2">{BookData?.data.name}</p>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <label>الكميه</label>
-              <p>{BookData?.data.quantity}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label className="font-bold text-lg">الكميه</label>
+              <p className="mt-2">{BookData?.data.quantity}</p>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">سعر النسخة</label>
-              <p>{BookData?.data.price}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">سعر النسخة</label>
+              <p className="mt-2">{BookData?.data.price}</p>
             </div>
             {/*  */}
           </div>
