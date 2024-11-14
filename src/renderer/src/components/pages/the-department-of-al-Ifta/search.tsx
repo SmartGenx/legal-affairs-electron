@@ -84,7 +84,7 @@ const DepartmentOfAlLftaSearch = () => {
         <div className="flex w-full items-center justify-center rounded-xl border-[3px] border-[#E5E7EB] ">
           <Search className="mr-2 text-gray-500" />
           <AsyncSelect<data>
-            placeholder="ابحث عن.."
+            placeholder="ابحث بمقدم الشكوى.."
             loadingMessage={() => 'جارٍ البحث ...'}
             noOptionsMessage={() => 'لا توجد نتائج'}
             cacheOptions

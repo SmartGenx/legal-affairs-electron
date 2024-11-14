@@ -5,13 +5,23 @@ import { useAuthHeader } from 'react-auth-kit'
 import { useQuery } from '@tanstack/react-query'
 import { Decision } from '@renderer/types'
 import { getApi } from '@renderer/lib/http'
+import { useSearchParams } from 'react-router-dom'
 
 export default function DecisionsIndex() {
   const authToken = useAuthHeader()
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get('query')
+  const page = searchParams.get('page')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Decisions'],
+    queryKey: ['Decisions' , query,page],
     queryFn: () =>
-      getApi<Decision>('/decision?page=1&pageSize=30', {
+      getApi<Decision>('/decision', {
+        params: {
+          'nameSource[contains]': query,
+          'include[governmentOffice]': true,
+          page: page || 1,
+          pageSize: 5
+        },
         headers: {
           Authorization: authToken()
         }
@@ -26,7 +36,7 @@ export default function DecisionsIndex() {
   return (
     <section className="relative space-y-4 ">
       <DecisionsSearch />
-      <TopButtons />
+      <TopButtons data={data?.data.info || []}/>
       <DecisionTable info={infoArray || []} page={1} pageSize="0" total="0" />
     </section>
   )

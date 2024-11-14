@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,8 +11,6 @@ import {
 import { OrganizationTable } from './organizationTable'
 import { DecisionInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
-import { axiosInstance } from '@renderer/lib/http'
-import { useAuthHeader } from 'react-auth-kit'
 import DeleteDialog from '@renderer/components/dialog/delete-dialog'
 
 type Props = {
@@ -30,13 +28,11 @@ export interface ReferenceProp {
 }
 export default function DecisionTable({ info, page, total }: Props) {
   const navigate = useNavigate()
-  const authToken = useAuthHeader()
   const columns = React.useMemo<ColumnDef<DecisionInfo>[]>(
     () => [
       {
         accessorKey: 'refrance',
         header: 'رقم القرار',
-        cell: ({ row }) => (row.index + 1 + (page - 1) * 10).toString().padStart(2, '0')
       },
       {
         accessorKey: 'createdAt',
@@ -47,30 +43,10 @@ export default function DecisionTable({ info, page, total }: Props) {
         }
       },
       {
-        accessorKey: 'governmentOfficeId',
+        accessorKey: 'governmentOffice.name',
         header: 'جهة القرار',
         cell: ({ row }) => {
-          const [data, setData] = useState<ReferenceProp>()
-          const fetchData = async () => {
-            try {
-              const response = await axiosInstance.get(
-                `/government-office/${row.original.governmentOfficeId}`,
-                {
-                  headers: {
-                    Authorization: `${authToken()}`
-                  }
-                }
-              )
-              setData(response.data)
-            } catch (error) {
-              console.error('Error fetching data:', error)
-            }
-          }
-          useEffect(() => {
-            fetchData()
-          }, [])
-
-          return data?.name
+          return row.original.governmentOffice.name
         }
       },
       {
