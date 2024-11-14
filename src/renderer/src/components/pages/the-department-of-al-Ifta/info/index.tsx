@@ -110,53 +110,53 @@ export default function AllaftaInfo() {
         <div className="mb-4 bg-[#dedef8] rounded-t-lg">
           <h3 className="font-bold text-[#3734a9] p-3">المعلومات</h3>
         </div>
-        <div className="bg-[#3734A9]/[.1] w-[90%] min-h-[50vh] m-auto rounded-md px-4 py-2">
+        <div className="bg-[#dedef8] w-[95%] min-h-[50vh] m-auto rounded-2xl px-4 py-2">
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label>مقدم الشكوى</label>
-              <p>{complaintData?.name}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label className="font-bold text-lg">مقدم الشكوى</label>
+              <p className="mt-2">{complaintData?.name}</p>
             </div>
             {/*  */}
 
-            <div className="col-span-1 translate-y-2">
-              <label>مصدر التوجيه</label>
-              <p>
+            <div className="text-[#757575] col-span-1 translate-y-2">
+              <label className="font-bold text-lg">مصدر التوجيه</label>
+              <p className="mt-2">
                 {data.filter((x) => x.id === complaintData?.governmentOfficeId).map((x) => x.name)}
               </p>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">موضوع الشكوى</label>
-              <p>{complaintData?.title}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">موضوع الشكوى</label>
+              <p className="mt-2">{complaintData?.title}</p>
             </div>
           </div>
           <Separator className="bg-[#757575]" />
           {/*  */}
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">رقم الشكوى</label>
-              <p>{complaintData?.refrance}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">رقم الشكوى</label>
+              <p className="mt-2">{complaintData?.refrance}</p>
             </div>
           </div>
           {/*  */}
           <div className="grid min-h-[80px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="">تفاصيل الشكوى</label>
-              <p>{complaintData?.description}</p>
+            <div className="text-[#757575] col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-lg">تفاصيل الشكوى</label>
+              <p className="mt-2">{complaintData?.description}</p>
             </div>
           </div>
           <Separator className="bg-[#757575]" />
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">تاريخة</label>
-              <p>{String(complaintData?.date).split('T')[0]}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">تاريخة</label>
+              <p className="mt-2">{String(complaintData?.date).split('T')[0]}</p>
             </div>
           </div>
 
           <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="">نص الرأي</label>
-              <p>{complaintData?.officeOpinian}</p>
+            <div className="text-[#757575] col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-lg">نص الرأي</label>
+              <p className="mt-2">{complaintData?.officeOpinian}</p>
             </div>
           </div>
         </div>
