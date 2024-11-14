@@ -184,7 +184,7 @@ export default function UpdateDecisions() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم القرار "
                         {...field}
                       />
@@ -206,6 +206,7 @@ export default function UpdateDecisions() {
                         {...field}
                         placeholder="تاريخة"
                         type="date"
+                        className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
@@ -227,7 +228,7 @@ export default function UpdateDecisions() {
                       }
                       defaultValue={String(field.value)}
                     >
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="مصدر التوجيه" />
                         </SelectTrigger>
@@ -255,7 +256,7 @@ export default function UpdateDecisions() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   اسم القرار "
                         {...field}
                       />
@@ -274,7 +275,7 @@ export default function UpdateDecisions() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   عنوان القرار "
                         {...field}
                       />
@@ -296,7 +297,7 @@ export default function UpdateDecisions() {
                   <FormItem className="col-span-2">
                     <FormControl>
                       <Textarea
-                        className="bg-transparent border-2 border-[#d1d5db] rounded-xl"
+                        className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                         rows={5}
                         {...field}
                         placeholder="نص القرار"
@@ -319,7 +320,7 @@ export default function UpdateDecisions() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   إسم صاحب القرار "
                         {...field}
                       />
@@ -339,7 +340,7 @@ export default function UpdateDecisions() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   جهة القرار   "
                         {...field}
                       />

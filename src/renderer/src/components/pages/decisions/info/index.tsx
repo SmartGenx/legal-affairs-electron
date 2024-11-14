@@ -75,65 +75,65 @@ export default function DecisionInfo() {
         <div className="mb-4 bg-[#dedef8] rounded-t-lg">
           <h3 className="font-bold text-[#3734a9] p-3">المعلومات</h3>
         </div>
-        <div className="bg-[#3734A9]/[.1] w-[90%] min-h-[50vh] m-auto rounded-md px-4 py-2">
+        <div className="bg-[#dedef8] w-[95%] min-h-[100vh] m-auto rounded-2xl px-4 py-2">
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label>رقم القرار</label>
-              <p>{DecisionData?.refrance}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label className="font-bold text-lg">رقم القرار</label>
+              <p className="mt-2">{DecisionData?.refrance}</p>
             </div>
             {/*  */}
 
             <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[50px] ">
-                <label htmlFor="">تاريخة</label>
-                <p>{String(DecisionData?.decisionDate).split('T')[0]}</p>
+              <div className="text-[#757575] col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-lg">تاريخة</label>
+                <p className="mt-2">{String(DecisionData?.decisionDate).split('T')[0]}</p>
               </div>
             </div>
-            <div className="col-span-1 translate-y-2">
-              <label>مصدر التوجيه</label>
-              <p>
+            <div className="text-[#757575] col-span-1 translate-y-2">
+              <label className="font-bold text-lg">مصدر التوجيه</label>
+              <p className="mt-2">
                 {data.filter((x) => x.id === DecisionData?.governmentOfficeId).map((x) => x.name)}
               </p>
             </div>
           </div>
           <Separator className="bg-[#757575]" />
           <div className="grid h-[80px] mt-5  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">موضوع الشكوى</label>
-              <p>{DecisionData?.title}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">موضوع الشكوى</label>
+              <p className="mt-2">{DecisionData?.title}</p>
             </div>
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">اسم القرار</label>
-              <p>{DecisionData?.decisionName}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">اسم القرار</label>
+              <p className="mt-2">{DecisionData?.decisionName}</p>
             </div>
 
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="">عنوان القرار</label>
-              <p>{DecisionData?.title}</p>
+            <div className="text-[#757575] col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-lg">عنوان القرار</label>
+              <p className="mt-2">{DecisionData?.title}</p>
             </div>
           </div>
 
           <Separator className="bg-[#757575]" />
           <div className="grid h-[80px] mt-5  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">نص القرار</label>
-              <p>{String(DecisionData?.description).split('T')[0]}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">نص القرار</label>
+              <p className="mt-2">{String(DecisionData?.description).split('T')[0]}</p>
             </div>
           </div>
 
           <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="">إسم صاحب القرار</label>
-              <p>{DecisionData?.nameSource}</p>
+            <div className="text-[#757575] col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-lg">إسم صاحب القرار</label>
+              <p className="mt-2">{DecisionData?.nameSource}</p>
             </div>
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="">جهة القرار</label>
-              <p>{DecisionData?.decisionSource}</p>
+            <div className="text-[#757575] col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-lg">جهة القرار</label>
+              <p className="mt-2">{DecisionData?.decisionSource}</p>
             </div>
           </div>
 
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">المرفقات</h3>
+            <h3 className="font-bold text-3xl text-[#3734a9] p-3">المرفقات</h3>
           </div>
 
           <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
