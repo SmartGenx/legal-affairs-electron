@@ -46,27 +46,7 @@ export default function AlLftaTable({ info, page, total }: Props) {
         accessorKey: 'governmentOfficeId',
         header: 'مصدر التوجية',
         cell: ({ row }) => {
-          const [data, setData] = useState<ReferenceProp>()
-          const fetchData = async () => {
-            try {
-              const response = await axiosInstance.get(
-                `/government-office/${row.original.governmentOfficeId}`,
-                {
-                  headers: {
-                    Authorization: `${authToken()}`
-                  }
-                }
-              )
-              setData(response.data)
-            } catch (error) {
-              console.error('Error fetching data:', error)
-            }
-          }
-          useEffect(() => {
-            fetchData()
-          }, [])
-
-          return data?.name
+          return row.original.governmentOffice.name
         }
       },
       {

@@ -5,13 +5,23 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuthHeader } from 'react-auth-kit'
 import { Complaint } from '@renderer/types'
 import AlLftaTable from './al-lfta-table'
+import { useSearchParams } from 'react-router-dom'
 
 export default function TheDepartmentOfAllfta() {
   const authToken = useAuthHeader()
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get('query')
+  const page = searchParams.get('page')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Complaint'],
+    queryKey: ['Complaint', query, page],
     queryFn: () =>
-      getApi<Complaint>('/complaint?page=1&pageSize=30', {
+      getApi<Complaint>('/complaint', {
+        params: {
+          'name[contains]': query,
+          'include[governmentOffice]': true,
+          page: page || 1,
+          pageSize: 5
+        },
         headers: {
           Authorization: authToken()
         }
@@ -26,7 +36,7 @@ export default function TheDepartmentOfAllfta() {
   return (
     <section className="relative space-y-4 ">
       <DepartmentOfAlLftaSearch />
-      <TopButtons />
+      <TopButtons data={data?.data.info || []} />
       <AlLftaTable info={infoArray || []} page={1} pageSize="0" total="0" />
     </section>
   )
