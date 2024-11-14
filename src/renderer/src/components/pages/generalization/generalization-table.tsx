@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu'
 import { OrganizationTable } from './organizationTable'
-import {  GeneralizationInfo } from '../../../types/index'
+import { GeneralizationInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
 import DeleteDialog from '@renderer/components/dialog/delete-dialog'
 
@@ -36,21 +36,23 @@ export default function GeneralizationTable({ info, page, total }: Props) {
         cell: ({ row }) => (row.index + 1 + (page - 1) * 10).toString().padStart(2, '0')
       },
       {
+        accessorKey: 'title',
+        header: 'موضوع التعميم'
+      },
+      {
         accessorKey: 'refrance',
         header: 'رقم التعميم',
-        cell: ({ row }) => (row.index + 1 + (page - 1) * 10).toString().padStart(2, '0')
+        cell: ({ row }) => {
+          return row.original.refrance
+        }
       },
       {
         accessorKey: 'createdAt',
-        header: 'تاريخ التعميم',
+        header: 'تاريخ الإضافة',
         cell: ({ row }) => {
           const date = row.original.createdAt
           return new Date(date).toISOString().split('T')[0]
         }
-      },
-      {
-        accessorKey: 'title',
-        header: 'موضوع التعميم'
       },
 
       {

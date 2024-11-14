@@ -6,6 +6,8 @@ const convertTopLevelStringBooleans = require('../utilty/convertTopLevelStringBo
 
 class GeneralizationServices {
   async getAllgeneralization(generalizationfilter) {
+    console.log("generalizationfilter",generalizationfilter);
+    
     try {
       const { page, pageSize } = generalizationfilter
       let { include } = generalizationfilter
