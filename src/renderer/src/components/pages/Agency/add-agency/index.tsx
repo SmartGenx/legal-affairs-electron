@@ -11,6 +11,7 @@ import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Plus } from 'lucide-react'
 
 const formSchema = z.object({
   legalName: z.string(),
@@ -117,7 +118,7 @@ export default function AddAgency() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base text-[#757575]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   اسم القانوني "
                         {...field}
                       />
@@ -136,7 +137,7 @@ export default function AddAgency() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base  text-[#757575] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   الوثيقة المقدمه "
                         {...field}
                       />
@@ -154,7 +155,7 @@ export default function AddAgency() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent translate-y-2 border-2 border-[#d1d5db] rounded-xl">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl translate-y-2">
                         <SelectTrigger>
                           <SelectValue placeholder="المرفق الحكومي" />
                         </SelectTrigger>
@@ -177,16 +178,17 @@ export default function AddAgency() {
 
           <div className="w-full flex justify-end gap-2 mb-4">
             <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
+              <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
             </Link>
 
             <Button
-              className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
+              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              حفظ
+              <p className='font-bold text-base'>حفظ</p>
+              <Plus className='mr-2'/>
             </Button>
           </div>
         </form>

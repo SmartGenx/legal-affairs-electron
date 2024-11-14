@@ -5,6 +5,7 @@ import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tan
 import { cn } from '../../../lib/utils'
 // import TablePagination from '../../ui/table-pagination'
 import { ScrollArea, ScrollBar } from '../../ui/scroll-area'
+import TablePagination from '@renderer/components/tables/table-pagination'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -26,8 +27,8 @@ export function OrganizationTable<TData, TValue>({
   compact,
   lastHeaderStyle,
   lightHeader = false,
-  // total,
-  // page,
+  total,
+  page,
   shadow = true,
   containerClaasName
 }: DataTableProps<TData, TValue>) {
@@ -62,6 +63,7 @@ export function OrganizationTable<TData, TValue>({
   )
 
   return (
+    <>
     <div
       className={cn(
         'relative space-y-6 overflow-hidden rounded-lg bg-white border-2 border-[#d4d5e5]  dark:bg-primary',
@@ -145,7 +147,8 @@ export function OrganizationTable<TData, TValue>({
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </Table>
-      {/* <TablePagination total={total} page={parseInt(page, 10) || 1} pageSize={10} /> */}
     </div>
+      <TablePagination total={total} page={parseInt(page, 10) || 1} pageSize={10} />
+    </>
   )
 }
