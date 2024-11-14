@@ -5,14 +5,23 @@ import { Generalization } from '@renderer/types'
 import { getApi } from '@renderer/lib/http'
 import GeneralizationSearch from './search'
 import GeneralizationTable from './generalization-table'
+import { useSearchParams } from 'react-router-dom'
 // import BookTable from './Book-table'
 
 export default function GeneralizationIndex() {
   const authToken = useAuthHeader()
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get('query')
+  const page = searchParams.get('page')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['generalization'],
+    queryKey: ['generalization',query,page],
     queryFn: () =>
-      getApi<Generalization>('/generalization?page=1&pageSize=30', {
+      getApi<Generalization>('/generalization', {
+        params:{
+          'title[contains]': query,
+          page: page || 1,
+          pageSize: 5
+        },
         headers: {
           Authorization: authToken()
         }
@@ -27,7 +36,7 @@ export default function GeneralizationIndex() {
   return (
     <section className="relative space-y-4 ">
       <GeneralizationSearch />
-      <TopButtons />
+      <TopButtons data={data?.data.info || []}/>
       <GeneralizationTable info={infoArray || []} page={1} pageSize="0" total="0" />
     </section>
   )

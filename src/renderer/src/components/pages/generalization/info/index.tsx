@@ -72,34 +72,30 @@ export default function GeneralizationInfo() {
         <div className="mb-4 bg-[#dedef8] rounded-t-lg">
           <h3 className="font-bold text-[#3734a9] p-3">المعلومات</h3>
         </div>
-        <div className="bg-[#3734A9]/[.1] w-[90%] min-h-[50vh] m-auto rounded-md px-4 py-2">
-          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
-          </div>
-
+        <div className="bg-[#dedef8] w-[95%] min-h-[40vh] m-auto rounded-2xl px-4 py-2">
           <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">رقم التعميم</label>
-              <p>{GeneralizationData?.refrance}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">رقم التعميم</label>
+              <p className="mt-2">{GeneralizationData?.refrance}</p>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="">موضوع التعميم</label>
-              <p>{GeneralizationData?.title}</p>
+            <div className="text-[#757575] col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-lg">موضوع التعميم</label>
+              <p className="mt-2">{GeneralizationData?.title}</p>
             </div>
 
             {/*  */}
           </div>
           <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="">تفاصيل التعميم</label>
-              <p>{GeneralizationData?.description}</p>
+            <div className="text-[#757575] col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-lg">تفاصيل التعميم</label>
+              <p className="mt-2">{GeneralizationData?.description}</p>
             </div>
             {/*  */}
           </div>
 
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">المرفقات</h3>
+            <h3 className="font-bold text-3xl text-[#3734a9] p-3">المرفقات</h3>
           </div>
 
           <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
