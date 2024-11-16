@@ -36,6 +36,8 @@ import AddBookForm from '../pages/official-journal/add-book/add-book'
 import HeaderFormLicense from '../pages/official-journal/license/header-form'
 import OrderBookFormIndex from '../pages/official-journal/order-book/header-form'
 import SettingsIndex from '../pages/settings'
+import UpdateLicense from '../pages/official-journal/license/update-lincense'
+import ViewLicense from '../pages/official-journal/license/view-license'
 
 export const router = createHashRouter([
   {
@@ -143,6 +145,14 @@ export const router = createHashRouter([
       {
         path: '/license/add-license',
         element: <ProtectedRoute element={<HeaderFormLicense />} />
+      },
+      {
+        path: '/license/update-license/:id',
+        element: <ProtectedRoute element={<UpdateLicense />} />
+      },
+      {
+        path: '/license/view-license/:id',
+        element: <ProtectedRoute element={<ViewLicense />} />
       },
       {
         path: '/generalization',

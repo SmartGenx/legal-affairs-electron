@@ -1,9 +1,10 @@
-import BookSearch from '../search'
 import TopButtons from './top-buttons'
 import { useAuthHeader } from 'react-auth-kit'
 import { useQuery } from '@tanstack/react-query'
 import { getApi } from '@renderer/lib/http'
 import LicenseTable from './licenseTable'
+import { useSearchParams } from 'react-router-dom'
+import LicenseSearch from './search'
 
 export interface LicenseResp {
   info: Info[]
@@ -28,6 +29,15 @@ export interface Info {
   updatedAt: Date
   isDeleted: boolean
   licenseType: LicenseType
+  Customer: Customer
+}
+export interface Customer {
+  id:        number;
+  name:      string;
+  type?:     number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
 }
 
 export interface LicenseType {
@@ -41,10 +51,20 @@ export interface LicenseType {
 
 export default function LicenseIndex() {
   const authToken = useAuthHeader()
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get('query')
+  const page = searchParams.get('page')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['LicenseResponse'],
+    queryKey: ['LicenseResponse', page,query],
     queryFn: () =>
-      getApi<LicenseResp>('/license?page=1&pageSize=2&include[licenseType]=true', {
+      getApi<LicenseResp>('/license', {
+        params: {
+          'Customer[name][contains]': query,
+          'include[licenseType]': true,
+          'include[Customer]': true,
+          page: page || 1,
+          pageSize: 5
+        },
         headers: {
           Authorization: authToken()
         }
@@ -58,8 +78,8 @@ export default function LicenseIndex() {
   console.log('infoArray:', infoArray)
   return (
     <section className="relative space-y-4 ">
-      <BookSearch />
-      <TopButtons />
+      <LicenseSearch />
+      <TopButtons data={data?.data.info || []}/>
       <LicenseTable info={infoArray || []} page={'1'} pageSize="0" total={0} />
     </section>
   )

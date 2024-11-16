@@ -20,7 +20,8 @@ class LicenseController {
     async getLicenseById(req, res, next) {
         const id = Number(req.params.id);
         try {
-            const license = await LicenseService.getLicenseById(id);
+            const LicenseFilter=req.query
+            const license = await LicenseService.getLicenseById(id,LicenseFilter);
             if (!license) {
                 return next(new NotFoundError(`License with id ${id} not found.`));
             }

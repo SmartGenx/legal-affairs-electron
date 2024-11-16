@@ -35,6 +35,15 @@ export interface Info {
   updatedAt: Date
   isDeleted: boolean
   licenseType: LicenseType
+  Customer: Customer
+}
+export interface Customer {
+  id:        number;
+  name:      string;
+  type?:     number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
 }
 
 export interface LicenseType {
@@ -57,11 +66,17 @@ export default function LicenseTable({ info, page, total }: Props) {
       },
       {
         accessorKey: 'customerId',
-        header: 'اسم الشركة'
+        header: 'اسم الشركة',
+        cell:({row}) => {
+            return row.original.Customer.name
+        },
       },
       {
         accessorKey: 'licenseTypeId',
-        header: 'نوع الترخيص'
+        header: 'نوع الترخيص',
+        cell:({row}) => {
+          return row.original.licenseType.name
+      },
       },
       {
         accessorKey: 'licenseYear',
@@ -87,12 +102,12 @@ export default function LicenseTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/official-journal/book-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/license/view-license/${row.original.id}`}>عرض</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
-                  url={`/book/${row.original?.id}`}
-                  keys={['Books']}
+                  url={`/license/${row.original?.id}`}
+                  keys={['LicenseResponse']}
                   path={'official-journal'}
                 />
               </DropdownMenuItem>
@@ -111,7 +126,7 @@ export default function LicenseTable({ info, page, total }: Props) {
       page={page.toString()}
       total={Number(total)}
       onRowClick={(_, { original }) => {
-        navigate(`/official-journal/view-book/${original.id}`)
+        navigate(`/license/update-license/${original.id}`)
       }}
     />
   )
