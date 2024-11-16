@@ -38,6 +38,7 @@ import OrderBookFormIndex from '../pages/official-journal/order-book/header-form
 import SettingsIndex from '../pages/settings'
 import UpdateLicense from '../pages/official-journal/license/update-lincense'
 import ViewLicense from '../pages/official-journal/license/view-license'
+import UpdateOrderBook from '../pages/official-journal/order-book/update-order-book'
 
 export const router = createHashRouter([
   {
@@ -121,6 +122,10 @@ export const router = createHashRouter([
       {
         path: '/official-journal/order-book',
         element: <ProtectedRoute element={<OrderBookFormIndex />} />
+      },
+      {
+        path: '/official-journal/update-order-book/:id',
+        element: <ProtectedRoute element={<UpdateOrderBook />} />
       },
       {
         path: '/personnel-affairs',

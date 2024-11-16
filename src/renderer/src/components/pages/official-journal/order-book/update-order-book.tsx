@@ -4,16 +4,15 @@ import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { axiosInstance, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation,  useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { BookInfo } from '@renderer/types'
-import { DateInput } from '@renderer/components/ui/date-input'
 import AddCustomerDialog from '../../dailogs/add-customer'
 
 const formSchema = z.object({
@@ -37,7 +36,8 @@ export type customer = {
 
 type BookFormValue = z.infer<typeof formSchema>
 
-export default function OrderBook() {
+export default function UpdateOrderBook() {
+  const { id } = useParams<{ id: string }>()
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
