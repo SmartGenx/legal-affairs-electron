@@ -299,8 +299,11 @@ export default function AddIssueForm() {
             <h3 className="font-bold text-[#3734a9] p-3">بيانات المختص القانوني</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-5  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                الإسم
+              </label>
               <FormField
                 control={form.control}
                 name="name"
@@ -321,6 +324,9 @@ export default function AddIssueForm() {
             {/*  */}
 
             <div className="col-span-1 translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                الصفة
+              </label>
               <FormField
                 control={form.control}
                 name="postionId"
@@ -348,6 +354,9 @@ export default function AddIssueForm() {
             {/*  */}
 
             <div className="col-span-1 translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                المرفق الحكومي
+              </label>
               <FormField
                 control={form.control}
                 name="governmentOfficeId"
@@ -417,7 +426,9 @@ export default function AddIssueForm() {
                             </svg>
                           </div>
                         </FormControl>
-                        <FormLabel className="font-normal ml-20 mr-2 relative -top-1">{caseType.label}</FormLabel>
+                        <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
+                          {caseType.label}
+                        </FormLabel>
                       </div>
                     ))}
                     <FormMessage />
@@ -595,8 +606,11 @@ export default function AddIssueForm() {
           </div>
           {selectedOption === 1 ? (
             <>
-              <div className="grid h-[50px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+              <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
+                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                    المحكمة
+                  </label>
                   <FormField
                     control={form.control}
                     name="tribunalId"
@@ -622,8 +636,11 @@ export default function AddIssueForm() {
                   />
                 </div>
               </div>
-              <div className="grid h-[70px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[50px] ">
+                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                    عنوان القضية
+                  </label>
                   <FormField
                     control={form.control}
                     name="title"
@@ -644,8 +661,11 @@ export default function AddIssueForm() {
 
                 {/*  */}
               </div>
-              <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                <div className=" col-span-1 h-[40px] ">
+              <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  نص الحكم
+                </label>
+                <div className=" col-span-1 min-h-[40px] ">
                   <FormField
                     control={form.control}
                     name="judgment"
@@ -667,10 +687,13 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
 
-              <div className="grid min-h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid min-h-[95px] mb-5 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخة
+                </label>
                   <FormField
                     control={form.control}
                     name="detailsDate"
@@ -692,6 +715,9 @@ export default function AddIssueForm() {
                 </div>
 
                 <div className=" col-span-1 h-[40px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  رقم الحكم
+                </label>
                   <FormField
                     control={form.control}
                     name="refrance"
@@ -709,7 +735,8 @@ export default function AddIssueForm() {
                     )}
                   />
                 </div>
-                <div className="col-span-1 h-[50px] translate-y-3">
+                <div className="col-span-1 h-[50px] translate-y-9">
+                  
                   <FormField
                     control={form.control}
                     name="Resumed"
@@ -764,8 +791,11 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 2 ? (
             <>
-              <div className="grid h-[50px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+              <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
+                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                    المحكمة
+                  </label>
                   <FormField
                     control={form.control}
                     name="tribunalId"
@@ -791,8 +821,11 @@ export default function AddIssueForm() {
                   />
                 </div>
               </div>
-              <div className="grid h-[70px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[50px] ">
+                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                    عنوان القضية
+                  </label>
                   <FormField
                     control={form.control}
                     name="title"
@@ -813,8 +846,11 @@ export default function AddIssueForm() {
 
                 {/*  */}
               </div>
-              <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
+                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                    نص الحكم
+                  </label>
                   <FormField
                     control={form.control}
                     name="judgment"
@@ -836,10 +872,13 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
 
-              <div className="grid h-[75px]  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[75px] mb-5 grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخة
+                </label>
                   <FormField
                     control={form.control}
                     name="detailsDate"
@@ -861,6 +900,9 @@ export default function AddIssueForm() {
                 </div>
 
                 <div className=" col-span-1 h-[40px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  رقم الحكم
+                </label>
                   <FormField
                     control={form.control}
                     name="refrance"
@@ -882,8 +924,11 @@ export default function AddIssueForm() {
             </>
           ) : selectedOption === 3 ? (
             <>
-              <div className="grid h-[50px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
+              <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
+                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                    المحكمة
+                  </label>
                   <FormField
                     control={form.control}
                     name="tribunalId"
@@ -909,8 +954,11 @@ export default function AddIssueForm() {
                   />
                 </div>
               </div>
-              <div className="grid h-[70px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[50px] ">
+                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                    عنوان القضية
+                  </label>
                   <FormField
                     control={form.control}
                     name="title"
@@ -931,8 +979,11 @@ export default function AddIssueForm() {
 
                 {/*  */}
               </div>
-              <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                <div className=" col-span-1 h-[40px] ">
+              <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  نص الحكم
+                </label>
+                <div className=" col-span-1 min-h-[40px] ">
                   <FormField
                     control={form.control}
                     name="judgment"
@@ -954,10 +1005,13 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
 
-              <div className="grid h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="grid min-h-[95px] mb-5 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخة
+                </label>
                   <FormField
                     name="detailsDate"
                     control={form.control}
@@ -979,6 +1033,9 @@ export default function AddIssueForm() {
                 </div>
 
                 <div className=" col-span-1 h-[40px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  رقم الحكم
+                </label>
                   <FormField
                     control={form.control}
                     name="refrance"
@@ -996,7 +1053,7 @@ export default function AddIssueForm() {
                     )}
                   />
                 </div>
-                <div className="col-span-1 h-[50px] translate-y-3">
+                <div className="col-span-1 h-[50px] translate-y-9">
                   <FormField
                     control={form.control}
                     name="Resumed"
@@ -1094,7 +1151,9 @@ export default function AddIssueForm() {
                             </svg>
                           </div>
                         </FormControl>
-                        <FormLabel className="font-normal ml-20 relative -top-1 mr-2">{caseType.label}</FormLabel>
+                        <FormLabel className="font-normal ml-20 relative -top-1 mr-2">
+                          {caseType.label}
+                        </FormLabel>
                       </div>
                     ))}
                     <FormMessage />
@@ -1115,8 +1174,8 @@ export default function AddIssueForm() {
               className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              <p className='font-bold text-base'>حفظ</p>
-              <Plus className='mr-2'/>
+              <p className="font-bold text-base">حفظ</p>
+              <Plus className="mr-2" />
             </Button>
           </div>
         </form>

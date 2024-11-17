@@ -124,8 +124,11 @@ export default function ViewBook() {
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              اسم الكتاب
+              </label>
               <FormField
                 control={form.control}
                 name="name"
@@ -145,6 +148,9 @@ export default function ViewBook() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+            الكميه
+              </label>
               <FormField
                 control={form.control}
                 name="quantity"
@@ -164,6 +170,9 @@ export default function ViewBook() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+            سعر النسخة
+              </label>
               <FormField
                 control={form.control}
                 name="price"
