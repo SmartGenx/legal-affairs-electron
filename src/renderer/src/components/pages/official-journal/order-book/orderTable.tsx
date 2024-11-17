@@ -71,7 +71,7 @@ export default function OrderBookTable({ info, page, total }: Props) {
         }
       },
       {
-        accessorKey: 'quantity',
+        accessorKey: 'Customer.name',
         header: 'اسم المشتري',
         cell: ({ row }) => {
           return row.original.Customer.name
@@ -101,12 +101,12 @@ export default function OrderBookTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/official-journal/book-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/official-journal/update-order-book/${row.original.id}`}>عرض</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
-                  url={`/book/${row.original?.id}`}
-                  keys={['Books']}
+                  url={`/book-order/${row.original?.id}`}
+                  keys={['OrderBookResponse']}
                   path={'official-journal'}
                 />
               </DropdownMenuItem>
@@ -125,7 +125,7 @@ export default function OrderBookTable({ info, page, total }: Props) {
       page={page.toString()}
       total={Number(total)}
       onRowClick={(_, { original }) => {
-        navigate(`/official-journal/view-book/${original.id}`)
+        navigate(`/official-journal/update-order-book/${original.id}`)
       }}
     />
   )

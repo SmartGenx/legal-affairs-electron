@@ -1,11 +1,6 @@
-import Header from './header'
-import AddLeaveIndex from './add-leave'
 
-export default function AddLeave() {
+export default function LeaveIndex() {
   return (
-    <>
-      <Header />
-      <AddLeaveIndex />
-    </>
+    <div>index</div>
   )
 }

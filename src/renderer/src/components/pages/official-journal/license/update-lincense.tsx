@@ -1,25 +1,40 @@
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui/form'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, getApi, postApi } from '@renderer/lib/http'
+import { axiosInstance, getApi, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { LicenseType } from '@renderer/types'
-import { Plus } from 'lucide-react'
-
+import { LoaderIcon } from 'lucide-react'
 
 export interface Customer {
   id: number
   name: string
   type: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+export interface licenseResp {
+  id: number
+  licenseTypeId: number
+  customerId: number
+  licenseNumber: string
+  licenseYear: number
+  compnayPorpose: string
+  compnayLocation: string
+  compnayCapital: number
+  compnayManger: string
+  referenceNum: string
+  referenceDate: Date
   createdAt: Date
   updatedAt: Date
   isDeleted: boolean
@@ -40,15 +55,16 @@ const formSchema = z.object({
 
 type BookFormValue = z.infer<typeof formSchema>
 
-export default function AddLincense() {
+export default function UpdateLicense() {
+  const { id } = useParams<{ id: string }>()
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
   const [customer, setCustomer] = useState<Customer[]>([])
 
-  console.log('customer', customer)
-  const { isLoading, error, data } = useQuery({
+
+  const {  error, data } = useQuery({
     queryKey: ['license'],
     queryFn: () =>
       getApi<LicenseType>('/license-type?page=1&pageSize=30', {
@@ -57,7 +73,33 @@ export default function AddLincense() {
         }
       })
   })
+  const { isPending, data: licenseById } = useQuery({
+    queryKey: ['licenseById', id],
+    queryFn: () =>
+      getApi<licenseResp>(`/license/${id}`, {
+        headers: {
+          Authorization: authToken()
+        }
+      })
+  })
 
+
+  React.useEffect(() => {
+    if (licenseById?.data) {
+      form.reset({
+        licenseTypeId: String(licenseById.data.licenseTypeId),
+        customerId: String(licenseById.data.customerId),
+        licenseNumber: licenseById.data.licenseNumber,
+        licenseYear: String(licenseById.data.licenseYear),
+        compnayPorpose: licenseById.data.compnayPorpose,
+        compnayLocation: licenseById.data.compnayLocation,
+        compnayCapital: String(licenseById.data.compnayCapital),
+        compnayManger: licenseById.data.compnayManger,
+        referenceNum: licenseById.data.referenceNum,
+        referenceDate: new Date(licenseById.data.referenceDate).toISOString().split('T')[0],
+      })
+    }
+  }, [licenseById?.data])
   const infoArray = data?.data?.info || [] // Directly access the `info` array from `data.data`
 
   const fetchData = async () => {
@@ -80,10 +122,10 @@ export default function AddLincense() {
     resolver: zodResolver(formSchema)
   })
   const { mutate } = useMutation({
-    mutationKey: ['AddLicense'],
+    mutationKey: ['UpdateLicense'],
     mutationFn: (datas: BookFormValue) =>
-      postApi(
-        '/license',
+      patchApi(
+        `/license/${id}`,
         {
           licenseTypeId: +datas.licenseTypeId,
           customerId: +datas.customerId,
@@ -122,7 +164,12 @@ export default function AddLincense() {
   const onSubmit = (datas: BookFormValue) => {
     mutate(datas)
   }
-  if (isLoading) return 'Loading...'
+  if (isPending)
+    return (
+      <div className="flex justify-center items-center w-full ">
+        <LoaderIcon className="mt-12 flex animate-spin items-center justify-end duration-1000" />
+      </div>
+    )
 
   if (error) return 'An error has occurred: ' + error.message
   return (
@@ -151,7 +198,13 @@ export default function AddLincense() {
                 name="licenseTypeId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange}
+                    value={
+                        field.value
+                          ? String(field.value)
+                          : String(licenseById?.data.licenseTypeId)
+                      }
+                    defaultValue={field.value}>
                       <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="نوع الرخصه" />
@@ -177,7 +230,13 @@ export default function AddLincense() {
                 name="customerId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange}
+                    value={
+                        field.value
+                          ? String(field.value)
+                          : String(licenseById?.data.customerId)
+                      }
+                    defaultValue={field.value}>
                       <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="اسم الشركة" />
@@ -379,7 +438,7 @@ export default function AddLincense() {
             {/*  */}
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/state-affairs'}>
+            <Link to={'/state-affairs'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
@@ -389,8 +448,7 @@ export default function AddLincense() {
               className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              <p className='font-bold text-base'>حفظ</p>
-              <Plus className='mr-2'/>
+              <p className='font-bold text-base'>تعديل</p>
             </Button>
           </div>
         </form>
