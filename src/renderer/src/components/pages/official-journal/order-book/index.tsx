@@ -54,7 +54,7 @@ export default function OrderBookIndex() {
   const query = searchParams.get('query')
   const page = searchParams.get('page')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['OrderBookResponseTable',page],
+    queryKey: ['OrderBookResponseTable',page,query],
     queryFn: () =>
       getApi<OrderBookResponse>(
         '/book-order',

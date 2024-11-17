@@ -21,40 +21,60 @@ type Props = {
 
 export interface Info {
   id: number
-  bookId: number
-  quantity: number
-  customerId: number
+  employeeeId: number
+  leaveTypeId: number
+  dayNumber: number
+  year: number
+  startDate: Date
+  endDate: Date
+  leaveNote: string
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+  LeaveType: LeaveType
+  employ: Employ
+}
+
+export interface LeaveType {
+  id: number
+  name: string
+  defaultDay: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
+export interface Employ {
+  id: number
+  name: string
   reference: string
-  description: string
-  sellingDate: Date
-  orderNumber: number
-  createdAt: Date
-  updatedAt: Date
-  isDeleted: boolean
-  Customer: Customer
-  Book: Book
-}
-
-export interface Book {
-  id: number
-  name: string
-  quantity: number
-  price: number
-  createdAt: Date
-  updatedAt: Date
-  isDeleted: boolean
-}
-
-export interface Customer {
-  id: number
-  name: string
-  type: number
+  phone: string
+  address: string
+  dob: Date
+  education: string
+  megor: number
+  graduationDate: Date
+  idtype: number
+  idNumber: string
+  issuerDate: Date
+  issuerPlace: string
+  empLeaved: string
+  empDgree: number
+  position: string
+  salary: number
+  firstEmployment: Date
+  employmentDate: Date
+  currentUnit: number
+  currentEmploymentDate: Date
+  legalStatus: number
+  employeeStatus: number
+  detailsDate: Date
   createdAt: Date
   updatedAt: Date
   isDeleted: boolean
 }
 
-export default function OrderBookTable({ info, page, total }: Props) {
+export default function LeaveTable({ info, page, total }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -64,31 +84,37 @@ export default function OrderBookTable({ info, page, total }: Props) {
         cell: ({ row }) => (row.index + 1 + (Number(page) - 1) * 10).toString().padStart(2, '0')
       },
       {
-        accessorKey: 'Book.name',
-        header: 'اسم الكتاب',
+        accessorKey: 'employ.reference',
+        header: 'م الموظف',
         cell: ({ row }) => {
-          return row.original.Book.name
+          return row.original.employ.reference
         }
       },
       {
-        accessorKey: 'Customer.name',
-        header: 'اسم المشتري',
+        accessorKey: 'employ.name',
+        header: 'الأسم',
         cell: ({ row }) => {
-          return row.original.Customer.name
+          return row.original.employ.name
         }
       },
       {
-        accessorKey: 'reference',
-        header: 'رقم السند'
+        accessorKey: 'LeaveType.name',
+        header: 'نوع الإجازة'
       },
-      {
-        accessorKey: 'Book.price',
-        header: 'سعر الكتاب'
-      },
-      {
-        accessorKey: 'orderNumber',
-        header: 'رقم الصرف'
-      },
+        {
+          accessorKey: 'startDate',
+          header: 'بداية الإجازة',
+          cell: ({ row }) => {
+            return String(row.original.startDate).split("T")[0]
+          }
+        },
+        {
+          accessorKey: 'endDate',
+          header: 'نهاية الإجازة',
+          cell: ({ row }) => {
+            return String(row.original.endDate).split("T")[0]
+          }
+        },
 
       {
         id: 'actions',
@@ -101,7 +127,7 @@ export default function OrderBookTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/official-journal/view-order-book/${row.original.id}`}>عرض</Link>
+                <Link to={`/official-journal/update-order-book/${row.original.id}`}>عرض</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -125,7 +151,7 @@ export default function OrderBookTable({ info, page, total }: Props) {
       page={page.toString()}
       total={Number(total)}
       onRowClick={(_, { original }) => {
-        navigate(`/official-journal/update-order-book/${original.id}`)
+        navigate(`/personnel-affairs/update-leave/${original.id}`)
       }}
     />
   )
