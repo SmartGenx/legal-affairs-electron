@@ -106,7 +106,7 @@ export default function OrderBookTable({ info, page, total }: Props) {
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
                   url={`/book-order/${row.original?.id}`}
-                  keys={['OrderBookResponse']}
+                  keys={['OrderBookResponseTable']}
                   path={'official-journal'}
                 />
               </DropdownMenuItem>
