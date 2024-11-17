@@ -126,40 +126,25 @@ class EmployServices {
 
   async updateEmploy(id, EmployData, filePath) {
     // try {
-    const { name, reference } = EmployData
+    console.log('🚀 ~ EmployServices ~ updateEmploy ~ filePath:', EmployData);
+
+
     const existingEmploy = await prisma.employ.findUnique({
       where: { id, isDeleted: false }
     })
     if (!existingEmploy) {
       throw new NotFoundError(`employ with id ${id} not found.`)
     }
-    console.log('🚀 ~ EmployServices ~ updateEmploy ~ id:', { ...EmployData })
+    console.log('🚀 ~ EmployServices ~ updateEmploy ~ id:', { EmployData })
 
-    if (name) {
-      console.log('🚀 ~ EmployServices ~ updateEmploy ~ name:', name)
-
-      const existingName = await prisma.employ.findFirst({
-        where: { name: name, isDeleted: false }
-      })
-      if (existingName) {
-        throw new NotFoundError(`employ with name => ( ${name} ) is exist .`)
-      }
-    }
-    if (reference) {
-      const existingreFerence = await prisma.employ.findFirst({
-        where: { reference: reference, isDeleted: false }
-      })
-      if (existingreFerence) {
-        throw new NotFoundError(`employ with reference => ( ${reference} ) is exist .`)
-      }
-    }
 
     // Update the employ
     const employ = await prisma.employ.update({
       where: { id },
-      data: {
-        ...EmployData
-      }
+      data:
+        EmployData
+
+
     })
     const existingattachment = await prisma.attachment.findFirst({
       where: { emploteeId: +employ.id }
