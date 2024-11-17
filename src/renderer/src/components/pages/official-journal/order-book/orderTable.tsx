@@ -71,7 +71,7 @@ export default function OrderBookTable({ info, page, total }: Props) {
         }
       },
       {
-        accessorKey: 'quantity',
+        accessorKey: 'Customer.name',
         header: 'اسم المشتري',
         cell: ({ row }) => {
           return row.original.Customer.name

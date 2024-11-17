@@ -13,7 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation,  useQueryClient } from '@tanstack/react-query'
 import { BookInfo } from '@renderer/types'
-import { DateInput } from '@renderer/components/ui/date-input'
 import AddCustomerDialog from '../../dailogs/add-customer'
 
 const formSchema = z.object({
@@ -114,7 +113,7 @@ export default function OrderBook() {
         variant: 'success',
         description: 'تمت الاضافة بنجاح'
       })
-      queryClient.invalidateQueries({ queryKey: ['OrderBookResponse'] })
+      queryClient.invalidateQueries({ queryKey: ['OrderBookResponseTable'] })
       navigate('/official-journal')
     },
     onError: (error) => {

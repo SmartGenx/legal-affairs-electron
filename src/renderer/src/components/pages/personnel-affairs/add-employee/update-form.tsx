@@ -12,7 +12,6 @@ import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import FileUploader from './FileUploader'
-import { DateInput } from '@renderer/components/ui/date-input'
 import { EmployInfo } from '@renderer/types'
 
 const formSchema = z.object({
@@ -222,7 +221,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   اسم الموظف "
                         {...field}
                       />
@@ -241,7 +240,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم الموظف "
                         {...field}
                       />
@@ -260,7 +259,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم الهاتف "
                         {...field}
                       />
@@ -283,7 +282,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   العنوان "
                         {...field}
                       />
@@ -301,10 +300,11 @@ export default function UpdateEmployeeIndex() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <DateInput
+                      <FormInput
                         {...field}
                         placeholder="تاريخ الميلاد"
                         type="date"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
@@ -322,7 +322,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   المؤهل التعليمي "
                         {...field}
                       />
@@ -349,7 +349,7 @@ export default function UpdateEmployeeIndex() {
                       value={field.value ? String(field.value) : String(EmployeeData?.megor)}
                       defaultValue={field.value}
                     >
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="التخصص" />
                         </SelectTrigger>
@@ -368,17 +368,18 @@ export default function UpdateEmployeeIndex() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] -translate-y-2">
               <FormField
                 control={form.control}
                 name="graduationDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <DateInput
+                      <FormInput
                         {...field}
                         placeholder="تاريخ التخرج"
                         type="date"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
@@ -399,7 +400,7 @@ export default function UpdateEmployeeIndex() {
                       value={field.value ? String(field.value) : String(EmployeeData?.idtype)}
                       defaultValue={field.value}
                     >
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="نوع الهوية" />
                         </SelectTrigger>
@@ -431,7 +432,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم الهوية "
                         {...field}
                       />
@@ -449,7 +450,8 @@ export default function UpdateEmployeeIndex() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <DateInput {...field} placeholder="تاريخ الإصدار" type="date" />
+                      <FormInput {...field} placeholder="تاريخ الإصدار" type="date"
+                      className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -465,7 +467,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   مكان الاصدار "
                         {...field}
                       />
@@ -489,7 +491,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   اجازة الموظف "
                         {...field}
                       />
@@ -508,7 +510,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   درجة الموظف "
                         {...field}
                       />
@@ -527,7 +529,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   المنصب "
                         {...field}
                       />
@@ -550,7 +552,7 @@ export default function UpdateEmployeeIndex() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-10 p-0  rounded-xl text-sm"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   الراتب "
                         {...field}
                       />
@@ -568,10 +570,11 @@ export default function UpdateEmployeeIndex() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <DateInput
+                      <FormInput
                         {...field}
                         placeholder="تاريخ التوظيف الاول"
                         type="date"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
@@ -588,10 +591,11 @@ export default function UpdateEmployeeIndex() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <DateInput
+                      <FormInput
                         {...field}
                         placeholder="تاريخ التوظيف"
                         type="date"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
@@ -617,7 +621,7 @@ export default function UpdateEmployeeIndex() {
                       value={field.value ? String(field.value) : String(EmployeeData?.currentUnit)}
                       defaultValue={field.value}
                     >
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="الوحدة الحالية" />
                         </SelectTrigger>
@@ -636,17 +640,18 @@ export default function UpdateEmployeeIndex() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] -translate-y-2">
               <FormField
                 control={form.control}
                 name="currentEmploymentDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <DateInput
+                      <FormInput
                         {...field}
                         placeholder="تاريخ  التوظيف في الوحدة"
                         type="date"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
@@ -667,7 +672,7 @@ export default function UpdateEmployeeIndex() {
                       value={field.value ? String(field.value) : String(EmployeeData?.legalStatus)}
                       defaultValue={field.value}
                     >
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="المركز القانوني" />
                         </SelectTrigger>
@@ -703,7 +708,7 @@ export default function UpdateEmployeeIndex() {
                       }
                       defaultValue={field.value}
                     >
-                      <FormControl className="bg-transparent border-2 border-[#d1d5db] rounded-xl translate-y-2">
+                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="حالة الموظف" />
                         </SelectTrigger>
@@ -722,17 +727,18 @@ export default function UpdateEmployeeIndex() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] -translate-y-2">
               <FormField
                 control={form.control}
                 name="detailsDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <DateInput
+                      <FormInput
                         {...field}
                         placeholder="تاريخ  التوظيف في الوحدة"
                         type="date"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>

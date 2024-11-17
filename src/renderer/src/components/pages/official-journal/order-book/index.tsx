@@ -1,4 +1,3 @@
-import BookSearch from '../search'
 import { useAuthHeader } from 'react-auth-kit'
 import { useQuery } from '@tanstack/react-query'
 import { getApi } from '@renderer/lib/http'
@@ -55,7 +54,7 @@ export default function OrderBookIndex() {
   const query = searchParams.get('query')
   const page = searchParams.get('page')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['OrderBookResponse',page],
+    queryKey: ['OrderBookResponseTable',page],
     queryFn: () =>
       getApi<OrderBookResponse>(
         '/book-order',
@@ -82,7 +81,7 @@ export default function OrderBookIndex() {
   return (
     <section className="relative space-y-4 ">
       <OrderBookSearch />
-      <TopButtons />
+      <TopButtons data={data?.data.info || []}/>
       <OrderBookTable info={infoArray || []} page="1" pageSize="0" total={0} />
     </section>
   )

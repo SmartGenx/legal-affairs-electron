@@ -7,11 +7,11 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, postApi } from '@renderer/lib/http'
+import { axiosInstance, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BookInfo } from '@renderer/types'
 import AddCustomerDialog from '../../dailogs/add-customer'
 
@@ -34,6 +34,41 @@ export type customer = {
   isDeleted: boolean
 }
 
+export interface OrderBookResp {
+  id: number
+  bookId: number
+  quantity: number
+  customerId: number
+  reference: string
+  description: string
+  sellingDate: Date
+  orderNumber: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+  Customer: Customer
+  Book: Book
+}
+
+export interface Book {
+  id: number
+  name: string
+  quantity: number
+  price: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
+export interface Customer {
+  id: number
+  name: string
+  type: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
 type BookFormValue = z.infer<typeof formSchema>
 
 export default function UpdateOrderBook() {
@@ -44,7 +79,7 @@ export default function UpdateOrderBook() {
   const navigate = useNavigate()
   const [bookId, setBookId] = useState<string | null>(null)
   const [quantity, setQuantity] = useState<number>(0)
-
+  console.log('quantity', quantity)
   const [data, setData] = useState<customer[]>([])
   const [order, setOrder] = useState<BookInfo[]>([])
 
@@ -53,6 +88,47 @@ export default function UpdateOrderBook() {
   const price = selectedBook ? selectedBook.price : 0
   const total = price * quantity
 
+  const fetchDataById = async () => {
+    const response = await axiosInstance.get<OrderBookResp[]>(
+      `/book-order/?include[Customer]=true&include[Book]=true&id=${id}`,
+      {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      }
+    )
+    return response.data
+  }
+  const {
+    data: BookData,
+    error: _BookError,
+    isLoading: _BookIsLoading
+  } = useQuery({
+    queryKey: ['BooksById', id],
+    queryFn: fetchDataById,
+    enabled: !!id
+  })
+
+
+  useEffect(() => {
+    if (BookData) {
+      form.reset({
+        bookId: String(BookData[0].bookId),
+        quantity: String(BookData[0].quantity),
+        customerId: String(BookData[0].customerId),
+        reference: String(BookData[0].reference),
+        description: String(BookData[0].description),
+        sellingDate: String(BookData[0].sellingDate).split("T")[0],
+        orderNumber: String(BookData[0].orderNumber)
+      })
+    }
+    if (!bookId && BookData && BookData.length > 0) {
+      setBookId(String(BookData[0].bookId))
+    }
+    if (!quantity && BookData && BookData.length > 0) {
+      setQuantity(BookData[0].quantity)
+    }
+  }, [BookData, bookId])
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get('/customer', {
@@ -89,10 +165,10 @@ export default function UpdateOrderBook() {
     resolver: zodResolver(formSchema)
   })
   const { mutate } = useMutation({
-    mutationKey: ['OrderBook'],
+    mutationKey: ['UpdateOrderBook'],
     mutationFn: (datas: BookFormValue) =>
-      postApi(
-        '/book-order',
+      patchApi(
+        `/book-order/${id}`,
         {
           bookId: +datas.bookId,
           quantity: +datas.quantity,
@@ -114,7 +190,8 @@ export default function UpdateOrderBook() {
         variant: 'success',
         description: 'تمت الاضافة بنجاح'
       })
-      queryClient.invalidateQueries({ queryKey: ['OrderBookResponse'] })
+      queryClient.invalidateQueries({ queryKey: ['OrderBookResponseTable'] })
+      queryClient.invalidateQueries({ queryKey: ['BooksById', id] })
       navigate('/official-journal')
     },
     onError: (error) => {
@@ -158,9 +235,31 @@ export default function UpdateOrderBook() {
                       onValueChange={(value) => {
                         field.onChange(value)
                         setBookId(value)
+
+                        // Add any additional handling as needed here
+                        if (BookData) {
+                          const selectedBook = BookData.find(
+                            (book) => String(book.bookId) === value
+                          )
+                          if (selectedBook) {
+                            console.log('Selected Book:', selectedBook)
+                          }
+                        }
                       }}
-                      value={field.value}
-                      defaultValue={field.value}
+                      value={
+                        field.value
+                          ? String(field.value)
+                          : BookData && BookData.length > 0
+                            ? String(BookData[0].bookId)
+                            : ''
+                      }
+                      defaultValue={
+                        field.value
+                          ? String(field.value)
+                          : BookData && BookData.length > 0
+                            ? String(BookData[0].bookId)
+                            : ''
+                      }
                     >
                       <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
@@ -169,12 +268,13 @@ export default function UpdateOrderBook() {
                       </FormControl>
                       <SelectContent>
                         {order.map((options) => (
-                          <SelectItem key={options.name} value={String(options.id)}>
+                          <SelectItem key={options.id} value={String(options.id)}>
                             {options.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -205,10 +305,15 @@ export default function UpdateOrderBook() {
                     <FormControl>
                       <FormInput
                         {...field}
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 p-0 placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   عدد الكتب "
                         onChange={(e) => {
-                          const value = Number(e.target.value)
+                          const value = e.target.value
+                            ? Number(e.target.value)
+                            : BookData && BookData.length > 0
+                              ? BookData[0].quantity
+                              : 0 // Default to 0 if BookData is undefined or empty
+
                           setQuantity(value)
                           field.onChange(e)
                         }}
@@ -264,7 +369,13 @@ export default function UpdateOrderBook() {
                   <FormItem>
                     <Select
                       onValueChange={field.onChange}
-                      value={field.value}
+                      value={
+                        field.value
+                          ? String(field.value)
+                          : BookData && BookData[0]
+                            ? String(BookData[0].customerId)
+                            : ''
+                      }
                       defaultValue={field.value}
                     >
                       <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">

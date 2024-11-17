@@ -16,7 +16,6 @@ import UpdateDecisions from '../pages/decisions/update-decisions'
 import OfficialJournalIndex from '../pages/official-journal'
 import ViewBook from '../pages/official-journal/add-book/view-page'
 import PersonnelAffairsIndex from '../pages/personnel-affairs'
-import PersonnelIndex from '../pages/personnel-affairs/add-employee'
 import UpdateEmployeeIndex from '../pages/personnel-affairs/add-employee/update-form'
 import GeneralizationIndex from '../pages/generalization'
 import AddGeneralizationForm from '../pages/generalization/add-generalization'
@@ -24,7 +23,6 @@ import UpdateGeneralization from '../pages/generalization/update-generalization'
 import AgencyIndex from '../pages/Agency'
 import AddAgency from '../pages/Agency/add-agency'
 import UpdateAgency from '../pages/Agency/update-agency'
-import AddLeave from '../pages/personnel-affairs/leave'
 import StateAffairsInfo from '../pages/state-affairs/[id]/info'
 import AllaftaInfo from '../pages/the-department-of-al-Ifta/info'
 import DecisionInfo from '../pages/decisions/info'
@@ -39,6 +37,8 @@ import SettingsIndex from '../pages/settings'
 import UpdateLicense from '../pages/official-journal/license/update-lincense'
 import ViewLicense from '../pages/official-journal/license/view-license'
 import UpdateOrderBook from '../pages/official-journal/order-book/update-order-book'
+import AddEmployeeForm from '../pages/personnel-affairs/add-employee/add-emp'
+import AddLeaveForm from '../pages/personnel-affairs/leave/form'
 
 export const router = createHashRouter([
   {
@@ -133,7 +133,7 @@ export const router = createHashRouter([
       },
       {
         path: '/personnel-affairs/add-employee',
-        element: <ProtectedRoute element={<PersonnelIndex />} />
+        element: <ProtectedRoute element={<AddEmployeeForm />} />
       },
       {
         path: '/personnel-affairs/view-employee-info/:id',
@@ -145,7 +145,7 @@ export const router = createHashRouter([
       },
       {
         path: '/personnel-affairs/add-leave',
-        element: <ProtectedRoute element={<AddLeave />} />
+        element: <ProtectedRoute element={<AddLeaveForm />} />
       },
       {
         path: '/license/add-license',
