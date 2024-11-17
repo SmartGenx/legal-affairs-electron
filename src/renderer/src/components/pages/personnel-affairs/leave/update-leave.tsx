@@ -267,15 +267,17 @@ export default function UpdateLeaveIndex() {
                 name="leaveTypeId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange}
-                    value={
+                    <Select
+                      onValueChange={field.onChange}
+                      value={
                         field.value
                           ? String(field.value)
                           : BookData && BookData.length > 0
                             ? String(BookData[0].leaveTypeId)
                             : '' // fallback in case BookData is undefined or empty
                       }
-                    defaultValue={field.value}>
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="نوع الإجازة" />
@@ -391,16 +393,16 @@ export default function UpdateLeaveIndex() {
 
           <div className="w-full flex justify-end gap-2 mb-4">
             <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
+              <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
             </Link>
 
             <Button
-              className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
+              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              حفظ
+              <p className="font-bold text-base">تعديل</p>
             </Button>
           </div>
         </form>

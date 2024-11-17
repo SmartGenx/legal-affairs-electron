@@ -141,10 +141,16 @@ class EmployServices {
     // Update the employ
     const employ = await prisma.employ.update({
       where: { id },
-      data:
-        EmployData
-
-
+      data: {
+        ...EmployData,
+        megor: +EmployData.megor,
+        idtype: +EmployData.idtype,
+        empDgree: +EmployData.empDgree,
+        currentUnit: +EmployData.currentUnit,
+        legalStatus: +EmployData.legalStatus,
+        employeeStatus: +EmployData.employeeStatus,
+        salary:+EmployData.salary
+      }
     })
     const existingattachment = await prisma.attachment.findFirst({
       where: { emploteeId: +employ.id }

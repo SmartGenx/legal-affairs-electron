@@ -3,13 +3,12 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Button } from '@renderer/components/ui/button'
-import { axiosInstance, patchApi } from '@renderer/lib/http'
-import { useToast } from '@renderer/components/ui/use-toast'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import { axiosInstance } from '@renderer/lib/http'
+import { useQuery } from '@tanstack/react-query'
 import { EmployInfo } from '@renderer/types'
 import { LoaderIcon } from 'lucide-react'
+import { Separator } from '@renderer/components/ui/separator'
 
 const formSchema = z.object({
   name: z.string(),
@@ -72,10 +71,7 @@ const empStatus = [
 ]
 export default function EmployeeInfo() {
   const { id } = useParams<{ id: string }>()
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
   const authToken = useAuthHeader()
-  const navigate = useNavigate()
 
   const fetchData = async () => {
     const response = await axiosInstance.get<EmployInfo>(`/employ/${id}?include[Attachment]=true`, {
@@ -100,7 +96,7 @@ export default function EmployeeInfo() {
   const form = useForm<AddEmployeeValue>({
     resolver: zodResolver(formSchema)
   })
-console.log("EmployeeData",EmployeeData)
+  console.log('EmployeeData', EmployeeData)
   useEffect(() => {
     if (EmployeeData) {
       form.reset({
@@ -132,270 +128,245 @@ console.log("EmployeeData",EmployeeData)
       })
     }
   }, [EmployeeData])
-  const { mutate } = useMutation({
-    mutationKey: ['UpdateEmployee'],
-    mutationFn: (datas: AddEmployeeValue) => {
-      const formData = new FormData()
-      formData.append('name', datas.name)
-      formData.append('reference', datas.reference)
-      formData.append('phone', datas.phone)
-      formData.append('address', datas.address)
-      formData.append('dob', new Date(datas.dob).toISOString())
-      formData.append('education', datas.education)
-      formData.append('megor', datas.megor)
-      formData.append('graduationDate', new Date(datas.graduationDate).toISOString())
-      formData.append('idtype', datas.idtype)
-      formData.append('idNumber', datas.idNumber)
-      formData.append('issuerDate', new Date(datas.issuerDate).toISOString())
-      formData.append('issuerPlace', datas.issuerPlace)
-      formData.append('empLeaved', datas.empLeaved)
-      formData.append('empDgree', datas.empDgree)
-      formData.append('position', datas.position)
-      formData.append('salary', datas.salary)
-      formData.append('firstEmployment', new Date(datas.firstEmployment).toISOString())
-      formData.append('employmentDate', new Date(datas.employmentDate).toISOString())
-      formData.append('currentUnit', datas.currentUnit)
-      formData.append('currentEmploymentDate', new Date(datas.currentEmploymentDate).toISOString())
-      formData.append('legalStatus', datas.legalStatus)
-      formData.append('employeeStatus', datas.employeeStatus)
-      formData.append('detailsDate', new Date(datas.detailsDate).toISOString())
 
-      if (datas.file) {
-        formData.append('file', datas.file)
-      }
-
-      return patchApi(`/employ/${id}`, formData, {
-        headers: {
-          Authorization: `${authToken()}`
-        }
-      })
-    },
-    onSuccess: () => {
-      toast({
-        title: 'اشعار',
-        variant: 'success',
-        description: 'تمت التعديل بنجاح'
-      })
-      queryClient.invalidateQueries({ queryKey: ['Employ'] })
-      navigate('/personnel-affairs')
-    },
-    onError: (error) => {
-      toast({
-        title: 'لم تتم العملية',
-        description: error.message,
-        variant: 'destructive'
-      })
-    }
-  })
   if (EmployeeIsPending) {
     return (
       <div className="flex w-full items-center justify-center ">
         <LoaderIcon className="mt-12 flex animate-spin items-center justify-end duration-1000" />
       </div>
-    );
+    )
   }
-  const onSubmit = (datas: AddEmployeeValue) => {
-    mutate(datas)
-  }
+
   return (
     <div className="min-h-[50vh] w-full mt-5">
-      <form
-        id="complainsForm"
-        //   key={key}
-        onSubmit={form.handleSubmit(onSubmit)}
-        className=""
-      >
-        {process.env.NODE_ENV === 'development' && (
-          <>
-            <p>Ignore it, it just in dev mode</p>
-            <div>{JSON.stringify(form.formState.errors)}</div>
-          </>
-        )}
+      <div>
         <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-          <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
+          <h3 className="font-bold text-[#3734a9] p-3 text-xl">بيانات الموظف الشخصية</h3>
         </div>
 
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">اسم الموظف</label>
-            <p>{EmployeeData?.name}</p>
-          </div>
+        <div className="bg-[#dedef8] w-[95%] min-h-[40vh] m-auto rounded-2xl px-4 py-2">
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                اسم الموظف
+              </label>
+              <p className="mt-2">{EmployeeData?.name}</p>
+            </div>
 
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">رقم الموظف</label>
-            <p>{EmployeeData?.reference}</p>
-          </div>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                رقم الموظف
+              </label>
+              <p className="mt-2">{EmployeeData?.reference}</p>
+            </div>
 
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">رقم الهاتف</label>
-            <p>{EmployeeData?.phone}</p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                رقم الهاتف
+              </label>
+              <p className="mt-2">{EmployeeData?.phone}</p>
+            </div>
+            {/*  */}
           </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
           {/*  */}
-        </div>
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                العنوان
+              </label>
+              <p className="mt-2">{EmployeeData?.address}</p>
+            </div>
 
-        {/*  */}
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">العنوان</label>
-            <p>{EmployeeData?.address}</p>
-          </div>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <p>تار className="font-bold text-lg"يخ الميلاد</p>
+              <p className="mt-2">{String(EmployeeData?.dob).split('T')[0]}</p>
+            </div>
 
-          <div className=" col-span-1 h-[50px] ">
-            <p>تاريخ الميلاد</p>
-            <p>{String(EmployeeData?.dob).split('T')[0]}</p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                المؤهل التعليمي
+              </label>
+              <p className="mt-2">{EmployeeData?.education}</p>
+            </div>
+            {/*  */}
           </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">المؤهل التعليمي</label>
-            <p>{EmployeeData?.education}</p>
-          </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
           {/*  */}
-        </div>
 
-        {/*  */}
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                التخصص
+              </label>
+              <p className="mt-2">
+                {major.filter((x) => x.value === EmployeeData?.megor).map((x) => x.label)}
+              </p>
+            </div>
 
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">التخصص</label>
-            <p>{major.filter((x) => x.value === EmployeeData?.megor).map((x) => x.label)}</p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                تاريخ التخرج
+              </label>
+              <p className="mt-2">{String(EmployeeData?.graduationDate).split('T')[0]}</p>
+            </div>
+
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                نوع الهوية
+              </label>
+              <p className="mt-2">
+                {idTypes.filter((x) => x.value === EmployeeData?.idtype).map((x) => x.label)}
+              </p>
+            </div>
+            {/*  */}
           </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">تاريخ التخرج</label>
-            <p>{String(EmployeeData?.graduationDate).split('T')[0]}</p>
-          </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">نوع الهوية</label>
-            <p>{idTypes.filter((x) => x.value === EmployeeData?.idtype).map((x) => x.label)}</p>
-          </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
           {/*  */}
-        </div>
 
-        {/*  */}
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                رقم الهوية
+              </label>
+              <p className="mt-2">{EmployeeData?.idNumber}</p>
+            </div>
 
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">رقم الهوية</label>
-            <p>{EmployeeData?.idNumber}</p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                تاريخ الإصدار
+              </label>
+              <p className="mt-2">{String(EmployeeData?.issuerDate).split('T')[0]}</p>
+            </div>
+
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                مكان الاصدار
+              </label>
+              <p className="mt-2">{EmployeeData?.issuerPlace}</p>
+            </div>
+            {/*  */}
           </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">تاريخ الإصدار</label>
-            <p>{String(EmployeeData?.issuerDate).split('T')[0]}</p>
-          </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">مكان الاصدار</label>
-            <p>{EmployeeData?.issuerPlace}</p>
-          </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
           {/*  */}
-        </div>
 
-        {/*  */}
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                اجازة الموظف
+              </label>
+              <p className="mt-2">{EmployeeData?.empLeaved}</p>
+            </div>
 
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">اجازة الموظف</label>
-            <p>{EmployeeData?.empLeaved}</p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                درجة الموظف
+              </label>
+              <p className="mt-2">{EmployeeData?.empDgree}</p>
+            </div>
+
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                المنصب
+              </label>
+              <p className="mt-2">{EmployeeData?.position}</p>
+            </div>
+            {/*  */}
           </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">درجة الموظف</label>
-            <p>{EmployeeData?.empDgree}</p>
-          </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">المنصب</label>
-            <p>{EmployeeData?.position}</p>
-          </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
           {/*  */}
-        </div>
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                الراتب
+              </label>
+              <p className="mt-2">{EmployeeData?.salary}</p>
+            </div>
 
-        {/*  */}
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">الراتب</label>
-            <p>{EmployeeData?.salary}</p>
-          </div>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                تاريخ التوظيف الاول
+              </label>
+              <p className="mt-2">{String(EmployeeData?.firstEmployment).split('T')[0]}</p>
+            </div>
 
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">تاريخ التوظيف الاول</label>
-            <p>{String(EmployeeData?.firstEmployment).split('T')[0]}</p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                تاريخ التوظيف
+              </label>
+              <p className="mt-2">{String(EmployeeData?.employmentDate).split('T')[0]}</p>
+            </div>
+            {/*  */}
           </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">تاريخ التوظيف</label>
-            <p>{String(EmployeeData?.employmentDate).split('T')[0]}</p>
-          </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
           {/*  */}
-        </div>
 
-        {/*  */}
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                الوحدة الحالية
+              </label>
+              <p className="mt-2">
+                {units.filter((x) => x.value === EmployeeData?.currentUnit).map((x) => x.label)}
+              </p>
+            </div>
 
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">الوحدة الحالية</label>
-            <p>{units.filter((x) => x.value === EmployeeData?.currentUnit).map((x) => x.label)}</p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                تاريخ التوظيف في الوحدة
+              </label>
+              <p className="mt-2">{String(EmployeeData?.currentEmploymentDate).split('T')[0]}</p>
+            </div>
+
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                المركز القانوني
+              </label>
+              <p className="mt-2">
+                {legalStatus
+                  .filter((x) => x.value === EmployeeData?.legalStatus)
+                  .map((x) => x.label)}
+              </p>
+            </div>
+            {/*  */}
           </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">تاريخ التوظيف في الوحدة</label>
-            <p>{String(EmployeeData?.currentEmploymentDate).split('T')[0]}</p>
-          </div>
-
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">المركز القانوني</label>
-            <p>
-              {legalStatus.filter((x) => x.value === EmployeeData?.legalStatus).map((x) => x.label)}
-            </p>
-          </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
           {/*  */}
-        </div>
+          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                حالة الموظف
+              </label>
+              <p className="mt-2">
+                {empStatus
+                  .filter((x) => x.value === EmployeeData?.employeeStatus)
+                  .map((x) => x.label)}
+              </p>
+            </div>
 
-        {/*  */}
-        <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">حالة الموظف</label>
-            <p>
-              {empStatus
-                .filter((x) => x.value === EmployeeData?.employeeStatus)
-                .map((x) => x.label)}
-            </p>
+            <div className=" col-span-1 h-[50px] text-[#757575] ">
+              <label className="font-bold text-lg" htmlFor="">
+                تاريخ التوظيف في الوحدة
+              </label>
+              <p className="mt-2">{String(EmployeeData?.detailsDate).split('T')[0]}</p>
+            </div>
+
+            {/*  */}
+          </div>
+          <Separator className="bg-[#757575] h-[2px] my-2" />
+          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
+            <h3 className="font-bold text-[#3734a9] text-3xl p-3">المرفقات</h3>
           </div>
 
-          <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="">تاريخ التوظيف في الوحدة</label>
-            <p>{String(EmployeeData?.detailsDate).split('T')[0]}</p>
-          </div>
-
-          {/*  */}
-        </div>
-
-        <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-          <h3 className="font-bold text-[#3734a9] p-3">أرفاق مرفق</h3>
-        </div>
-
-        <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-          <div className=" col-span-1 h-[40px] bg-black">
-            <img src={EmployeeData?.Attachment[0].file} alt="" />
+          <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[40px] bg-black">
+              {EmployeeData?.Attachment?.[0]?.file && (
+                <img src={EmployeeData.Attachment[0].file} alt="" />
+              )}
+            </div>
           </div>
         </div>
-        <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/state-affairs'}>
-            <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
-              إلغاء
-            </Button>
-          </Link>
-
-          <Button
-            className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
-            type="submit"
-          >
-            حفظ
-          </Button>
-        </div>
-      </form>
+      </div>
     </div>
   )
 }

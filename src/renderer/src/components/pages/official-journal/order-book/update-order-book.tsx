@@ -109,7 +109,6 @@ export default function UpdateOrderBook() {
     enabled: !!id
   })
 
-
   useEffect(() => {
     if (BookData) {
       form.reset({
@@ -118,7 +117,7 @@ export default function UpdateOrderBook() {
         customerId: String(BookData[0].customerId),
         reference: String(BookData[0].reference),
         description: String(BookData[0].description),
-        sellingDate: String(BookData[0].sellingDate).split("T")[0],
+        sellingDate: String(BookData[0].sellingDate).split('T')[0],
         orderNumber: String(BookData[0].orderNumber)
       })
     }
@@ -466,17 +465,16 @@ export default function UpdateOrderBook() {
 
           <div className="w-full flex justify-end gap-2 mb-4">
             <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
+              <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
             </Link>
 
             <Button
-              className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
+              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
-              form="OrderBookForm"
             >
-              حفظ
+              <p className="font-bold text-base">تعديل</p>
             </Button>
           </div>
         </form>
