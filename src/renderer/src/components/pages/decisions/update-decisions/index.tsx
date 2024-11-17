@@ -175,8 +175,11 @@ export default function UpdateDecisions() {
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                رقم القرار
+              </label>
               <FormField
                 control={form.control}
                 name="refrance"
@@ -196,6 +199,9 @@ export default function UpdateDecisions() {
             </div>
             {/*  */}
             <div className=" col-span-1 h-[30px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                تاريخة
+              </label>
               <FormField
                 control={form.control}
                 name="decisionDate"
@@ -216,6 +222,9 @@ export default function UpdateDecisions() {
               />
             </div>
             <div className="col-span-1 translate-y-2">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                مصدر التوجيه
+              </label>
               <FormField
                 control={form.control}
                 name="governmentOfficeId"
@@ -247,8 +256,11 @@ export default function UpdateDecisions() {
               />
             </div>
           </div>
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                اسم القرار
+              </label>
               <FormField
                 control={form.control}
                 name="decisionName"
@@ -268,6 +280,9 @@ export default function UpdateDecisions() {
             </div>
             {/*  */}
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                عنوان القرار
+              </label>
               <FormField
                 control={form.control}
                 name="title"
@@ -288,8 +303,11 @@ export default function UpdateDecisions() {
           </div>
 
           {/*  */}
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                نص القرار
+              </label>
               <FormField
                 control={form.control}
                 name="description"
@@ -311,8 +329,11 @@ export default function UpdateDecisions() {
             {/*  */}
           </div>
 
-          <div className="grid h-[80px]   grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                إسم صاحب القرار
+              </label>
               <FormField
                 control={form.control}
                 name="nameSource"
@@ -333,6 +354,9 @@ export default function UpdateDecisions() {
             {/*  */}
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                جهة القرار
+              </label>
               <FormField
                 control={form.control}
                 name="decisionSource"

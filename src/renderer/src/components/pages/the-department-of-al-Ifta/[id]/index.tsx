@@ -166,8 +166,13 @@ export default function AlLftaIndex() {
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
+          <div className="grid min-h-[80px] mb-3 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            {/*  */}
+
+            <div className=" col-span-1 h-auto">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                مقدم الشكوى
+              </label>
               <FormField
                 control={form.control}
                 name="name"
@@ -188,6 +193,9 @@ export default function AlLftaIndex() {
             {/*  */}
 
             <div className="col-span-1 translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                مصدر التوجيه
+              </label>
               <FormField
                 control={form.control}
                 name="governmentOfficeId"
@@ -222,6 +230,9 @@ export default function AlLftaIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                موضوع الشكوى
+              </label>
               <FormField
                 control={form.control}
                 name="title"
@@ -242,8 +253,13 @@ export default function AlLftaIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
+          <div className="grid min-h-[80px] mb-3 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            {/*  */}
+
+            <div className=" col-span-1 h-auto">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                رقم الشكوى
+              </label>
               <FormField
                 control={form.control}
                 name="refrance"
@@ -264,8 +280,11 @@ export default function AlLftaIndex() {
             {/*  */}
           </div>
           {/*  */}
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                رقم الشكوى
+              </label>
               <FormField
                 control={form.control}
                 name="description"
@@ -291,8 +310,11 @@ export default function AlLftaIndex() {
             <h3 className="font-bold text-[#3734a9] p-3">رأي المكتب</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                تاريخة
+              </label>
               <FormField
                 control={form.control}
                 name="date"
@@ -315,8 +337,11 @@ export default function AlLftaIndex() {
             {/*  */}
           </div>
 
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                نص الرأي
+              </label>
               <FormField
                 control={form.control}
                 name="officeOpinian"

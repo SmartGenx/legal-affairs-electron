@@ -373,8 +373,11 @@ export default function ViewPage() {
               <h3 className="font-bold text-[#3734a9] p-3">بيانات المختص القانوني</h3>
             </div>
 
-            <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className="grid h-[80px] mb-5  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
               <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  الإسم
+                </label>
                 <FormField
                   control={form.control}
                   name="name"
@@ -394,7 +397,10 @@ export default function ViewPage() {
               </div>
               {/*  */}
 
-              <div className="col-span-1 translate-y-2 ">
+              <div className="col-span-1 translate-y-2">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  الصفة
+                </label>
                 <FormField
                   control={form.control}
                   name="postionId"
@@ -430,6 +436,9 @@ export default function ViewPage() {
               {/*  */}
 
               <div className="col-span-1 translate-y-2">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  المرفق الحكومي
+                </label>
                 <FormField
                   control={form.control}
                   name="governmentOfficeId"
@@ -695,8 +704,11 @@ export default function ViewPage() {
                 if (level === 1) {
                   return (
                     <>
-                      <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                         <div className="col-span-1 ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            المحكمة
+                          </label>
                           <FormField
                             control={form.control}
                             name="tribunalId"
@@ -728,8 +740,11 @@ export default function ViewPage() {
                         </div>
                         {/*  */}
                       </div>
-                      <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                        <div className=" col-span-1 h-[40px] ">
+                      <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className=" col-span-1 h-[50px] ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            عنوان القضية
+                          </label>
                           <FormField
                             control={form.control}
                             name="title"
@@ -750,8 +765,11 @@ export default function ViewPage() {
 
                         {/*  */}
                       </div>
-                      <div className="grid h-[130px]   grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                        <div className=" col-span-1 h-[40px] ">
+                      <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                          نص الحكم
+                        </label>
+                        <div className=" col-span-1 min-h-[40px] ">
                           <FormField
                             control={form.control}
                             name="judgment"
@@ -773,10 +791,13 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid min-h-[95px] mb-5 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         {/*  */}
 
                         <div className=" col-span-1 h-auto">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            تاريخة
+                          </label>
                           <FormField
                             control={form.control}
                             name="detailsDate"
@@ -798,6 +819,9 @@ export default function ViewPage() {
                         </div>
 
                         <div className=" col-span-1 h-[40px] ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            رقم الحكم
+                          </label>
                           <FormField
                             control={form.control}
                             name="refrance"
@@ -815,7 +839,7 @@ export default function ViewPage() {
                             )}
                           />
                         </div>
-                        <div className="col-span-1 h-[50px] translate-y-3">
+                        <div className="col-span-1 h-[50px] translate-y-9">
                           <FormField
                             control={form.control}
                             name="Resumed"
@@ -871,8 +895,11 @@ export default function ViewPage() {
                 } else if (level === 2) {
                   return (
                     <>
-                      <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                         <div className="col-span-1 ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            المحكمة
+                          </label>
                           <FormField
                             control={form.control}
                             name="tribunalId"
@@ -904,8 +931,11 @@ export default function ViewPage() {
                         </div>
                         {/*  */}
                       </div>
-                      <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                        <div className=" col-span-1 h-[40px] ">
+                      <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className=" col-span-1 h-[50px] ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            عنوان القضية
+                          </label>
                           <FormField
                             control={form.control}
                             name="title"
@@ -926,8 +956,11 @@ export default function ViewPage() {
 
                         {/*  */}
                       </div>
-                      <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         <div className=" col-span-1 h-[40px] ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            نص الحكم
+                          </label>
                           <FormField
                             control={form.control}
                             name="judgment"
@@ -949,10 +982,13 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[60px]  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[75px] mb-5 grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         {/*  */}
 
                         <div className=" col-span-1 h-auto">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            تاريخة
+                          </label>
                           <FormField
                             control={form.control}
                             name="detailsDate"
@@ -974,6 +1010,9 @@ export default function ViewPage() {
                         </div>
 
                         <div className=" col-span-1 h-[40px] ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            رقم الحكم
+                          </label>
                           <FormField
                             control={form.control}
                             name="refrance"
@@ -997,8 +1036,11 @@ export default function ViewPage() {
                 } else if (level === 3) {
                   return (
                     <>
-                      <div className="grid h-[60px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                         <div className="col-span-1 ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            المحكمة
+                          </label>
                           <FormField
                             control={form.control}
                             name="tribunalId"
@@ -1030,8 +1072,11 @@ export default function ViewPage() {
                         </div>
                         {/*  */}
                       </div>
-                      <div className="grid h-[60px] mb-3  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                        <div className=" col-span-1 h-[40px] ">
+                      <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <div className=" col-span-1 h-[50px] ">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            عنوان القضية
+                          </label>
                           <FormField
                             control={form.control}
                             name="title"
@@ -1053,8 +1098,11 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[130px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                        <div className=" col-span-1 h-[40px] ">
+                      <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                        <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                          نص الحكم
+                        </label>
+                        <div className=" col-span-1 min-h-[40px] ">
                           <FormField
                             control={form.control}
                             name="judgment"
@@ -1076,10 +1124,13 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[75px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                        {/*  */}
+                      <div className="grid min-h-[95px] mb-5 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                {/*  */}
 
-                        <div className=" col-span-1 h-auto">
+                <div className=" col-span-1 h-auto">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخة
+                </label>
                           <FormField
                             name="detailsDate"
                             control={form.control}
@@ -1101,6 +1152,9 @@ export default function ViewPage() {
                         </div>
 
                         <div className=" col-span-1 h-[40px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  رقم الحكم
+                </label>
                           <FormField
                             control={form.control}
                             name="refrance"
@@ -1118,7 +1172,7 @@ export default function ViewPage() {
                             )}
                           />
                         </div>
-                        <div className="col-span-1 h-[50px] translate-y-3">
+                        <div className="col-span-1 h-[50px] translate-y-9">
                           <FormField
                             control={form.control}
                             name="Resumed"

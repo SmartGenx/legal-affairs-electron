@@ -126,8 +126,11 @@ export default function AddDecisionForm() {
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                رقم القرار
+              </label>
               <FormField
                 control={form.control}
                 name="refrance"
@@ -147,6 +150,9 @@ export default function AddDecisionForm() {
             </div>
             {/*  */}
             <div className=" col-span-1 h-[30px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                تاريخة
+              </label>
               <FormField
                 control={form.control}
                 name="decisionDate"
@@ -167,6 +173,9 @@ export default function AddDecisionForm() {
               />
             </div>
             <div className="col-span-1 translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                مصدر التوجيه
+              </label>
               <FormField
                 control={form.control}
                 name="governmentOfficeId"
@@ -192,8 +201,11 @@ export default function AddDecisionForm() {
               />
             </div>
           </div>
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                اسم القرار
+              </label>
               <FormField
                 control={form.control}
                 name="decisionName"
@@ -213,6 +225,9 @@ export default function AddDecisionForm() {
             </div>
             {/*  */}
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                عنوان القرار
+              </label>
               <FormField
                 control={form.control}
                 name="title"
@@ -233,8 +248,11 @@ export default function AddDecisionForm() {
           </div>
 
           {/*  */}
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                نص القرار
+              </label>
               <FormField
                 control={form.control}
                 name="description"
@@ -256,8 +274,11 @@ export default function AddDecisionForm() {
             {/*  */}
           </div>
 
-          <div className="grid h-[80px]   grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                إسم صاحب القرار
+              </label>
               <FormField
                 control={form.control}
                 name="nameSource"
@@ -278,6 +299,9 @@ export default function AddDecisionForm() {
             {/*  */}
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                جهة القرار
+              </label>
               <FormField
                 control={form.control}
                 name="decisionSource"
@@ -334,7 +358,7 @@ export default function AddDecisionForm() {
             {/*  */}
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/state-affairs'}>
+            <Link to={'/state-affairs'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
@@ -344,8 +368,8 @@ export default function AddDecisionForm() {
               className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              <p className='font-bold text-base'>حفظ</p>
-              <Plus className='mr-2'/>
+              <p className="font-bold text-base">حفظ</p>
+              <Plus className="mr-2" />
             </Button>
           </div>
         </form>
