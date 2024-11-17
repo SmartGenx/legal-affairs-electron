@@ -3,15 +3,16 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../ui
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { getApi, postApi } from '@renderer/lib/http'
+import { axiosInstance, getApi, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Employ, Leave } from '@renderer/types'
+import { useEffect } from 'react'
 
 const formSchema = z.object({
   employeeeId: z.string(),
@@ -22,14 +23,104 @@ const formSchema = z.object({
   leaveNote: z.string()
 })
 
+export interface LeaveResp {
+  id: number
+  employeeeId: number
+  leaveTypeId: number
+  dayNumber: number
+  year: number
+  startDate: Date
+  endDate: Date
+  leaveNote: string
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+  LeaveType: LeaveType
+  employ: EmployRes
+}
+
+export interface LeaveType {
+  id: number
+  name: string
+  defaultDay: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
+export interface EmployRes {
+  id: number
+  name: string
+  reference: string
+  phone: string
+  address: string
+  dob: Date
+  education: string
+  megor: number
+  graduationDate: Date
+  idtype: number
+  idNumber: string
+  issuerDate: Date
+  issuerPlace: string
+  empLeaved: string
+  empDgree: number
+  position: string
+  salary: number
+  firstEmployment: Date
+  employmentDate: Date
+  currentUnit: number
+  currentEmploymentDate: Date
+  legalStatus: number
+  employeeStatus: number
+  detailsDate: Date
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
+}
+
 type AddEmployeeValue = z.infer<typeof formSchema>
 
-export default function AddLeaveIndex() {
+export default function UpdateLeaveIndex() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
-  //   const [data, setData] = useState<Employ[]>([])
+  const { id } = useParams<{ id: string }>()
+
+  const fetchDataById = async () => {
+    const response = await axiosInstance.get<LeaveResp[]>(
+      `/leave-details?include[LeaveType]=true&include[employ]=true&id=${id}`,
+      {
+        headers: {
+          Authorization: `${authToken()}`
+        }
+      }
+    )
+    return response.data
+  }
+  const {
+    data: BookData,
+    error: _BookError,
+    isLoading: _BookIsLoading
+  } = useQuery({
+    queryKey: ['LeaveByIdResp', id],
+    queryFn: fetchDataById,
+    enabled: !!id
+  })
+
+  console.log('BookData', BookData)
+  useEffect(() => {
+    if (BookData) {
+      form.reset({
+        employeeeId: String(BookData[0].employeeeId),
+        leaveTypeId: String(BookData[0].leaveTypeId),
+        dayNumber: String(BookData[0].dayNumber),
+        startDate: String(BookData[0].startDate).split('T')[0],
+        endDate: String(BookData[0].endDate).split('T')[0],
+        leaveNote: String(BookData[0].leaveNote)
+      })
+    }
+  }, [BookData])
   const {
     data: employData,
     isLoading: employLoading,
@@ -73,8 +164,8 @@ export default function AddLeaveIndex() {
   const { mutate } = useMutation({
     mutationKey: ['AddLeave'],
     mutationFn: (datas: AddEmployeeValue) =>
-      postApi(
-        '/leave-details',
+      patchApi(
+        `/leave-details/${id}`,
         {
           employeeeId: +datas.employeeeId,
           leaveTypeId: +datas.leaveTypeId,
@@ -96,6 +187,7 @@ export default function AddLeaveIndex() {
         description: 'تمت الاضافة بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['leaveAllocation'] })
+      queryClient.invalidateQueries({ queryKey: ['LeaveByIdResp', id] })
       navigate('/personnel-affairs')
     },
     onError: (error) => {
@@ -139,7 +231,17 @@ export default function AddLeaveIndex() {
                 name="employeeeId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={
+                        field.value
+                          ? String(field.value)
+                          : BookData && BookData.length > 0
+                            ? String(BookData[0].employeeeId)
+                            : '' // fallback in case BookData is undefined or empty
+                      }
+                      defaultValue={field.value}
+                    >
                       <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="اسم الموظف" />
@@ -165,7 +267,15 @@ export default function AddLeaveIndex() {
                 name="leaveTypeId"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange}
+                    value={
+                        field.value
+                          ? String(field.value)
+                          : BookData && BookData.length > 0
+                            ? String(BookData[0].leaveTypeId)
+                            : '' // fallback in case BookData is undefined or empty
+                      }
+                    defaultValue={field.value}>
                       <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="نوع الإجازة" />
