@@ -127,13 +127,13 @@ export default function LeaveTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/official-journal/update-order-book/${row.original.id}`}>عرض</Link>
+                <Link to={`/personnel-affairs/view-leave/${row.original.id}`}>عرض</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
-                  url={`/book-order/${row.original?.id}`}
-                  keys={['OrderBookResponse']}
-                  path={'official-journal'}
+                  url={`/leave-details/${row.original?.id}`}
+                  keys={['leaveAllocation']}
+                  path={'personnel-affairs'}
                 />
               </DropdownMenuItem>
             </DropdownMenuContent>

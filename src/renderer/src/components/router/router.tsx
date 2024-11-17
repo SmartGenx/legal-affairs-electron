@@ -41,6 +41,7 @@ import AddEmployeeForm from '../pages/personnel-affairs/add-employee/add-emp'
 import AddLeaveForm from '../pages/personnel-affairs/leave/form'
 import UpdateLeaveIndex from '../pages/personnel-affairs/leave/update-leave'
 import ViewOrderPage from '../pages/official-journal/order-book/view-order-page'
+import ViewPageLeave from '../pages/personnel-affairs/leave/view-page-leave'
 
 export const router = createHashRouter([
   {
@@ -156,6 +157,10 @@ export const router = createHashRouter([
       {
         path: '/personnel-affairs/update-leave/:id',
         element: <ProtectedRoute element={<UpdateLeaveIndex />} />
+      },
+      {
+        path: '/personnel-affairs/view-leave/:id',
+        element: <ProtectedRoute element={<ViewPageLeave />} />
       },
       {
         path: '/license/add-license',
