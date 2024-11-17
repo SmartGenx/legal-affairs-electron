@@ -6,11 +6,12 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import {  postApi } from '@renderer/lib/http'
+import { postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import FileUploader from './FileUploader'
+import { Plus } from 'lucide-react'
 
 const formSchema = z.object({
   name: z.string(),
@@ -72,30 +73,15 @@ const empStatus = [
   { label: 'wwww', value: 4 }
 ]
 const LeaveStatus = [
-  { label: 'Yes', value: "Yes" },
-  { label: 'No', value: 'No' },
+  { label: 'Yes', value: 'Yes' },
+  { label: 'No', value: 'No' }
 ]
 export default function AddEmployeeIndex() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
-  //   const [data, setData] = useState<GovernmentOffice[]>([])
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axiosInstance.get('/government-office', {
-  //         headers: {
-  //           Authorization: `${authToken()}`
-  //         }
-  //       })
-  //       setData(response.data)
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error)
-  //     }
-  //   }
-  //   useEffect(() => {
-  //     fetchData()
-  //   }, [])
+
   const form = useForm<AddEmployeeValue>({
     resolver: zodResolver(formSchema)
   })
@@ -178,8 +164,11 @@ export default function AddEmployeeIndex() {
             <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                اسم الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="name"
@@ -199,6 +188,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              رقم الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="reference"
@@ -218,6 +210,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              رقم الهاتف
+              </label>
               <FormField
                 control={form.control}
                 name="phone"
@@ -239,8 +234,11 @@ export default function AddEmployeeIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              العنوان
+              </label>
               <FormField
                 control={form.control}
                 name="address"
@@ -260,6 +258,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ الميلاد
+              </label>
               <FormField
                 control={form.control}
                 name="dob"
@@ -281,6 +282,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              المؤهل التعليمي
+              </label>
               <FormField
                 control={form.control}
                 name="education"
@@ -303,8 +307,11 @@ export default function AddEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              التخصص
+              </label>
               <FormField
                 control={form.control}
                 name="megor"
@@ -331,6 +338,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ التخرج
+              </label>
               <FormField
                 control={form.control}
                 name="graduationDate"
@@ -352,6 +362,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              نوع الهوية
+              </label>
               <FormField
                 control={form.control}
                 name="idtype"
@@ -381,8 +394,11 @@ export default function AddEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              رقم الهوية
+              </label>
               <FormField
                 control={form.control}
                 name="idNumber"
@@ -402,14 +418,21 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ الإصدار
+              </label>
               <FormField
                 name="issuerDate"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <FormInput {...field} placeholder="تاريخ الإصدار" type="date"
-                      className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm" />
+                      <FormInput
+                        {...field}
+                        placeholder="تاريخ الإصدار"
+                        type="date"
+                        className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -418,6 +441,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              مكان الاصدار
+              </label>
               <FormField
                 control={form.control}
                 name="issuerPlace"
@@ -440,28 +466,31 @@ export default function AddEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              اجازة الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="empLeaved"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="اجازة الموظف" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {LeaveStatus.map((status) => (
-                          <SelectItem key={status.value} value={String(status.value)}>
-                            {status.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <SelectTrigger>
+                            <SelectValue placeholder="اجازة الموظف" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {LeaveStatus.map((status) => (
+                            <SelectItem key={status.value} value={String(status.value)}>
+                              {status.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -470,6 +499,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              درجة الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="empDgree"
@@ -489,6 +521,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              المنصب
+              </label>
               <FormField
                 control={form.control}
                 name="position"
@@ -510,8 +545,11 @@ export default function AddEmployeeIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              الراتب
+              </label>
               <FormField
                 control={form.control}
                 name="salary"
@@ -531,6 +569,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ التوظيف الاول
+              </label>
               <FormField
                 control={form.control}
                 name="firstEmployment"
@@ -552,6 +593,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ التوظيف
+              </label>
               <FormField
                 control={form.control}
                 name="employmentDate"
@@ -576,8 +620,11 @@ export default function AddEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              الوحدة الحالية
+              </label>
               <FormField
                 control={form.control}
                 name="currentUnit"
@@ -604,6 +651,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ  التوظيف في
+              </label>
               <FormField
                 control={form.control}
                 name="currentEmploymentDate"
@@ -625,6 +675,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              المركز القانوني
+              </label>
               <FormField
                 control={form.control}
                 name="legalStatus"
@@ -653,8 +706,11 @@ export default function AddEmployeeIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575] ">
+              حالة الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="employeeStatus"
@@ -681,6 +737,9 @@ export default function AddEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575] ">
+              تاريخ  التوظيف في الوحدة
+              </label>
               <FormField
                 control={form.control}
                 name="detailsDate"
@@ -741,17 +800,18 @@ export default function AddEmployeeIndex() {
             </div>
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-            <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
+          <Link to={'/state-affairs'}>
+              <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
             </Link>
 
             <Button
-              className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
+              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              حفظ
+              <p className='font-bold text-base'>حفظ</p>
+              <Plus className='mr-2'/>
             </Button>
           </div>
         </form>

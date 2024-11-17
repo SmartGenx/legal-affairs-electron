@@ -79,7 +79,6 @@ export default function UpdateEmployeeIndex() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
-
   const fetchData = async () => {
     const response = await axiosInstance.get<EmployInfo>(`/employ/${id}`, {
       headers: {
@@ -134,6 +133,9 @@ export default function UpdateEmployeeIndex() {
       })
     }
   }, [EmployeeData])
+
+console.log("EmployeeData?.currentUnit",EmployeeData?.currentUnit)
+
   const { mutate } = useMutation({
     mutationKey: ['UpdateEmployee'],
     mutationFn: (datas: AddEmployeeValue) => {
@@ -212,8 +214,11 @@ export default function UpdateEmployeeIndex() {
             <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                اسم الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="name"
@@ -233,6 +238,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              رقم الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="reference"
@@ -252,6 +260,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              رقم الهاتف
+              </label>
               <FormField
                 control={form.control}
                 name="phone"
@@ -273,8 +284,11 @@ export default function UpdateEmployeeIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              العنوان
+              </label>
               <FormField
                 control={form.control}
                 name="address"
@@ -294,6 +308,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ الميلاد
+              </label>
               <FormField
                 control={form.control}
                 name="dob"
@@ -315,6 +332,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              المؤهل التعليمي
+              </label>
               <FormField
                 control={form.control}
                 name="education"
@@ -337,8 +357,11 @@ export default function UpdateEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              التخصص
+              </label>
               <FormField
                 control={form.control}
                 name="megor"
@@ -369,6 +392,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ التخرج
+              </label>
               <FormField
                 control={form.control}
                 name="graduationDate"
@@ -390,6 +416,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              نوع الهوية
+              </label>
               <FormField
                 control={form.control}
                 name="idtype"
@@ -423,8 +452,11 @@ export default function UpdateEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              رقم الهوية
+              </label>
               <FormField
                 control={form.control}
                 name="idNumber"
@@ -444,14 +476,21 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ الإصدار
+              </label>
               <FormField
                 name="issuerDate"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <FormInput {...field} placeholder="تاريخ الإصدار" type="date"
-                      className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm" />
+                      <FormInput
+                        {...field}
+                        placeholder="تاريخ الإصدار"
+                        type="date"
+                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -460,6 +499,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              مكان الاصدار
+              </label>
               <FormField
                 control={form.control}
                 name="issuerPlace"
@@ -482,8 +524,11 @@ export default function UpdateEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              اجازة الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="empLeaved"
@@ -503,6 +548,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              درجة الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="empDgree"
@@ -522,6 +570,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              المنصب
+              </label>
               <FormField
                 control={form.control}
                 name="position"
@@ -543,8 +594,11 @@ export default function UpdateEmployeeIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              الراتب
+              </label>
               <FormField
                 control={form.control}
                 name="salary"
@@ -564,6 +618,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ التوظيف الاول
+              </label>
               <FormField
                 control={form.control}
                 name="firstEmployment"
@@ -585,6 +642,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ التوظيف
+              </label>
               <FormField
                 control={form.control}
                 name="employmentDate"
@@ -609,8 +669,11 @@ export default function UpdateEmployeeIndex() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              الوحدة الحالية
+              </label>
               <FormField
                 control={form.control}
                 name="currentUnit"
@@ -641,6 +704,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              تاريخ  التوظيف في
+              </label>
               <FormField
                 control={form.control}
                 name="currentEmploymentDate"
@@ -662,6 +728,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              المركز القانوني
+              </label>
               <FormField
                 control={form.control}
                 name="legalStatus"
@@ -694,8 +763,11 @@ export default function UpdateEmployeeIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+            <label htmlFor="" className="font-bold text-sm text-[#757575] ">
+              حالة الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="employeeStatus"
@@ -728,6 +800,9 @@ export default function UpdateEmployeeIndex() {
             </div>
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
+            <label htmlFor="" className="font-bold text-sm text-[#757575] ">
+              تاريخ  التوظيف في الوحدة
+              </label>
               <FormField
                 control={form.control}
                 name="detailsDate"
@@ -788,18 +863,18 @@ export default function UpdateEmployeeIndex() {
             </div>
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-            <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
-                إلغاء
-              </Button>
-            </Link>
+          <Link to={'/state-affairs'}>
+                <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
+                  إلغاء
+                </Button>
+              </Link>
 
-            <Button
-              className="text-sm h-10  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm"
-              type="submit"
-            >
-              حفظ
-            </Button>
+              <Button
+                className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
+                type="submit"
+              >
+                <p className="font-bold text-base">تعديل</p>
+              </Button>
           </div>
         </form>
       </Form>
