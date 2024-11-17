@@ -38,6 +38,7 @@ class EmployControllers {
         return next(new ValidationError('Validation Failed', errors.array()))
       }
       const EmployData = req.body
+      console.log("🚀 ~ EmployControllers ~ createEmploy ~ EmployData:", EmployData)
       let filePath = ''
 
       if (req.file) {
@@ -53,30 +54,30 @@ class EmployControllers {
   }
 
   async updateEmploy(req, res, next) {
-    console.log('here');
+    console.log('here')
 
     const id = Number(req.params.id)
-    // try {
+    try {
+
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return next(new ValidationError('Validation Failed', errors.array()))
     }
-
     const EmployData = req.body
     let filePath = ''
-
     if (req.file) {
       filePath = req?.file?.local
     }
+    console.log("🚀 ~ EmployControllers ~ updateEmploy ~ filePath:", filePath)
     const Employ = await EmployServices.updateEmploy(id, EmployData, filePath)
     if (!Employ) {
       return next(new NotFoundError(`Employ with id ${id} not found.`))
     }
     res.status(200).json(Employ)
-    // } catch (error) {
-    //   console.log(error)
-    //   next(new ApiError(500, 'InternalServer', `${error}`))
-    // }
+    } catch (error) {
+      console.log(error)
+      next(new ApiError(500, 'InternalServer', `${error}`))
+    }
   }
 
   async deleteEmploy(req, res, next) {
