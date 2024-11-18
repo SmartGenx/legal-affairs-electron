@@ -23,6 +23,7 @@ const BookOrderRoutes = require('./BookOrderRoutes.js')
 const TribunalRoutes = require('./TribunalRouters.js')
 const StateIssueAgencyRoutes = require('./StateIssueAgencyRouters.js')
 const AgencyRoutes = require('./AgencyRouters.js')
+const StatisticsRoutes = require('./StatisticsRoutes.js')
 
 const rootRouter = Router()
 
@@ -49,5 +50,6 @@ rootRouter.use('/book-order', BookOrderRoutes)
 rootRouter.use('/tribunal', TribunalRoutes)
 rootRouter.use('/state-issue-agency', StateIssueAgencyRoutes)
 rootRouter.use('/agency', AgencyRoutes)
+rootRouter.use('/statistics', StatisticsRoutes)
 
 module.exports = rootRouter
