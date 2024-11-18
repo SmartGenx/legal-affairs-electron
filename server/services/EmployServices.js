@@ -98,11 +98,11 @@ class EmployServices {
       const empoy = await prisma.employ.create({
         data: {
           ...EmployData,
-          megor: +EmployData.megor,
+
           idtype: +EmployData.idtype,
           empDgree: +EmployData.empDgree,
-          currentUnit: +EmployData.currentUnit,
-          legalStatus: +EmployData.legalStatus,
+
+
           employeeStatus: +EmployData.employeeStatus,
           salary: +EmployData.salary
         }
@@ -143,11 +143,11 @@ class EmployServices {
       where: { id },
       data: {
         ...EmployData,
-        megor: +EmployData.megor,
+
         idtype: +EmployData.idtype,
         empDgree: +EmployData.empDgree,
-        currentUnit: +EmployData.currentUnit,
-        legalStatus: +EmployData.legalStatus,
+
+        
         employeeStatus: +EmployData.employeeStatus,
         salary:+EmployData.salary
       }

@@ -184,7 +184,7 @@ model Employ {
   address               String
   dob                   DateTime
   education             String // هذا غير مفهوم
-  megor                 Int //enum
+  megor                 String //enum
   graduationDate        DateTime //هذا غير مفهوم
   idtype                Int //enum
   idNumber              String
@@ -196,9 +196,9 @@ model Employ {
   salary                Float
   firstEmployment       String
   employmentDate        DateTime
-  currentUnit           Int
+  currentUnit           String
   currentEmploymentDate DateTime
-  legalStatus           Int //enum
+  legalStatus           String //enum
   employeeStatus        Int //enum
   detailsDate           DateTime
   createdAt             DateTime          @default(now())

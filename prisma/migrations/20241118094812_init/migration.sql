@@ -87,7 +87,7 @@ CREATE TABLE "IssueDetails" (
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "judgment" TEXT NOT NULL,
     "refrance" TEXT NOT NULL,
-    "Resumed" BOOLEAN NOT NULL,
+    "Resumed" BOOLEAN,
 
     CONSTRAINT "IssueDetails_pkey" PRIMARY KEY ("id")
 );
@@ -189,7 +189,7 @@ CREATE TABLE "Employ" (
     "address" TEXT NOT NULL,
     "dob" TIMESTAMP(3) NOT NULL,
     "education" TEXT NOT NULL,
-    "megor" INTEGER NOT NULL,
+    "megor" TEXT NOT NULL,
     "graduationDate" TIMESTAMP(3) NOT NULL,
     "idtype" INTEGER NOT NULL,
     "idNumber" TEXT NOT NULL,
@@ -201,9 +201,9 @@ CREATE TABLE "Employ" (
     "salary" DOUBLE PRECISION NOT NULL,
     "firstEmployment" TEXT NOT NULL,
     "employmentDate" TIMESTAMP(3) NOT NULL,
-    "currentUnit" INTEGER NOT NULL,
+    "currentUnit" TEXT NOT NULL,
     "currentEmploymentDate" TIMESTAMP(3) NOT NULL,
-    "legalStatus" INTEGER NOT NULL,
+    "legalStatus" TEXT NOT NULL,
     "employeeStatus" INTEGER NOT NULL,
     "detailsDate" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
