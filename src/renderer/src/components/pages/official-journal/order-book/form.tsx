@@ -7,11 +7,11 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, postApi } from '@renderer/lib/http'
+import { axiosInstance, getApi, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BookInfo } from '@renderer/types'
 import AddCustomerDialog from '../../dailogs/add-customer'
 import { Plus } from 'lucide-react'
@@ -45,26 +45,36 @@ export default function OrderBook() {
   const [bookId, setBookId] = useState<string | null>(null)
   const [quantity, setQuantity] = useState<number>(0)
 
-  const [data, setData] = useState<customer[]>([])
+  // const [data, setData] = useState<customer[]>([])
   const [order, setOrder] = useState<BookInfo[]>([])
+
+  const { data: customerDate } = useQuery({
+    queryKey: ['customerData'],
+    queryFn: () =>
+      getApi<customer[]>('/customer', {
+        headers: {
+          Authorization: authToken()
+        }
+      })
+  })
 
   // Find the selected book's price
   const selectedBook = order.find((x) => bookId === String(x.id))
   const price = selectedBook ? selectedBook.price : 0
   const total = price * quantity
 
-  const fetchData = async () => {
-    try {
-      const response = await axiosInstance.get('/customer', {
-        headers: {
-          Authorization: `${authToken()}`
-        }
-      })
-      setData(response.data)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axiosInstance.get('/customer', {
+  //       headers: {
+  //         Authorization: `${authToken()}`
+  //       }
+  //     })
+  //     setData(response.data)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }
   //
   const fetchOrder = async () => {
     try {
@@ -78,13 +88,12 @@ export default function OrderBook() {
       console.error('Error fetching data:', error)
     }
   }
-  //
-  // console.log('bookId', bookId)
-  // console.log('data', data)
+
   useEffect(() => {
-    fetchData()
+    // fetchData()
     fetchOrder()
   }, [])
+
   const form = useForm<BookFormValue>({
     resolver: zodResolver(formSchema)
   })
@@ -125,7 +134,9 @@ export default function OrderBook() {
       })
     }
   })
-  const onSubmit = (datas: BookFormValue) => {
+  const onSubmit = (datas: BookFormValue, event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();  // Prevent default form submission behavior
+    event.stopPropagation();
     mutate(datas)
   }
   return (
@@ -134,7 +145,9 @@ export default function OrderBook() {
         <form
           id="OrderBookForm"
           //   key={key}
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={(e) => {
+            form.handleSubmit((data) => onSubmit(data, e))(e)
+          }}
           className=""
         >
           {process.env.NODE_ENV === 'development' && (
@@ -291,7 +304,7 @@ export default function OrderBook() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {data.map((options) => (
+                        {customerDate?.data.map((options) => (
                           <SelectItem key={options.name} value={String(options.id)}>
                             {options.name}
                           </SelectItem>
@@ -388,8 +401,9 @@ export default function OrderBook() {
             </Link>
 
             <Button
-              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
+              form="OrderBookForm"
               type="submit"
+              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
             >
               <p className="font-bold text-base">حفظ</p>
               <Plus className="mr-2" />
