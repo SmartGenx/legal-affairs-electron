@@ -10,6 +10,7 @@ import { FormInput } from '@renderer/components/ui/form-input'
 import { axiosInstance, patchApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { ArrowRight } from 'lucide-react'
 
 const formSchema = z.object({
   name: z.string(),
@@ -106,6 +107,15 @@ export default function ViewBook() {
     mutate(datas)
   }
   return (
+    <>
+    <div className="flex items-center text-3xl">
+        <Link to={'/official-journal'}>
+          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+            <ArrowRight size={20} />
+          </Button>
+        </Link>
+        <h1 className="mr-2 text-[#3734a9] font-bold">{BookData?.name}</h1>
+      </div>
     <div className="min-h-[50vh] w-full mt-5">
       <Form {...form}>
         <form
@@ -194,7 +204,7 @@ export default function ViewBook() {
           </div>
 
           <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/state-affairs'}>
+          <Link to={'/official-journal'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
@@ -210,5 +220,6 @@ export default function ViewBook() {
         </form>
       </Form>
     </div>
+    </>
   )
 }

@@ -11,7 +11,7 @@ import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Employ, Leave } from '@renderer/types'
+import { EmployInfo, Leave } from '@renderer/types'
 import { Plus } from 'lucide-react'
 
 const formSchema = z.object({
@@ -38,7 +38,7 @@ export default function AddLeaveIndex() {
   } = useQuery({
     queryKey: ['Employ'],
     queryFn: () =>
-      getApi<Employ>('/employ?page=1&pageSize=30', {
+      getApi<EmployInfo[]>('/employ', {
         headers: {
           Authorization: authToken()
         }
@@ -60,7 +60,7 @@ export default function AddLeaveIndex() {
   })
 
   // Assuming LeaveTypeData is correct and not LeaveTypeLoading in the last line
-  const infoArray = employData?.data?.info || []
+  const infoArray = employData?.data || []
   const DataArray = LeaveTypeData?.data?.info || [] // Changed LeaveTypeLoading to LeaveTypeData here
 
   console.log('DataArray', DataArray)
@@ -133,8 +133,11 @@ export default function AddLeaveIndex() {
             <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] translate-y-2">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                اسم الموظف
+              </label>
               <FormField
                 control={form.control}
                 name="employeeeId"
@@ -160,7 +163,10 @@ export default function AddLeaveIndex() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] translate-y-2">
+            <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                نوع الإجازة
+              </label>
               <FormField
                 control={form.control}
                 name="leaveTypeId"
@@ -186,7 +192,10 @@ export default function AddLeaveIndex() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] -translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                الايام
+              </label>
               <FormField
                 control={form.control}
                 name="dayNumber"
@@ -208,8 +217,11 @@ export default function AddLeaveIndex() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                تاريخ بداية الإجازة
+              </label>
               <FormField
                 control={form.control}
                 name="startDate"
@@ -230,6 +242,9 @@ export default function AddLeaveIndex() {
               />
             </div>
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                تاريخ انتهاء الإجازة
+              </label>
               <FormField
                 control={form.control}
                 name="endDate"
@@ -253,8 +268,11 @@ export default function AddLeaveIndex() {
 
           {/*  */}
 
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                ملاحظات
+              </label>
               <FormField
                 control={form.control}
                 name="leaveNote"
@@ -281,7 +299,7 @@ export default function AddLeaveIndex() {
           {/*  */}
 
           <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/state-affairs'}>
+            <Link to={'/personnel-affairs'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
@@ -291,8 +309,8 @@ export default function AddLeaveIndex() {
               className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              <p className='font-bold text-base'>حفظ</p>
-              <Plus className='mr-2'/>
+              <p className="font-bold text-base">حفظ</p>
+              <Plus className="mr-2" />
             </Button>
           </div>
         </form>

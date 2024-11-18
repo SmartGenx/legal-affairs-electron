@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { getApi } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
-import { LoaderIcon } from 'lucide-react'
+import { ArrowRight, LoaderIcon } from 'lucide-react'
 import { Separator } from '@radix-ui/react-dropdown-menu'
+import { Button } from '@renderer/components/ui/button'
 
 export type BookResp = {
   id: number
@@ -74,7 +75,7 @@ export default function ViewLicense() {
   })
   console.log('licenseByIdView', licenseByIdView?.data)
   useEffect(() => {}, [licenseByIdView])
-
+  
   if (isPending)
     return (
       <div className="flex justify-center items-center w-full ">
@@ -84,6 +85,16 @@ export default function ViewLicense() {
   if (error) return 'An error has occurred: ' + error.message
 
   return (
+    <>
+    
+    <div className=" flex items-center text-3xl">
+      <Link to={'/official-journal'}>
+        <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <ArrowRight size={20} />
+        </Button>
+      </Link>
+      <h1 className="mr-2 text-[#3734a9] font-bold">{licenseByIdView.data.Customer.name}</h1>
+    </div>
     <div className="min-h-[50vh] w-full mt-5">
       <div>
         <div className="mb-4 bg-[#dedef8] rounded-t-lg">
@@ -171,5 +182,6 @@ export default function ViewLicense() {
         </div>
       </div>
     </div>
+    </>
   )
 }

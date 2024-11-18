@@ -12,6 +12,7 @@ import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AgencyInfo } from '@renderer/types'
+import { ArrowRight } from 'lucide-react'
 
 const formSchema = z.object({
   legalName: z.string(),
@@ -117,113 +118,132 @@ export default function UpdateAgency() {
     mutate(datas)
   }
   return (
-    <div className="min-h-[50vh] w-full mt-5">
-      <Form {...form}>
-        <form
-          id="complainsForm"
-          //   key={key}
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=""
-        >
-          {process.env.NODE_ENV === 'development' && (
-            <>
-              <p>Ignore it, it just in dev mode</p>
-              <div>{JSON.stringify(form.formState.errors)}</div>
-            </>
-          )}
-          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
-          </div>
-
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="legalName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base text-[#757575]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   اسم القانوني "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+    <>
+      <div className=" flex items-center text-3xl">
+        <Link to={'/Agency'}>
+          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+            <ArrowRight size={20} />
+          </Button>
+        </Link>
+        <h1 className="mr-2 text-[#3734a9] font-bold">{AgencyData?.legalName}</h1>
+      </div>
+      <div className="min-h-[50vh] w-full mt-5">
+        <Form {...form}>
+          <form
+            id="complainsForm"
+            //   key={key}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className=""
+          >
+            {process.env.NODE_ENV === 'development' && (
+              <>
+                <p>Ignore it, it just in dev mode</p>
+                <div>{JSON.stringify(form.formState.errors)}</div>
+              </>
+            )}
+            <div className="mb-4 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="providedDocument"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base text-[#757575]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   الوثيقة المقدمه "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="col-span-1 ">
-              <FormField
-                control={form.control}
-                name="governmentOfficeId"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={
-                        field.value ? String(field.value) : String(AgencyData?.governmentOfficeId)
-                      }
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl translate-y-2">
-                        <SelectTrigger>
-                          <SelectValue placeholder="المرفق الحكومي" />
-                        </SelectTrigger>
+            <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  اسم القانوني
+                </label>
+                <FormField
+                  control={form.control}
+                  name="legalName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 p-0 placeholder:text-base text-[#757575]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   اسم القانوني "
+                          {...field}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {dataGovernment.map((directorate) => (
-                          <SelectItem key={directorate.name} value={String(directorate.id)}>
-                            {directorate.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  الوثيقة المقدمه
+                </label>
+                <FormField
+                  control={form.control}
+                  name="providedDocument"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 p-0 placeholder:text-base text-[#757575]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   الوثيقة المقدمه "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-1 ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  المرفق الحكومي
+                </label>
+                <FormField
+                  control={form.control}
+                  name="governmentOfficeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={
+                          field.value ? String(field.value) : String(AgencyData?.governmentOfficeId)
+                        }
+                        defaultValue={field.value}
+                      >
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl translate-y-2">
+                          <SelectTrigger>
+                            <SelectValue placeholder="المرفق الحكومي" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {dataGovernment.map((directorate) => (
+                            <SelectItem key={directorate.name} value={String(directorate.id)}>
+                              {directorate.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
             </div>
-            {/*  */}
-          </div>
 
-          <div className="w-full flex justify-end gap-2 mb-4">
-            <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
-                إلغاء
+            <div className="w-full flex justify-end gap-2 mb-4">
+              <Link to={'/Agency'}>
+                <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
+                  إلغاء
+                </Button>
+              </Link>
+
+              <Button
+                className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
+                type="submit"
+              >
+                <p className="font-bold text-base">تعديل</p>
               </Button>
-            </Link>
-
-            <Button
-              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
-              type="submit"
-            >
-              <p className='font-bold text-base'>تعديل</p>
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </>
   )
 }

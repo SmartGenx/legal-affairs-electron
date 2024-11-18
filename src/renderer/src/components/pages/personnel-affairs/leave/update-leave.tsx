@@ -11,8 +11,9 @@ import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Employ, Leave } from '@renderer/types'
+import { EmployInfo, Leave } from '@renderer/types'
 import { useEffect } from 'react'
+import { ArrowRight } from 'lucide-react'
 
 const formSchema = z.object({
   employeeeId: z.string(),
@@ -128,7 +129,7 @@ export default function UpdateLeaveIndex() {
   } = useQuery({
     queryKey: ['Employ'],
     queryFn: () =>
-      getApi<Employ>('/employ?page=1&pageSize=30', {
+      getApi<EmployInfo[]>('/employ', {
         headers: {
           Authorization: authToken()
         }
@@ -150,7 +151,7 @@ export default function UpdateLeaveIndex() {
   })
 
   // Assuming LeaveTypeData is correct and not LeaveTypeLoading in the last line
-  const infoArray = employData?.data?.info || []
+  const infoArray = employData?.data || []
   const DataArray = LeaveTypeData?.data?.info || [] // Changed LeaveTypeLoading to LeaveTypeData here
 
   console.log('DataArray', DataArray)
@@ -206,207 +207,243 @@ export default function UpdateLeaveIndex() {
 
   if (employError) return 'An error has occurred: ' + employError.message
   return (
-    <div className="min-h-[50vh] w-full mt-5">
-      <Form {...form}>
-        <form
-          id="complainsForm"
-          //   key={key}
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=""
-        >
-          {process.env.NODE_ENV === 'development' && (
-            <>
-              <p>Ignore it, it just in dev mode</p>
-              <div>{JSON.stringify(form.formState.errors)}</div>
-            </>
-          )}
-          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
-          </div>
+    <>
+      <div className=" flex items-center text-3xl">
+        <Link to={'/personnel-affairs'}>
+          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+            <ArrowRight size={20} />
+          </Button>
+        </Link>
+        {BookData?.[0] && (
+          <h1 className="mr-2 text-[#3734a9] font-bold">{BookData[0].employ.name}</h1>
+        )}
+      </div>
+      <div className="min-h-[50vh] w-full mt-5">
+        <Form {...form}>
+          <form
+            id="complainsForm"
+            //   key={key}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className=""
+          >
+            {process.env.NODE_ENV === 'development' && (
+              <>
+                <p>Ignore it, it just in dev mode</p>
+                <div>{JSON.stringify(form.formState.errors)}</div>
+              </>
+            )}
+            <div className="mb-4 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
+            </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] translate-y-2">
-              <FormField
-                control={form.control}
-                name="employeeeId"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={
-                        field.value
-                          ? String(field.value)
-                          : BookData && BookData.length > 0
-                            ? String(BookData[0].employeeeId)
-                            : '' // fallback in case BookData is undefined or empty
-                      }
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="اسم الموظف" />
-                        </SelectTrigger>
+            <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className="col-span-1 h-[50px]">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  اسم الموظف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="employeeeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={
+                          field.value
+                            ? String(field.value)
+                            : BookData && BookData.length > 0
+                              ? String(BookData[0].employeeeId)
+                              : '' // fallback in case BookData is undefined or empty
+                        }
+                        defaultValue={field.value}
+                      >
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <SelectTrigger>
+                            <SelectValue placeholder="اسم الموظف" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {infoArray.length > 0 ? (
+                            infoArray.map((options) => (
+                              <SelectItem key={options.id} value={String(options.id)}>
+                                {options.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem disabled value="no_value">
+                              No employees available
+                            </SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  نوع الإجازة
+                </label>
+                <FormField
+                  control={form.control}
+                  name="leaveTypeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={
+                          field.value
+                            ? String(field.value)
+                            : BookData && BookData.length > 0
+                              ? String(BookData[0].leaveTypeId)
+                              : '' // fallback in case BookData is undefined or empty
+                        }
+                        defaultValue={field.value}
+                      >
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <SelectTrigger>
+                            <SelectValue placeholder="نوع الإجازة" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {DataArray.map((options) => (
+                            <SelectItem key={options.id} value={String(options.id)}>
+                              {options.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] -translate-y-2">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  الايام
+                </label>
+                <FormField
+                  control={form.control}
+                  name="dayNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   الايام "
+                          {...field}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {infoArray.map((options) => (
-                          <SelectItem key={options.id} value={String(options.id)}>
-                            {options.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
             </div>
 
-            <div className=" col-span-1 h-[50px] translate-y-2">
-              <FormField
-                control={form.control}
-                name="leaveTypeId"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={
-                        field.value
-                          ? String(field.value)
-                          : BookData && BookData.length > 0
-                            ? String(BookData[0].leaveTypeId)
-                            : '' // fallback in case BookData is undefined or empty
-                      }
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="نوع الإجازة" />
-                        </SelectTrigger>
+            {/*  */}
+            <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ بداية الإجازة
+                </label>
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ بداية الإجازة"
+                          type="date"
+                          className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {DataArray.map((options) => (
-                          <SelectItem key={options.id} value={String(options.id)}>
-                            {options.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ انتهاء الإجازة
+                </label>
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ انتهاء الإجازة"
+                          type="date"
+                          className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="dayNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   الايام "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             {/*  */}
-          </div>
 
-          {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="startDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ بداية الإجازة"
-                        type="date"
-                        className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[40px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  ملاحظات
+                </label>
+                <FormField
+                  control={form.control}
+                  name="leaveNote"
+                  render={({ field }) => (
+                    <FormItem className="col-span-2">
+                      <FormControl>
+                        <Textarea
+                          className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                          rows={5}
+                          {...field}
+                          placeholder="ملاحظات"
+                        ></Textarea>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
             </div>
-            <div className=" col-span-1 h-[50px] ">
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ انتهاء الإجازة"
-                        type="date"
-                        className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
 
-          {/*  */}
-
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <FormField
-                control={form.control}
-                name="leaveNote"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormControl>
-                      <Textarea
-                        className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
-                        rows={5}
-                        {...field}
-                        placeholder="ملاحظات"
-                      ></Textarea>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             {/*  */}
-          </div>
 
-          {/*  */}
+            {/*  */}
 
-          {/*  */}
+            <div className="w-full flex justify-end gap-2 mb-4">
+              <Link to={'/personnel-affairs'}>
+                <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
+                  إلغاء
+                </Button>
+              </Link>
 
-          <div className="w-full flex justify-end gap-2 mb-4">
-            <Link to={'/state-affairs'}>
-              <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
-                إلغاء
+              <Button
+                className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
+                type="submit"
+              >
+                <p className="font-bold text-base">تعديل</p>
               </Button>
-            </Link>
-
-            <Button
-              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
-              type="submit"
-            >
-              <p className="font-bold text-base">تعديل</p>
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </>
   )
 }
