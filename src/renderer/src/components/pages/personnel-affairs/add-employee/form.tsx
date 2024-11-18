@@ -800,7 +800,7 @@ export default function AddEmployeeIndex() {
             </div>
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/state-affairs'}>
+          <Link to={'/personnel-affairs'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>

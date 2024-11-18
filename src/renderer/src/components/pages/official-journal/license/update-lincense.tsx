@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '@renderer/components/ui/textarea'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { LicenseType } from '@renderer/types'
-import { LoaderIcon } from 'lucide-react'
+import { ArrowRight, LoaderIcon } from 'lucide-react'
 
 export interface Customer {
   id: number
@@ -115,6 +115,8 @@ export default function UpdateLicense() {
     }
   }
 
+  const CustomerId = customer.find((x) => x.id === licenseById?.data.customerId)?.name;
+
   useEffect(() => {
     fetchData()
   }, [])
@@ -173,6 +175,15 @@ export default function UpdateLicense() {
 
   if (error) return 'An error has occurred: ' + error.message
   return (
+    <>
+    <div className=" flex items-center text-3xl">
+      <Link to={'/official-journal'}>
+        <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <ArrowRight size={20} />
+        </Button>
+      </Link>
+      <h1 className="mr-2 text-[#3734a9] font-bold">{CustomerId}</h1>
+    </div>
     <div className="min-h-[50vh] w-full mt-5">
       <Form {...form}>
         <form
@@ -191,8 +202,11 @@ export default function UpdateLicense() {
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className="col-span-1 h-[50px] translate-y-2">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                نوع الرخصه
+              </label>
               <FormField
                 control={form.control}
                 name="licenseTypeId"
@@ -224,7 +238,10 @@ export default function UpdateLicense() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] translate-y-2">
+            <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                اسم الشركة
+              </label>
               <FormField
                 control={form.control}
                 name="customerId"
@@ -256,7 +273,10 @@ export default function UpdateLicense() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] -translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                مركز الشركة
+              </label>
               <FormField
                 control={form.control}
                 name="compnayLocation"
@@ -279,8 +299,11 @@ export default function UpdateLicense() {
 
           {/*  */}
 
-          <div className="grid h-[80px]   grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                مسؤول الشركة
+              </label>
               <FormField
                 control={form.control}
                 name="compnayManger"
@@ -300,6 +323,9 @@ export default function UpdateLicense() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                رأس مال الشركة
+              </label>
               <FormField
                 control={form.control}
                 name="compnayCapital"
@@ -323,8 +349,11 @@ export default function UpdateLicense() {
 
           {/*  */}
 
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
+          <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 min-h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                غرض الشركة
+              </label>
               <FormField
                 control={form.control}
                 name="compnayPorpose"
@@ -352,8 +381,11 @@ export default function UpdateLicense() {
             <h3 className="font-bold text-[#3734a9] p-3">معلومات الترخيص</h3>
           </div>
 
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                رقم الترخيص
+              </label>
               <FormField
                 control={form.control}
                 name="licenseNumber"
@@ -373,6 +405,9 @@ export default function UpdateLicense() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                السنة
+              </label>
               <FormField
                 control={form.control}
                 name="licenseYear"
@@ -394,8 +429,11 @@ export default function UpdateLicense() {
           </div>
 
           {/*  */}
-          <div className="grid h-[80px]   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+          <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-2 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                رقم السند
+              </label>
               <FormField
                 control={form.control}
                 name="referenceNum"
@@ -415,6 +453,9 @@ export default function UpdateLicense() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                تاريخ السند
+              </label>
               <FormField
                 control={form.control}
                 name="referenceDate"
@@ -438,7 +479,7 @@ export default function UpdateLicense() {
             {/*  */}
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-            <Link to={'/state-affairs'}>
+            <Link to={'/official-journal'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
@@ -454,5 +495,6 @@ export default function UpdateLicense() {
         </form>
       </Form>
     </div>
+    </>
   )
 }
