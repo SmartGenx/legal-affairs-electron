@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/newTab'
-import ManageUsers from '../manage-users'
+import ManageRoles from '../manage-roles'
 import { Plus } from 'lucide-react'
 import GovernmentOfficesIndex from '../settings/government-offices'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -10,7 +10,7 @@ import LicenseTypeIndex from '../settings/licenseType'
 import TribunalIndex from '../settings/Tribunal'
 
 const subTabs = [
-  { value: 'manage-users', title: 'إدارة المستخدمين', content: <ManageUsers /> },
+  { value: 'manage-users', title: 'الادوار', content: <ManageRoles /> },
   { value: 'system-configuration', title: 'إضافة الصفة', content: <PostionIndex /> },
   { value: 'backup', title: 'المكاتب الحكومية', content: <GovernmentOfficesIndex /> },
   { value: 'manage-users-2', title: 'نوع  الإجازات', content: <LeaveTypeIndex /> },

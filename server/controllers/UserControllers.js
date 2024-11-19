@@ -84,7 +84,7 @@ class UserController {
             if (!updatedUser) {
                 return next(new NotFoundError(`User with id ${id} not found.`));
             }
-            addLog(req.user, 'Update user', '');
+            
             res.status(200).json(updatedUser);
         } catch (error) {
             next(new ApiError(500, 'InternalServer', `${error}`));
