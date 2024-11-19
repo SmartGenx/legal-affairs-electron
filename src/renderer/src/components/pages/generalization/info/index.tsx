@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
@@ -8,6 +8,8 @@ import { axiosInstance } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '@renderer/components/ui/button'
 import { ArrowRight } from 'lucide-react'
+import Pdf from '@renderer/components/icons/pdf'
+import Png from '@renderer/components/icons/png'
 
 const formSchema = z.object({
   title: z.string(),
@@ -30,6 +32,7 @@ export type Generalization = {
 type BookFormValue = z.infer<typeof formSchema>
 
 export default function GeneralizationInfo() {
+  const [modalOpen, setModalOpen] = useState(false)
   const { id } = useParams<{ id: string }>()
 
   const authToken = useAuthHeader()
@@ -67,7 +70,17 @@ export default function GeneralizationInfo() {
       })
     }
   }, [GeneralizationData])
+  const openModal = () => {
+    if (GeneralizationData?.attachmentPath) {
+      setModalOpen(true)
+    }
+  }
 
+  const closeModal = () => {
+    setModalOpen(false)
+  }
+  const attachedUrlPrec = GeneralizationData?.attachmentPath ?? 'لايوجد'
+  const isPDF = attachedUrlPrec?.toLowerCase().endsWith('.pdf')
   return (
     <>
       <div className=" flex items-center text-3xl">
@@ -116,10 +129,59 @@ export default function GeneralizationInfo() {
             </div>
 
             <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[40px] bg-black">
-                <img src={GeneralizationData?.attachmentPath} alt="" />
+              <div className=" col-span-1 h-[40px] ">
+                <a onClick={openModal} className="cursor-pointer">
+                  {isPDF ? <Pdf /> : <Png />}
+                </a>
+                {modalOpen && (
+                  <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+                    onClick={closeModal}
+                  >
+                    {isPDF ? (
+                      <div
+                        className="relative w-[80%] h-[80%] bg-black bg-opacity-75 z-50 rounded-lg overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {/* Close Button */}
+                        <button
+                          onClick={closeModal}
+                          className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-1 px-3 rounded"
+                        >
+                          X
+                        </button>
+
+                        {/* Image Content */}
+                        <iframe
+                          src={attachedUrlPrec!}
+                          className="w-full h-full"
+                          frameBorder="0"
+                        ></iframe>
+                      </div>
+                    ) : (
+                      <div
+                        className="relative w-[80%] h-[80%] bg-black bg-opacity-75 z-50 rounded-lg overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {/* Close Button */}
+                        <button
+                          onClick={closeModal}
+                          className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-1 px-3 rounded"
+                        >
+                          X
+                        </button>
+
+                        {/* Image Content */}
+                        <img
+                          src={GeneralizationData?.attachmentPath}
+                          className="w-full h-full object-contain"
+                          alt="Decision Screenshot"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-              {/*  */}
             </div>
           </div>
         </div>

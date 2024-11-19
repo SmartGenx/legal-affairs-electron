@@ -60,7 +60,7 @@ class DecisionControllers{
             let filePath = '';
             
             if (req.file) {
-                filePath = `${req.file.local}-decision`;
+                filePath = `${req.file.local}`;
             }
             console.log("🚀 ~ DecisionControllers ~ updateDecision ~ filePath:", filePath)
             

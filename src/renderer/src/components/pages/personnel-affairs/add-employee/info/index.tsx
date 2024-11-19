@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
@@ -10,6 +10,8 @@ import { EmployInfo } from '@renderer/types'
 import { ArrowRight, LoaderIcon } from 'lucide-react'
 import { Separator } from '@renderer/components/ui/separator'
 import { Button } from '@renderer/components/ui/button'
+import Pdf from '@renderer/components/icons/pdf'
+import Png from '@renderer/components/icons/png'
 
 const formSchema = z.object({
   name: z.string(),
@@ -52,6 +54,7 @@ const empStatus = [
 ]
 
 export default function EmployeeInfo() {
+  const [modalOpen, setModalOpen] = useState(false)
   const { id } = useParams<{ id: string }>()
   const authToken = useAuthHeader()
 
@@ -70,11 +73,11 @@ export default function EmployeeInfo() {
     isLoading: _EmployeeIsLoading,
     isPending: EmployeeIsPending
   } = useQuery({
-    queryKey: ['Employ', id],
+    queryKey: ['EmployInfo', id],
     queryFn: fetchData,
     enabled: !!id
   })
-  console.log('sdsdfsdfs', EmployeeData)
+
   const form = useForm<AddEmployeeValue>({
     resolver: zodResolver(formSchema)
   })
@@ -110,6 +113,19 @@ export default function EmployeeInfo() {
       })
     }
   }, [EmployeeData])
+
+  const openModal = () => {
+    if (EmployeeData?.Attachment?.[0]?.file) {
+      setModalOpen(true)
+    }
+  }
+
+  const closeModal = () => {
+    setModalOpen(false)
+  }
+
+  const attachedUrlPrec = EmployeeData?.Attachment?.[0]?.file ?? 'لايوجد'
+  const isPDF = attachedUrlPrec?.toLowerCase().endsWith('.pdf')
 
   if (EmployeeIsPending) {
     return (
@@ -341,10 +357,43 @@ export default function EmployeeInfo() {
               <h3 className="font-bold text-[#3734a9] text-3xl p-3">المرفقات</h3>
             </div>
 
-            <div className="grid h-[150px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[40px] bg-black">
-                {EmployeeData?.Attachment?.[0]?.file && (
-                  <img src={EmployeeData.Attachment[0].file} alt="" />
+            <div className="grid h-[150px] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
+              <div className="col-span-1 h-[40px]">
+                <a onClick={openModal} className="cursor-pointer">
+                  {isPDF ? <Pdf /> : <Png />}
+                </a>
+                {modalOpen && EmployeeData?.Attachment?.[0]?.file && (
+                  <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+                    onClick={closeModal}
+                  >
+                    <div
+                      className="relative w-[80%] h-[80%] bg-black bg-opacity-75 z-50 rounded-lg overflow-hidden"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Close Button */}
+                      <button
+                        onClick={closeModal}
+                        className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-1 px-3 rounded"
+                      >
+                        X
+                      </button>
+
+                      {isPDF ? (
+                        <iframe
+                          src={attachedUrlPrec!}
+                          className="w-full h-full"
+                          frameBorder="0"
+                        ></iframe>
+                      ) : (
+                        <img
+                          src={attachedUrlPrec!}
+                          className="w-full h-full object-contain"
+                          alt="Decision Screenshot"
+                        />
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>

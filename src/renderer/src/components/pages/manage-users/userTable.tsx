@@ -1,15 +1,13 @@
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '../../ui/dropdown-menu'
-
-import { DecisionInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
 import DeleteDialog from '@renderer/components/dialog/delete-dialog'
 import { OrganizationTable } from '../state-affairs/organizationTable'
@@ -46,7 +44,6 @@ export interface RoleRole {
   updatedAt: Date
 }
 export default function UserTable({ info, page, total }: Props) {
-  const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
       {

@@ -166,6 +166,7 @@ export default function UpdateEmployeeIndex() {
         description: 'تمت التعديل بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Employ'] })
+      queryClient.invalidateQueries({ queryKey: ['EmployInfo',id] })
       navigate('/personnel-affairs')
     },
     onError: (error) => {
