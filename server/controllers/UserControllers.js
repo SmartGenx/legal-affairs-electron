@@ -78,7 +78,7 @@ class UserController {
             let filePath = '';
 
             if (req.file) {
-                filePath = `${req.file.local}-User`;
+                filePath = `${req.file.local}`;
             }
             const updatedUser = await UserService.updateUser(id, userData, filePath);
             if (!updatedUser) {

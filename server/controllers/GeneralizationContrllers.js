@@ -62,7 +62,7 @@ class GeneralizationContrllers {
       const generalizationData = req.body
       let filePath = ''
       if (req.file) {
-        filePath = `${req.file.local}-generalization`
+        filePath = `${req.file.local}`
       }
       const generalization = await GeneralizationServicesss.updategeneralization(
         id,
