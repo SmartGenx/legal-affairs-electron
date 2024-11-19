@@ -8,10 +8,11 @@ const { hashPassword } = require('./passport-config')
 const util = require('util')
 const fs = require('fs')
 const { prisma } = require('./utilty/prisma')
-
+const path = require('path');
 const cors = require('cors')
 require('dotenv').config()
 const mkdir = util.promisify(fs.mkdir)
+const profileDir = path.join('D:', 'ledal')
 class App {
   constructor() {
     this.app = express()
@@ -20,7 +21,7 @@ class App {
     this.setErrorMiddlewares()
     this.setPassport()
     this.setcreateAdmin()
-    this.ensureProfileDirExists('./profile')
+    this.ensureProfileDirExists(profileDir)
   }
   setPassport() {
     this.app.use(bodyParser.urlencoded({ extended: false }))
@@ -107,7 +108,7 @@ class App {
     // Error handling middleware should be the last middleware added.
     this.app.use(errorMiddleware)
   }
- 
+
 
   listen() {
     const PORT = process.env.PORT || 5050 // Good use of environment variable for the PORT with a fallback.
