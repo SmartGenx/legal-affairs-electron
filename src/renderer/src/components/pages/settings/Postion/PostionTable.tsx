@@ -33,7 +33,7 @@ export default function PostionTable({ info, page, total }: Props) {
       },
       {
         accessorKey: 'name',
-        header: 'اسم المنصب'
+        header: 'اسم الصفة'
       },
 
       {
@@ -47,7 +47,7 @@ export default function PostionTable({ info, page, total }: Props) {
               url={`/position/${row.original?.id}`}
               keys={['PotionsRespTable']}
               path={'settings'}
-            /> 
+            />
           </div>
         )
       }

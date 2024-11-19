@@ -42,35 +42,15 @@ const formSchema = z.object({
 
 type AddEmployeeValue = z.infer<typeof formSchema>
 
-const major = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
-]
 const idTypes = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
-]
-const units = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
-]
-const legalStatus = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
+  { label: 'بطاقة', value: 1 },
+  { label: 'جواز', value: 2 },
+  { label: 'شهادة ميلاد', value: 3 }
 ]
 const empStatus = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
+  { label: 'موظف', value: 1 },
+  { label: 'متقاعد', value: 2 },
+  { label: 'اجر يومي', value: 3 }
 ]
 const LeaveStatus = [
   { label: 'Yes', value: 'Yes' },
@@ -189,7 +169,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              رقم الموظف
+                رقم الموظف
               </label>
               <FormField
                 control={form.control}
@@ -211,7 +191,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              رقم الهاتف
+                رقم الهاتف
               </label>
               <FormField
                 control={form.control}
@@ -237,7 +217,7 @@ export default function AddEmployeeIndex() {
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              العنوان
+                العنوان
               </label>
               <FormField
                 control={form.control}
@@ -259,7 +239,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ الميلاد
+                تاريخ الميلاد
               </label>
               <FormField
                 control={form.control}
@@ -283,7 +263,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              المؤهل التعليمي
+                المؤهل التعليمي
               </label>
               <FormField
                 control={form.control}
@@ -310,27 +290,18 @@ export default function AddEmployeeIndex() {
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              التخصص
+                التخصص
               </label>
               <FormField
                 control={form.control}
                 name="megor"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="التخصص" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {major.map((type) => (
-                          <SelectItem key={type.value} value={String(type.value)}>
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormInput
+                      className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                      placeholder="التخصص "
+                      {...field}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -339,7 +310,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ التخرج
+                تاريخ التخرج
               </label>
               <FormField
                 control={form.control}
@@ -363,7 +334,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              نوع الهوية
+                نوع الهوية
               </label>
               <FormField
                 control={form.control}
@@ -397,7 +368,7 @@ export default function AddEmployeeIndex() {
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              رقم الهوية
+                رقم الهوية
               </label>
               <FormField
                 control={form.control}
@@ -419,7 +390,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ الإصدار
+                تاريخ الإصدار
               </label>
               <FormField
                 name="issuerDate"
@@ -442,7 +413,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              مكان الاصدار
+                مكان الاصدار
               </label>
               <FormField
                 control={form.control}
@@ -469,7 +440,7 @@ export default function AddEmployeeIndex() {
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] translate-y-2">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              اجازة الموظف
+                اجازة الموظف
               </label>
               <FormField
                 control={form.control}
@@ -500,7 +471,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              درجة الموظف
+                درجة الموظف
               </label>
               <FormField
                 control={form.control}
@@ -522,7 +493,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              المنصب
+                المنصب
               </label>
               <FormField
                 control={form.control}
@@ -548,7 +519,7 @@ export default function AddEmployeeIndex() {
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              الراتب
+                الراتب
               </label>
               <FormField
                 control={form.control}
@@ -570,7 +541,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ التوظيف الاول
+                تاريخ التوظيف الاول
               </label>
               <FormField
                 control={form.control}
@@ -594,7 +565,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ التوظيف
+                تاريخ التوظيف
               </label>
               <FormField
                 control={form.control}
@@ -623,27 +594,18 @@ export default function AddEmployeeIndex() {
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              الوحدة الحالية
+                الوحدة الحالية
               </label>
               <FormField
                 control={form.control}
                 name="currentUnit"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="الوحدة الحالية" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {units.map((unit) => (
-                          <SelectItem key={unit.value} value={String(unit.value)}>
-                            {unit.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormInput
+                      className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                      placeholder="الوحدة الحالية"
+                      {...field}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -652,7 +614,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ  التوظيف في
+                تاريخ التوظيف في الوحدة
               </label>
               <FormField
                 control={form.control}
@@ -676,27 +638,18 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              المركز القانوني
+                المركز القانوني
               </label>
               <FormField
                 control={form.control}
                 name="legalStatus"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="المركز القانوني" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {legalStatus.map((legal) => (
-                          <SelectItem key={legal.value} value={String(legal.value)}>
-                            {legal.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormInput
+                      className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                      placeholder="المركز القانوني"
+                      {...field}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -709,7 +662,7 @@ export default function AddEmployeeIndex() {
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575] ">
-              حالة الموظف
+                حالة الموظف
               </label>
               <FormField
                 control={form.control}
@@ -738,7 +691,7 @@ export default function AddEmployeeIndex() {
 
             <div className=" col-span-1 h-[50px] -translate-y-2">
               <label htmlFor="" className="font-bold text-sm text-[#757575] ">
-              تاريخ  التوظيف في الوحدة
+                تاريخ التوظيف في الوحدة
               </label>
               <FormField
                 control={form.control}
@@ -800,7 +753,7 @@ export default function AddEmployeeIndex() {
             </div>
           </div>
           <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/personnel-affairs'}>
+            <Link to={'/personnel-affairs'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                 إلغاء
               </Button>
@@ -810,8 +763,8 @@ export default function AddEmployeeIndex() {
               className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
               type="submit"
             >
-              <p className='font-bold text-base'>حفظ</p>
-              <Plus className='mr-2'/>
+              <p className="font-bold text-base">حفظ</p>
+              <Plus className="mr-2" />
             </Button>
           </div>
         </form>
