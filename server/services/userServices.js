@@ -1,46 +1,46 @@
-const { DatabaseError } = require("../errors/DatabaseError");
-const { NotFoundError } = require("../errors/NotFoundError");
-const { hashPassword } = require("../passport-config");
-const { prisma } = require("../utilty/prisma");
-const convertEqualsToInt = require("../utilty/convertToInt");
-const convertTopLevelStringBooleans = require("../utilty/convertTopLevelStringBooleans");
+const { DatabaseError } = require('../errors/DatabaseError')
+const { NotFoundError } = require('../errors/NotFoundError')
+const { hashPassword } = require('../passport-config')
+const { prisma } = require('../utilty/prisma')
+const convertEqualsToInt = require('../utilty/convertToInt')
+const convertTopLevelStringBooleans = require('../utilty/convertTopLevelStringBooleans')
 
 class UserService {
   // Retrieve all Users
   async getAllUsers(userFilter) {
     try {
-      const { page, pageSize } = userFilter;
-      let { orderBy } = userFilter;
-      let { include } = userFilter;
-      delete userFilter.orderBy;
-      delete userFilter.page;
-      delete userFilter.pageSize;
-      delete userFilter.include;
+      const { page, pageSize } = userFilter
+      let { orderBy } = userFilter
+      let { include } = userFilter
+      delete userFilter.orderBy
+      delete userFilter.page
+      delete userFilter.pageSize
+      delete userFilter.include
 
       if (include) {
-        const convertTopLevel = convertTopLevelStringBooleans(include);
-        include = convertTopLevel;
+        const convertTopLevel = convertTopLevelStringBooleans(include)
+        include = convertTopLevel
       } else {
-        include = [];
+        include = []
       }
-      console.log(include);
+      console.log(include)
 
-      const convertString = convertEqualsToInt(userFilter);
-      userFilter = convertString;
+      const convertString = convertEqualsToInt(userFilter)
+      userFilter = convertString
 
       if (page && pageSize) {
-        const skip = (+page - 1) * +pageSize;
-        const take = +pageSize;
+        const skip = (+page - 1) * +pageSize
+        const take = +pageSize
         const users = await prisma.user.findMany({
-          where: { ...userFilter, isDeleted: false  },
+          where: { ...userFilter, isDeleted: false },
           skip: +skip,
           take: +take,
           orderBy,
-          include,
-        });
+          include
+        })
         const total = await prisma.user.count({
-          where: { ...userFilter, isDeleted: false },
-        });
+          where: { ...userFilter, isDeleted: false }
+        })
 
         const content = users.map((user) => ({
           id: user.id,
@@ -49,23 +49,23 @@ class UserService {
           phone: user.phone,
           address: user.address,
           image: user.image,
-          roles: user.UserRole,
+          roles: user.UserRole
           // Add other fields you want to include
-        }));
+        }))
 
         return {
           info: content,
           total,
           page,
-          pageSize,
-        };
+          pageSize
+        }
       }
 
       const users = await prisma.user.findMany({
         where: { ...userFilter, isDeleted: false },
         orderBy,
-        include,
-      });
+        include
+      })
       const content = users.map((user) => ({
         id: user.id,
         name: user.username,
@@ -73,12 +73,12 @@ class UserService {
         phone: user.phone,
         address: user.address,
         image: user.image,
-        roles: user.UserRole,
+        roles: user.UserRole
         // Add other fields you want to include
-      }));
-      return content;
+      }))
+      return content
     } catch (error) {
-      throw new DatabaseError("Error retrieving accounting entries.", error);
+      throw new DatabaseError('Error retrieving accounting entries.', error)
     }
   }
 
@@ -92,220 +92,244 @@ class UserService {
           username: true,
           email: true,
           phone: true,
-          image: true,
-
-        },
-      });
+          image: true
+        }
+      })
       if (!user) {
-        throw new NotFoundError(`User with id ${id} not found.`);
+        throw new NotFoundError(`User with id ${id} not found.`)
       }
-      return user;
+      return user
     } catch (error) {
       if (error instanceof NotFoundError) {
-        throw error;
+        throw error
       }
-      throw new DatabaseError("Error retrieving user.", error);
+      throw new DatabaseError('Error retrieving user.', error)
     }
   }
 
   // Create a new User
   async createUser(userData, filePath) {
     try {
-      const { email } = userData;
-      const roleId = userData.roleId;
-      delete userData.roleId;
+      const { email } = userData
+      const roleId = userData.roleId
+      delete userData.roleId
 
-        const existRole = await prisma.role.findFirst({
-          where: { id: +roleId },
-        });
-        if (!existRole) {
-          throw new NotFoundError(`Role with id ${roleId} not found.`);
+      const existRole = await prisma.role.findFirst({
+        where: { id: +roleId }
+      })
+      if (!existRole) {
+        throw new NotFoundError(`Role with id ${roleId} not found.`)
+      }
+      // Ensure a User with the same email does not already exist
+      const existingUser = await prisma.user.findFirst({
+        where: { email }
+      })
+      if (existingUser) {
+        throw new NotFoundError(`User with email ${email} already exists.`)
+      }
+      const hashPass = await hashPassword(userData.password)
+      const NewUser = await prisma.user.create({
+        data: {
+          ...userData,
+          image: filePath,
+          password: hashPass
+        },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          password: true,
+          phone: true,
+          image: true
         }
-        // Ensure a User with the same email does not already exist
-        const existingUser = await prisma.user.findFirst({
-          where: { email },
-        });
-        if (existingUser) {
-          throw new NotFoundError(`User with email ${email} already exists.`);
+      })
+      console.log('🚀 ~ UserService ~ createUser ~ NewUser:', NewUser.username)
+
+      await prisma.userRole.create({
+        data: {
+          roleId: +roleId,
+          userId: +NewUser.id
         }
-        const hashPass = await hashPassword(userData.password);
-        const NewUser = await prisma.user.create({
-          data: {
-            ...userData,
-            image: filePath,
-            password: hashPass,
-          },
-          select: {
-            id:true,
-            username  : true,
-            email     : true,
-            password  : true,
-            phone     : true,
-            image     : true,
-          },
-        });
-        console.log("🚀 ~ UserService ~ createUser ~ NewUser:", NewUser.username)
+      })
 
-
-        await prisma.userRole.create({
-          data: {
-            roleId: +roleId,
-            userId: +NewUser.id,
-          },
-        });
-
-        return NewUser;
+      return NewUser
     } catch (error) {
-      console.log(error);
+      console.log(error)
 
       if (error instanceof NotFoundError) {
-        throw error;
+        throw error
       }
-      throw new DatabaseError("Error creating new user.", error);
+      throw new DatabaseError('Error creating new user.', error)
     }
   }
 
   // Update an existing User
   async updateUser(id, userData, filePath) {
     try {
-      const existingUser = await prisma.user.findUnique({ where: { id } });
+      const roleId = userData.roleId
+      delete userData.roleId
+      const existingUser = await prisma.user.findUnique({ where: { id } })
       if (!existingUser) {
-        throw new NotFoundError(`User with id ${id} not found.`);
+        throw new NotFoundError(`User with id ${id} not found.`)
       }
       if (existingUser.isDeleted) {
-        throw new NotFoundError(`User was deleted.`);
+        throw new NotFoundError(`User was deleted.`)
       }
 
-      let hashPass = "";
+      let hashPass = ''
       if (userData.password) {
-        hashPass = await hashPassword(userData.password);
+        hashPass = await hashPassword(userData.password)
       }
+
+
 
       const updateUser = await prisma.user.update({
         where: { id },
         data: {
           ...userData,
-          image:
-            filePath.length > 0 ? filePath : existingUser.profileImage,
-            password: userData.password ? hashPass : existingUser.password,
+          image: filePath.length > 0 ? filePath : existingUser.profileImage,
+          password: userData.password ? hashPass : existingUser.password
         },
         select: {
-          username  : true,
-            email     : true,
-            password  : true,
-            phone     : true,
-            image     : true
-        },
-      });
+          id: true,
+          username: true,
+          email: true,
+          password: true,
+          phone: true,
+          image: true
+        }
+      })
+      console.log("🚀 ~ UserService ~ updateUser ~ updateUser:", updateUser)
 
-      return updateUser;
+      if (roleId) {
+        const userRole = await prisma.userRole.findFirst({
+          where:{
+            userId: +updateUser.id,
+          }
+
+        })
+        if(userRole){
+          await prisma.userRole.update({
+            where: {
+              id: userRole.id
+            },
+            data: {
+              roleId: +roleId,
+              userId: +updateUser.id
+            }
+          })
+        }
+
+      }
+
+      return updateUser
     } catch (error) {
-      console.log(error);
+      console.log(error)
 
       if (error instanceof NotFoundError) {
-        throw error;
+        throw error
       }
-      throw new DatabaseError("Error updating User.", error);
+      throw new DatabaseError('Error updating User.', error)
     }
   }
 
   // logout
   async logout(userData) {
     try {
-      const { token } = userData;
+      const { token } = userData
       const existingUser = await prisma.user.findFirst({
         where: {
-          token: token,
-        },
-      });
+          token: token
+        }
+      })
       if (!existingUser) {
-        throw new NotFoundError(`User with token ${token} not found.`);
+        throw new NotFoundError(`User with token ${token} not found.`)
       }
       if (existingUser.isDeleted) {
-        throw new NotFoundError(`User was deleted.`);
+        throw new NotFoundError(`User was deleted.`)
       }
       const user = await prisma.user.update({
         where: { id: existingUser.id },
         data: {
-          token     : null, // Reset token?
-          restToken : null, // Reset token?
-        },
-      });
+          token: null, // Reset token?
+          restToken: null // Reset token?
+        }
+      })
       return {
         name: user.username,
-        email: user.email,
-      };
+        email: user.email
+      }
     } catch (error) {
       if (error instanceof NotFoundError) {
-        throw error;
+        throw error
       }
-      throw new DatabaseError("Error updating User.", error);
+      throw new DatabaseError('Error updating User.', error)
     }
   }
 
   async resetUser(id, password) {
     try {
-      const existingUser = await prisma.user.findUnique({ where: { id } });
+      const existingUser = await prisma.user.findUnique({ where: { id } })
       if (!existingUser) {
-        throw new NotFoundError(`User with id ${id} not found.`);
+        throw new NotFoundError(`User with id ${id} not found.`)
       }
       if (existingUser.isDeleted) {
-        throw new NotFoundError(`User was deleted.`);
+        throw new NotFoundError(`User was deleted.`)
       }
-      const hashPass = await hashPassword(password);
+      const hashPass = await hashPassword(password)
       return await prisma.user.update({
         where: { id },
         data: {
-          password: hashPass,
+          password: hashPass
         },
         select: {
-          username  : true,
-          email     : true,
-          password  : true,
-          phone     : true,
-          image     : true
-        },
-      });
+          username: true,
+          email: true,
+          password: true,
+          phone: true,
+          image: true
+        }
+      })
     } catch (error) {
       if (error instanceof NotFoundError) {
-        throw error;
+        throw error
       }
-      throw new DatabaseError("Error updating User.", error);
+      throw new DatabaseError('Error updating User.', error)
     }
   }
 
   // Delete a User by their ID
   async deleteUser(id) {
     try {
-      const user = await prisma.user.findUnique({ where: { id } });
+      const user = await prisma.user.findUnique({ where: { id } })
       if (!user) {
-        throw new NotFoundError(`User with id ${id} not found.`);
+        throw new NotFoundError(`User with id ${id} not found.`)
       }
-      const username = user.username;
+      const username = user.username
       await prisma.user.update({
         where: { id },
         data: {
-          isDeleted: true,
+          isDeleted: true
         },
         select: {
-          username  : true,
-          email     : true,
-          password  : true,
-          phone     : true,
-          image     : true
-        },
-      });
-      return username;
+          username: true,
+          email: true,
+          password: true,
+          phone: true,
+          image: true
+        }
+      })
+      return username
     } catch (error) {
-      console.log(error);
+      console.log(error)
 
       if (error instanceof NotFoundError) {
-        throw error;
+        throw error
       }
-      throw new DatabaseError("Error deleting user.", error);
+      throw new DatabaseError('Error deleting user.', error)
     }
   }
 }
 
 // Create an instance of the UserService to export
-module.exports = new UserService();
+module.exports = new UserService()
