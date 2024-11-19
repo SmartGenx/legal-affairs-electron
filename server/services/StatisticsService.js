@@ -8,32 +8,34 @@ class StatisticsService {
   async getDashboardStatistics() {
     try {
       const invitationType = await prisma.issue.groupBy({
-        by: ['invitationType'],
+        by: ['type'],
         _count: {
-          invitationType: true
+          type: true
         }
       })
+      console.log(invitationType)
+
       let arr = []
       for (let index = 0; index < invitationType.length; index++) {
-        switch (invitationType[index].invitationType) {
+        switch (invitationType[index].type) {
           case 1:
             arr.push({
-              جنائية: invitationType[index]._count.invitationType
+              جنائية: invitationType[index]._count.type
             })
             break
           case 2:
             arr.push({
-              مدنية: invitationType[index]._count.invitationType
+              مدنية: invitationType[index]._count.type
             })
             break
           case 3:
             arr.push({
-              تجارية: invitationType[index]._count.invitationType
+              تجارية: invitationType[index]._count.type
             })
             break
           case 4:
             arr.push({
-              إدارية: invitationType[index]._count.invitationType
+              إدارية: invitationType[index]._count.type
             })
             break
 
@@ -80,47 +82,48 @@ class StatisticsService {
             break
         }
       }
-      let employName;
-      let isueName;
-      let bookName;
+      let employName
+      let isueName
+      let bookName
+      let employDate
+      let isueDate
+      let bookDate
 
       const latestEmploy = await prisma.employ.findFirst({
         orderBy: {
           createdAt: 'desc'
         }
       })
-      if(!latestEmploy){
-        employName=''
-      }
-      else{
-        employName=latestEmploy.name
-
+      if (!latestEmploy) {
+        employName = ''
+        employDate = ''
+      } else {
+        employDate = latestEmploy.createdAt
       }
       const latestIssue = await prisma.issue.findFirst({
         orderBy: {
           createdAt: 'desc'
         }
       })
-      if(!latestIssue){
-        isueName=''
-      }
-      else{
-        isueName=latestIssue.name
-
+      if (!latestIssue) {
+        isueName = ''
+        isueDate = ''
+      } else {
+        isueName = latestIssue.name
+        isueDate = latestIssue.createdAt
       }
       const latestBook = await prisma.book.findFirst({
         orderBy: {
           createdAt: 'desc'
         }
       })
-      if(!latestBook){
-        bookName=''
+      if (!latestBook) {
+        bookName = ''
+        bookDate = ''
+      } else {
+        bookName = latestBook.name
+        bookDate = latestBook.createdAt
       }
-      else{
-        bookName=latestBook.name
-
-      }
-
 
       return {
         invitationType: arr,
@@ -132,12 +135,13 @@ class StatisticsService {
         },
         employtype: employarr,
         log: {
-          latestEmploy:employName?
-            `تم اضافة الموضف ${employName}`:'لم يتم اضافة قضية',
+          latestEmploy: employName ? `تم اضافة الموضف ${employName}` : 'لم يتم اضافة قضية',
+          DateEmploy: employDate ? employDate : '00/00/0000',
 
-          latestIssue:  isueName?`تم اضافة قضية ${isueName}`:'لم يتم اضافة قضية',
-          latestBook:bookName? `تم اضافة كتاب ${bookName}`:'لم يتم اضافة كتاب'
-
+          latestIssue: isueName ? `تم اضافة قضية ${isueName}` : 'لم يتم اضافة قضية',
+          DateIssue: isueDate ? isueDate : '00/00/0000',
+          latestBook: bookName ? `تم اضافة كتاب ${bookName}` : 'لم يتم اضافة كتاب',
+          DateBook: bookDate ? bookDate : '00/00/0000'
         }
       }
     } catch (error) {

@@ -11,7 +11,7 @@ import TribunalIndex from '../settings/Tribunal'
 
 const subTabs = [
   { value: 'manage-users', title: 'إدارة المستخدمين', content: <ManageUsers /> },
-  { value: 'system-configuration', title: 'إضافة منصب', content: <PostionIndex /> },
+  { value: 'system-configuration', title: 'إضافة الصفة', content: <PostionIndex /> },
   { value: 'backup', title: 'المكاتب الحكومية', content: <GovernmentOfficesIndex /> },
   { value: 'manage-users-2', title: 'نوع  الإجازات', content: <LeaveTypeIndex /> },
   { value: 'system-configuration-2', title: 'أنواع التراخيص', content: <LicenseTypeIndex /> },

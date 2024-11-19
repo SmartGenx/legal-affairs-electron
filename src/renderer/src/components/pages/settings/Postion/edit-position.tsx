@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getApi, patchApi } from '@renderer/lib/http'
 import { useAuthHeader } from 'react-auth-kit'
 import { toast } from '@renderer/components/ui/use-toast'
-import {  AlertDialogCancel } from '@renderer/components/ui/alert-dialog'
+import { AlertDialogCancel } from '@renderer/components/ui/alert-dialog'
 import { useEffect } from 'react'
 const formSchema = z.object({
   name: z.string()
@@ -93,7 +93,7 @@ export default function EditPosition({ id }: Props) {
               render={({ field }) => (
                 <FormItem className="col-span-2">
                   <FormControl>
-                    <Input label="اسم المنصب" placeholder="اسم المنصب" type="text" {...field} />
+                    <Input label="اسم الصفة" placeholder="اسم الصفة" type="text" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

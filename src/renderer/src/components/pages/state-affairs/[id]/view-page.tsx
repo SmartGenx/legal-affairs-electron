@@ -982,7 +982,7 @@ export default function ViewPage() {
                         {/*  */}
                       </div>
 
-                      <div className="grid h-[75px] mb-5 grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+                      <div className="grid min-h-[85px] mb-5 grid-cols-2 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                         {/*  */}
 
                         <div className=" col-span-1 h-auto">
@@ -1125,12 +1125,12 @@ export default function ViewPage() {
                       </div>
 
                       <div className="grid min-h-[95px] mb-5 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                {/*  */}
+                        {/*  */}
 
-                <div className=" col-span-1 h-auto">
-                <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                  تاريخة
-                </label>
+                        <div className=" col-span-1 h-auto">
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            تاريخة
+                          </label>
                           <FormField
                             name="detailsDate"
                             control={form.control}
@@ -1152,9 +1152,9 @@ export default function ViewPage() {
                         </div>
 
                         <div className=" col-span-1 h-[40px] ">
-                <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                  رقم الحكم
-                </label>
+                          <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                            رقم الحكم
+                          </label>
                           <FormField
                             control={form.control}
                             name="refrance"
