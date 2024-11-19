@@ -3,15 +3,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import Person from '@renderer/components/icons/person'
 import Category2 from '@renderer/components/icons/category-2'
 import DirectInbox from '@renderer/components/icons/direct-inbox'
-import ManageUsers from '../manage-users'
 import SystemConfigurationIndex from '../system-configuration'
 import BackupIndex from '../backup'
+import ManageUsersIndex from '../manage-users'
 
 const subTabs = [
   {
     value: 'manage-users',
     title: 'إدارة المستخدمين',
-    content: <ManageUsers />,
+    content: <ManageUsersIndex />,
     icon: <Person />
   },
   {
@@ -53,7 +53,7 @@ export default function SettingsIndex() {
               ))}
             </TabsList>
             {subTabs.map((tab) => (
-              <TabsContent key={tab.value} value={tab.value} >
+              <TabsContent key={tab.value} value={tab.value}>
                 {tab.content}
               </TabsContent>
             ))}

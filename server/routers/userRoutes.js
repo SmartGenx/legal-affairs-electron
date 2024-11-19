@@ -16,7 +16,7 @@ UserRoutes.get("/", isAuthenticated, UserController.getAllUsers);
 UserRoutes.get("/:id", isAuthenticated, UserController.getUserById);
 UserRoutes.delete("/:id", isAuthenticated, UserController.deleteUser);
 UserRoutes.patch(
-  "/",
+  "/:id",
   upload.single("file"),
   copyFileToProfileDir(),
   isAuthenticated,

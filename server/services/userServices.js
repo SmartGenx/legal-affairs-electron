@@ -184,6 +184,7 @@ class UserService {
       const updateUser = await prisma.user.update({
         where: { id },
         data: {
+          ...userData,
           image:
             filePath.length > 0 ? filePath : existingUser.profileImage,
             password: userData.password ? hashPass : existingUser.password,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,80 +11,56 @@ import {
 
 import { DecisionInfo } from '../../../types/index'
 import { Button } from '../../ui/button'
-import { axiosInstance } from '@renderer/lib/http'
-import { useAuthHeader } from 'react-auth-kit'
 import DeleteDialog from '@renderer/components/dialog/delete-dialog'
 import { OrganizationTable } from '../state-affairs/organizationTable'
 
 type Props = {
-  info: DecisionInfo[]
-  page: number
+  info: Info[]
+  total: number
+  page: string
   pageSize: string
-  total: string
 }
-export interface ReferenceProp {
+
+export interface Info {
   id: number
   name: string
-  isDeleted: boolean
+  email: string
+  phone: null
+  image: null
+  roles: RoleElement[]
+}
+
+export interface RoleElement {
+  id: number
+  userId: number
+  roleId: number
+  createdAt: Date
+  updatedAt: Date
+  role: RoleRole
+}
+
+export interface RoleRole {
+  id: number
+  name: string
   createdAt: Date
   updatedAt: Date
 }
-export default function UsersTable({ info, page, total }: Props) {
+export default function UserTable({ info, page, total }: Props) {
   const navigate = useNavigate()
-  const authToken = useAuthHeader()
-  const columns = React.useMemo<ColumnDef<DecisionInfo>[]>(
+  const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
       {
-        accessorKey: 'refrance',
-        header: 'رقم القرار',
-        cell: ({ row }) => (row.index + 1 + (page - 1) * 10).toString().padStart(2, '0')
+        accessorKey: 'name',
+        header: 'الاسم'
       },
       {
-        accessorKey: 'createdAt',
-        header: 'تاريخ القرار',
-        cell: ({ row }) => {
-          const date = row.original.decisionDate
-          return new Date(date).toISOString().split('T')[0]
-        }
+        accessorKey: 'email',
+        header: 'البريد الاكتروني'
       },
       {
-        accessorKey: 'governmentOfficeId',
-        header: 'جهة القرار',
-        cell: ({ row }) => {
-          const [data, setData] = useState<ReferenceProp>()
-          const fetchData = async () => {
-            try {
-              const response = await axiosInstance.get(
-                `/government-office/${row.original.governmentOfficeId}`,
-                {
-                  headers: {
-                    Authorization: `${authToken()}`
-                  }
-                }
-              )
-              setData(response.data)
-            } catch (error) {
-              console.error('Error fetching data:', error)
-            }
-          }
-          useEffect(() => {
-            fetchData()
-          }, [])
-
-          return data?.name
-        }
-      },
-      {
-        accessorKey: 'nameSource',
-        header: 'اسم صاحب القرار'
-      },
-      {
-        accessorKey: 'date',
-        header: 'تاريخ الإضافة',
-        cell: ({ row }) => {
-          const date = row.original.createdAt
-          return new Date(date).toISOString().split('T')[0]
-        }
+        accessorKey: 'phone',
+        header: 'رقم الهاتف',
+        
       },
 
       {
@@ -102,9 +78,9 @@ export default function UsersTable({ info, page, total }: Props) {
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
-                  url={`/decision/${row.original?.id}`}
-                  keys={['Decisions']}
-                  path={'decisions'}
+                  url={`/user/${row.original?.id}`}
+                  keys={['UsersInfo']}
+                  path={'settings'}
                 />
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -121,9 +97,9 @@ export default function UsersTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
-      onRowClick={(_, { original }) => {
-        navigate(`/decisions/update-Decision/info/${original.id}`)
-      }}
+      //   onRowClick={(_, { original }) => {
+      //     navigate(`/decisions/update-Decision/info/${original.id}`)
+      //   }}
     />
   )
 }
