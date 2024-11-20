@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain,Menu } from 'electron'
-import { join, resolve } from 'path'
+import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { spawn } from 'child_process'
 function createWindow(): void {
@@ -59,18 +59,21 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  // Start the backend server
-  let serverPath
+  let serverPath = ''
 
   if (is.dev) {
-    serverPath = resolve(__dirname, '../../server/index')
+    serverPath = join(__dirname, '../../server/index.js')
   } else {
-    serverPath = join(process.resourcesPath, '/server/index.js')
-  } // const serverPath = resolve(__dirname, '../../server/index')
+    serverPath = join(__dirname, '../../../server/index.js')
+  }
+  // }
+
+  // } // const serverPath = resolve(__dirname, '../../server/index')
   console.log(`Starting server with path: ${serverPath}`)
 
   const serverProcess = spawn('node', [serverPath], {
-    stdio: 'inherit' // Passes stdio to the parent process, useful for debugging
+    stdio: 'inherit', // Passes stdio to the parent process, useful for debugging
+    windowsHide: true
   })
 
   serverProcess.on('error', (error) => {
