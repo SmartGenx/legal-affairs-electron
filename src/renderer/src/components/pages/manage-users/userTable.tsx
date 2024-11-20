@@ -1,7 +1,7 @@
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,6 +44,7 @@ export interface RoleRole {
   updatedAt: Date
 }
 export default function UserTable({ info, page, total }: Props) {
+  const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
       {
@@ -56,8 +57,7 @@ export default function UserTable({ info, page, total }: Props) {
       },
       {
         accessorKey: 'phone',
-        header: 'رقم الهاتف',
-        
+        header: 'رقم الهاتف'
       },
 
       {
@@ -71,7 +71,7 @@ export default function UserTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/decisions/view-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/settings/view-user/${row.original.id}`}>عرض</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -94,9 +94,9 @@ export default function UserTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
-      //   onRowClick={(_, { original }) => {
-      //     navigate(`/decisions/update-Decision/info/${original.id}`)
-      //   }}
+      onRowClick={(_, { original }) => {
+        navigate(`/settings/update-user/${original.id}`)
+      }}
     />
   )
 }

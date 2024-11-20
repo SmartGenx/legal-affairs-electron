@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuthHeader } from 'react-auth-kit'
 import { useSearchParams } from 'react-router-dom'
 import UserTable from './userTable'
+import TopButtons from './top-buttons'
+import UserSearch from './search'
 export interface Users {
   info: Info[]
   total: number
@@ -45,7 +47,7 @@ export default function ManageUsersIndex() {
     queryFn: () =>
       getApi<Users>('/user', {
         params: {
-          // 'nameSource[contains]': query,
+          'username[contains]': query,
           'include[UserRole][include]': 'role',
           page: page || 1,
           pageSize: 5
@@ -63,8 +65,8 @@ export default function ManageUsersIndex() {
 
   return (
     <section className="relative space-y-4 ">
-      {/* <DecisionsSearch /> */}
-      {/* <TopButtons data={data?.data.info || []} /> */}
+      <UserSearch />
+      <TopButtons  />
 
       <UserTable info={infoArray || []} page={'1'} pageSize="0" total={0} />
     </section>
