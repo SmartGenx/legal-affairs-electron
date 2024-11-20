@@ -111,6 +111,11 @@ export default function AddEmployeeIndex() {
         description: 'تمت الاضافة بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Employ'] })
+      queryClient.invalidateQueries({ queryKey: ['EmployInfo'] })
+      queryClient.invalidateQueries({ queryKey: ['EmployInfoView'] })
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
       navigate('/personnel-affairs')
     },
     onError: (error) => {
