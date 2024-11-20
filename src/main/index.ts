@@ -1,15 +1,17 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain,Menu } from 'electron'
 import { join, resolve } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
 import { spawn } from 'child_process'
 function createWindow(): void {
+  const iconPath = join(__dirname, '../../../resources/Frame123.ico')
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform === 'linux' ? { iconPath } : {}),
+    title: 'مكتب الشؤون القانونية',
+    icon: iconPath,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
@@ -25,7 +27,16 @@ function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-
+  mainWindow.webContents.on('context-menu', (_event, _params) => {
+    const contextMenu = Menu.buildFromTemplate([
+      { role: 'cut', label: 'قطع' },
+      { role: 'copy', label: 'نسخ' },
+      { role: 'paste', label: 'لصق' },
+      { type: 'separator' },
+      { role: 'selectAll', label: 'تحديد الكل' }
+    ])
+    contextMenu.popup()
+  })
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
