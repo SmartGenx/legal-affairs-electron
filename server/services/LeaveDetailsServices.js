@@ -96,16 +96,39 @@ class LeaveDetailsService {
       if (!existingLeaveType) {
         throw new NotFoundError(`leaveType with id ${leaveTypeId} not found.`)
       }
-
-      const leaveDetails = await prisma.leaveDetails.create({
-        data: {
-          ...leaveDetailsData,
-          employeeeId: +employeeeId,
-          leaveTypeId: +leaveTypeId,
-          year: +year,
-          dayNumber: +leaveDetailsData.dayNumber
+      const existingLeaveDetails = await prisma.leaveDetails.findFirst({
+        where: {
+          employeeeId: employeeeId,
+          leaveTypeId: leaveTypeId,
+          isDeleted: false
         }
       })
+      if (existingLeaveDetails) {
+        await prisma.leaveDetails.update({
+          where: {
+            id: existingLeaveDetails.id,
+          },
+          data: {
+            ...leaveDetailsData,
+            dayNumber: existingLeaveDetails.dayNumber + leaveDetailsData.dayNumber
+          }
+
+        })
+
+      }else{
+      const leaveDetails = await prisma.leaveDetails.create({
+          data: {
+            ...leaveDetailsData,
+            employeeeId: +employeeeId,
+            leaveTypeId: +leaveTypeId,
+            year: +year,
+            dayNumber: +leaveDetailsData.dayNumber
+          }
+        })
+
+      }
+
+
       const result = await prisma.leaveDetails.aggregate({
         _sum: {
           dayNumber: true
@@ -149,7 +172,7 @@ class LeaveDetailsService {
         })
       }
 
-      return leaveDetails
+      return "تم اضافه الاجازه بنجاح"
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error
