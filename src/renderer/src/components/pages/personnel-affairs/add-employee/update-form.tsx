@@ -78,7 +78,7 @@ export default function UpdateEmployeeIndex() {
     error: _EmployeeError,
     isLoading: _EmployeeIsLoading
   } = useQuery({
-    queryKey: ['Employ', id],
+    queryKey: ['EmployInfo', id],
     queryFn: fetchData,
     enabled: !!id
   })
@@ -167,6 +167,7 @@ export default function UpdateEmployeeIndex() {
       })
       queryClient.invalidateQueries({ queryKey: ['Employ'] })
       queryClient.invalidateQueries({ queryKey: ['EmployInfo',id] })
+      queryClient.invalidateQueries({ queryKey: ['EmployInfoView',id] })
       navigate('/personnel-affairs')
     },
     onError: (error) => {

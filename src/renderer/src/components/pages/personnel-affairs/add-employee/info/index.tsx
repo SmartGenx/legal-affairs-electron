@@ -73,7 +73,7 @@ export default function EmployeeInfo() {
     isLoading: _EmployeeIsLoading,
     isPending: EmployeeIsPending
   } = useQuery({
-    queryKey: ['EmployInfo', id],
+    queryKey: ['EmployInfoView', id],
     queryFn: fetchData,
     enabled: !!id
   })

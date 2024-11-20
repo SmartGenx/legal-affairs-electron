@@ -88,7 +88,7 @@ class UserController {
 
   
 
-
+      }
   // Logout
   async logout(req, res, next) {
     try {
