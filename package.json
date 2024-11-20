@@ -102,7 +102,9 @@
     "vite": "^5.3.1"
   },
   "build": {
-   
+   "win": {
+      "icon": "resources/Frame123.ico"
+    },
     "files": [
       "dist/**/*",
       "out/**/*",
