@@ -47,6 +47,7 @@
     "@tanstack/react-table": "^8.20.1",
     "axios": "^1.7.3",
     "bcrypt": "^5.1.1",
+    "bluebird": "^3.7.2",
     "body-parser": "^1.20.2",
     "chart.js": "^4.4.6",
     "class-variance-authority": "^0.7.0",
@@ -101,6 +102,7 @@
     "vite": "^5.3.1"
   },
   "build": {
+   
     "files": [
       "dist/**/*",
       "out/**/*",
@@ -113,6 +115,27 @@
       {
         "from": "server",
         "to": "server",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "node_modules",
+        "to": "node_modules",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "prisma",
+        "to": "prisma",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources",
+        "to": "resources",
         "filter": [
           "**/*"
         ]
