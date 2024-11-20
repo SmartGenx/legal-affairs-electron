@@ -1,6 +1,8 @@
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { OrganizationTable } from '../state-affairs/organizationTable'
+import EditDialog from '../settings/edit-dailog'
+import EditRoles from './role-edit'
 
 type Props = {
   info: Info[]
@@ -14,7 +16,7 @@ export interface Info {
   createdAt: Date
   updatedAt: Date
 }
-export default function UsersTable({ info, page, total }: Props) {
+export default function RoleTable({ info, page, total }: Props) {
   
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -37,30 +39,15 @@ export default function UsersTable({ info, page, total }: Props) {
         }
       },
 
-      // {
-      //   id: 'actions',
-      //   cell: ({ row }) => (
-      //     <DropdownMenu>
-      //       <DropdownMenuTrigger asChild>
-      //         <Button variant="ghost" className="h-8 w-8 p-0">
-      //           <MoreHorizontal className="h-4 w-4" />
-      //         </Button>
-      //       </DropdownMenuTrigger>
-      //       <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
-      //         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-      //           <Link to={`/decisions/view-info/${row.original.id}`}>عرض</Link>
-      //         </DropdownMenuItem>
-      //         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-      //           <DeleteDialog
-      //             url={`/decision/${row.original?.id}`}
-      //             keys={['Decisions']}
-      //             path={'decisions'}
-      //           />
-      //         </DropdownMenuItem>
-      //       </DropdownMenuContent>
-      //     </DropdownMenu>
-      //   )
-      // }
+      {
+        id: 'actions',
+        cell: ({ row }) => (
+          <div className="flex w-fit">
+            <EditDialog content={<EditRoles id={row.original.id} />} />
+            
+          </div>
+        )
+      }
     ],
     [page]
   )

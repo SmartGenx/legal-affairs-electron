@@ -82,13 +82,9 @@ class UserController {
         } catch (error) {
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
-    }
+    
 
-
-      res.status(200).json(updatedUser)
-    } catch (error) {
-      next(new ApiError(500, 'InternalServer', `${error}`))
-    }
+     
   }
 
   // Logout

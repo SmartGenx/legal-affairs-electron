@@ -4,7 +4,6 @@ import { z } from 'zod'
 import { useAuthHeader } from 'react-auth-kit'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getApi, postApi } from '@renderer/lib/http'
-import UsersTable from './userTable'
 import { useSearchParams } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@renderer/components/ui/use-toast'
@@ -12,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@renderer/c
 import { FormInput } from '@renderer/components/ui/form-input'
 import { Button } from '@renderer/components/ui/button'
 import { Plus } from 'lucide-react'
+import RoleTable from './userTable'
 export interface Roles {
   info: Info[]
   total: number
@@ -133,7 +133,7 @@ export default function ManageRoles() {
           </Button>
         </form>
       </Form>
-      <UsersTable info={infoArray || []} page={1} pageSize="1000" total="0" />
+      <RoleTable info={infoArray || []} page={1} pageSize="1000" total="0" />
     </div>
   )
 }

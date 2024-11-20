@@ -42,6 +42,9 @@ import AddLeaveForm from '../pages/personnel-affairs/leave/form'
 import UpdateLeaveIndex from '../pages/personnel-affairs/leave/update-leave'
 import ViewOrderPage from '../pages/official-journal/order-book/view-order-page'
 import ViewPageLeave from '../pages/personnel-affairs/leave/view-page-leave'
+import AddUserForm from '../pages/manage-users/add-user'
+import UpdateUserForm from '../pages/manage-users/update-user'
+import ViewUser from '../pages/manage-users/view-user'
 
 export const router = createHashRouter([
   {
@@ -209,6 +212,18 @@ export const router = createHashRouter([
       {
         path: '/settings',
         element: <ProtectedRoute element={<SettingsIndex />} />
+      },
+      {
+        path: '/settings/add-user',
+        element: <ProtectedRoute element={<AddUserForm />} />
+      },
+      {
+        path: '/settings/update-user/:id',
+        element: <ProtectedRoute element={<UpdateUserForm />} />
+      },
+      {
+        path: '/settings/view-user/:id',
+        element: <ProtectedRoute element={<ViewUser />} />
       }
     ]
   }
