@@ -82,11 +82,12 @@ class UserController {
         } catch (error) {
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
-    }
+    
 
 
 
   
+
 
   // Logout
   async logout(req, res, next) {

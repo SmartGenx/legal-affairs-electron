@@ -112,8 +112,8 @@ const Home = () => {
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 p-2">
       {/* Doughnut Chart Section */}
       <div className="bg-white rounded-t-2xl border-[2px] border-[#E5E7EB] col-span-1 lg:col-span-2 flex relative flex-col items-center h-80">
-        <h3 className="text-start text-[#2F3746] text-lg px-9 mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] py-3 w-full absolute top-0 bg-[#3734A9]/[.20]">
-          مربع يستبدل بنص
+        <h3 className="text-start text-[#2F3746] text-lg px-9 mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] py-3 w-full absolute -top-[2px] bg-[#3734A9]/[.20]">
+          نوع القضائي
         </h3>
         <div className="w-full h-full flex items-center justify-center mt-10 relative">
           {/* Legend Container */}
@@ -148,7 +148,10 @@ const Home = () => {
       </div>
 
       {/* Radial Progress and Stats Section */}
-      <div className="bg-white rounded-t-2xl border-[2px] border-[#E5E7EB] p-2 col-span-4 lg:col-span-3 flex flex-col md:flex-row items-center h-80">
+      <div className="bg-white rounded-t-2xl border-[2px] relative border-[#E5E7EB] p-2 col-span-4 lg:col-span-3 flex flex-col md:flex-row items-center h-80">
+      <h3 className="text-start text-[#2F3746] text-lg px-9 mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] py-3 left-0 w-full absolute -top-[2px] bg-[#3734A9]/[.20]">
+          مربع يستبدل بنص
+        </h3>
         <div className="w-full h-full flex items-center justify-center mt-10 relative">
           {/* Legend Container */}
           <div className="w-[100%] flex justify-start pr-4 absolute top-24 -left-12">
@@ -189,7 +192,7 @@ const Home = () => {
 
       {/* Bar Chart Section */}
       <div className="bg-white rounded-t-2xl border-[2px] border-[#E5E7EB] pb-7 col-span-2 lg:col-span-3 h-80 w-full">
-        <h3 className="text-start px-5 text-[#2F3746] text-lg mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] p-2 bg-[#3734A9]/[.20]">
+        <h3 className="text-start px-5 text-[#2F3746] text-lg mb-1 font-semibold rounded-t-2xl relative -top-[2px] border-t-[2px] border-[#E5E7EB] p-2 bg-[#3734A9]/[.20]">
           مربع يستبدل بنص
         </h3>
         <div className="w-full h-[92%] px-5">
@@ -231,7 +234,7 @@ const Home = () => {
 
       {/* List Section */}
       <div className="bg-white rounded-lg rounded-t-2xl border-[2px] border-[#E5E7EB] col-span-2 lg:col-span-2 h-80 ">
-        <h3 className="text-start px-5 text-[#2F3746] text-lg mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] p-2 bg-[#3734A9]/[.20]">
+        <h3 className="text-start px-5 text-[#2F3746] text-lg mb-1 font-semibold rounded-t-2xl relative -top-[2px] border-t-[2px] border-[#E5E7EB] p-2 bg-[#3734A9]/[.20]">
           اخر التحديثات
         </h3>
         <div className="space-y-3 mt-4">
