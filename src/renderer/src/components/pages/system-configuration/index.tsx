@@ -10,7 +10,7 @@ import LicenseTypeIndex from '../settings/licenseType'
 import TribunalIndex from '../settings/Tribunal'
 
 const subTabs = [
-  { value: 'manage-users', title: 'الادوار', content: <ManageRoles /> },
+  { value: 'manage-users', title: 'الأدوار', content: <ManageRoles /> },
   { value: 'system-configuration', title: 'إضافة الصفة', content: <PostionIndex /> },
   { value: 'backup', title: 'المكاتب الحكومية', content: <GovernmentOfficesIndex /> },
   { value: 'manage-users-2', title: 'نوع  الإجازات', content: <LeaveTypeIndex /> },

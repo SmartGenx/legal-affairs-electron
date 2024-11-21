@@ -85,8 +85,8 @@ const Home = () => {
     datasets: [
       {
         data: chartDataEmp,
-        backgroundColor: ['#4C02BE'],
-        hoverBackgroundColor: ['#4C02BE']
+        backgroundColor: ['#8400AA', '#B63479','#4C02BE'],
+        hoverBackgroundColor: ['#8400AA', '#B63479','#4C02BE']
       }
     ]
   }
@@ -113,7 +113,7 @@ const Home = () => {
       {/* Doughnut Chart Section */}
       <div className="bg-white rounded-t-2xl border-[2px] border-[#E5E7EB] col-span-1 lg:col-span-2 flex relative flex-col items-center h-80">
         <h3 className="text-start text-[#2F3746] text-lg px-9 mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] py-3 w-full absolute -top-[2px] bg-[#3734A9]/[.20]">
-          نوع القضائي
+          أنواع القضايا
         </h3>
         <div className="w-full h-full flex items-center justify-center mt-10 relative">
           {/* Legend Container */}
@@ -193,7 +193,7 @@ const Home = () => {
       {/* Bar Chart Section */}
       <div className="bg-white rounded-t-2xl border-[2px] border-[#E5E7EB] pb-7 col-span-2 lg:col-span-3 h-80 w-full">
         <h3 className="text-start px-5 text-[#2F3746] text-lg mb-1 font-semibold rounded-t-2xl relative -top-[2px] border-t-[2px] border-[#E5E7EB] p-2 bg-[#3734A9]/[.20]">
-        احصائيات الادارات
+        إحصائيات الإدارات
         </h3>
         <div className="w-full h-[92%] px-5">
           <Bar
