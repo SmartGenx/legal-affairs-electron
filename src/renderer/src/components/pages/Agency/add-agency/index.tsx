@@ -143,7 +143,7 @@ export default function AddAgency() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                الوثيقة المقدمه
+                رقم الوثيقة المقدمه
               </label>
               <FormField
                 control={form.control}
@@ -153,7 +153,7 @@ export default function AddAgency() {
                     <FormControl>
                       <FormInput
                         className="h-11 p-0 placeholder:text-base  text-[#757575] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   الوثيقة المقدمه "
+                        placeholder="   رقم الوثيقة المقدمه "
                         {...field}
                       />
                     </FormControl>
