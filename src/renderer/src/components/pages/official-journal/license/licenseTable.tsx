@@ -102,7 +102,7 @@ export default function LicenseTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/license/view-license/${row.original.id}`}>عرض</Link>
+                <Link to={`/license/update-license/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -126,7 +126,7 @@ export default function LicenseTable({ info, page, total }: Props) {
       page={page.toString()}
       total={Number(total)}
       onRowClick={(_, { original }) => {
-        navigate(`/license/update-license/${original.id}`)
+        navigate(`/license/view-license/${original.id}`)
       }}
     />
   )

@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/newTab'
 import ManageRoles from '../manage-roles'
 import { Plus } from 'lucide-react'
 import GovernmentOfficesIndex from '../settings/government-offices'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+// import { ChevronLeft, ChevronRight } from 'lucide-react'
 import PostionIndex from '../settings/Postion'
 import LeaveTypeIndex from '../settings/LeaveType'
 import LicenseTypeIndex from '../settings/licenseType'
@@ -22,17 +22,17 @@ export default function SystemConfigurationIndex() {
   const [activeTab, setActiveTab] = useState<string>(subTabs[0].value)
   const tabListRef = useRef<HTMLDivElement>(null)
 
-  const scrollLeft = () => {
-    if (tabListRef.current) {
-      tabListRef.current.scrollBy({ left: -100, behavior: 'smooth' })
-    }
-  }
+  // const scrollLeft = () => {
+  //   if (tabListRef.current) {
+  //     tabListRef.current.scrollBy({ left: -100, behavior: 'smooth' })
+  //   }
+  // }
 
-  const scrollRight = () => {
-    if (tabListRef.current) {
-      tabListRef.current.scrollBy({ left: 100, behavior: 'smooth' })
-    }
-  }
+  // const scrollRight = () => {
+  //   if (tabListRef.current) {
+  //     tabListRef.current.scrollBy({ left: 100, behavior: 'smooth' })
+  //   }
+  // }
 
   return (
     <div className="flex flex-col">
@@ -44,12 +44,12 @@ export default function SystemConfigurationIndex() {
             className="dark:bg-[#3734a9]"
           >
             <div className="relative flex items-center">
-              <button
+              {/* <button
                 onClick={scrollRight}
                 className="p-2 absolute -right-9 text-gray-500 hover:text-gray-800 top-9"
               >
                 <ChevronRight size={35} color="#3734a9" />
-              </button>
+              </button> */}
               <TabsList
                 ref={tabListRef}
                 className="flex overflow-x-auto h-20 whitespace-nowrap scrollbar-hide p-0 gap-4 mt-6"
@@ -66,12 +66,12 @@ export default function SystemConfigurationIndex() {
                   </TabsTrigger>
                 ))}
               </TabsList>
-              <button
+              {/* <button
                 onClick={scrollLeft}
                 className="p-2 absolute -left-9 text-gray-500 hover:text-gray-800 top-9"
               >
                 <ChevronLeft size={35} color="#3734a9" />
-              </button>
+              </button> */}
             </div>
             {subTabs.map((tab) => (
               <TabsContent key={tab.value} value={tab.value} className="p-4">

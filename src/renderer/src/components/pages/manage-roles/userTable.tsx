@@ -43,8 +43,8 @@ export default function RoleTable({ info, page, total }: Props) {
         id: 'actions',
         cell: ({ row }) => (
           <div className="flex w-fit">
-            <EditDialog content={<EditRoles id={row.original.id} />} />
-            
+            {/* <EditDialog content={<EditRoles id={row.original.id} />} /> */}
+            <EditDialog>{(onClose) => <EditRoles id={row.original.id} onClose={onClose} />}</EditDialog>
           </div>
         )
       }

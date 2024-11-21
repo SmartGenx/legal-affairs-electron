@@ -42,7 +42,7 @@ export default function PostionTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            <EditDialog content={<EditPosition id={row.original.id} />} />
+            <EditDialog>{(onClose) => <EditPosition id={row.original.id} onClose={onClose} />}</EditDialog>
             <DeleteSettingDialog
               url={`/position/${row.original?.id}`}
               keys={['PotionsRespTable']}

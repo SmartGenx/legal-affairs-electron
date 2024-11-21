@@ -78,7 +78,7 @@ export default function ViewAgencyInfo() {
             </div>
 
             <div className="text-[#757575] col-span-1 h-[50px] ">
-              <label htmlFor="" className="font-bold text-lg">الوثيقة المقدمه</label>
+              <label htmlFor="" className="font-bold text-lg">رقم الوثيقة المقدمه</label>
               <p className="mt-2">{AgencyData?.providedDocument}</p>
             </div>
 

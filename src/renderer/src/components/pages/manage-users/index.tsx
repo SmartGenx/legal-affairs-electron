@@ -67,7 +67,6 @@ export default function ManageUsersIndex() {
     <section className="relative space-y-4 ">
       <UserSearch />
       <TopButtons  />
-
       <UserTable info={infoArray || []} page={'1'} pageSize="0" total={0} />
     </section>
   )

@@ -15,6 +15,7 @@ const formSchema = z.object({
 })
 interface Props {
   id: number
+  onClose: () => void // Added onClose prop
 }
 export interface RoleById {
   id: number
@@ -22,7 +23,7 @@ export interface RoleById {
   createdAt: Date
   updatedAt: Date
 }
-export default function EditRoles({ id }: Props) {
+export default function EditRoles({ id, onClose }: Props) {
   const authToken = useAuthHeader()
   const queryClient = useQueryClient()
   const { data: RoleByIdData, isSuccess } = useQuery({
@@ -69,6 +70,8 @@ console.log("RoleByIdData",RoleByIdData?.data.name)
 
       queryClient.invalidateQueries({ queryKey: ['Roles'] })
       queryClient.invalidateQueries({ queryKey: ['RoleById', id] })
+      form.reset()
+      onClose()
     },
     onError(error) {
       toast({

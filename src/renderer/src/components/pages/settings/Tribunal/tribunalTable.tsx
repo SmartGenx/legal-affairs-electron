@@ -42,7 +42,9 @@ export default function TribunalResTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            <EditDialog content={<TribunalEdit id={row.original.id} />} />
+            <EditDialog>
+              {(onClose) => <TribunalEdit id={row.original.id} onClose={onClose} />}
+            </EditDialog>
             <DeleteSettingDialog
               url={`/tribunal/${row.original?.id}`}
               keys={['TribunalTable']}

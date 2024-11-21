@@ -16,6 +16,7 @@ const formSchema = z.object({
 })
 interface Props {
   id: number
+  onClose: () => void // Added onClose prop
 }
 export interface licenseTypeById {
   id: number
@@ -26,7 +27,7 @@ export interface licenseTypeById {
   updatedAt: Date
 }
 
-export default function LicenseTypeEdit({ id }: Props) {
+export default function LicenseTypeEdit({ id, onClose }: Props) {
   const authToken = useAuthHeader()
   const queryClient = useQueryClient()
   const { data: GovernmentOffice, isSuccess } = useQuery({
@@ -71,8 +72,9 @@ export default function LicenseTypeEdit({ id }: Props) {
         description: 'تمت التعديل بنجاح',
         variant: 'success'
       })
-
       queryClient.invalidateQueries({ queryKey: ['LicenseTypeTable'] })
+      form.reset()
+      onClose()
     },
     onError(error) {
       toast({
@@ -116,12 +118,7 @@ export default function LicenseTypeEdit({ id }: Props) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      label="الرسوم"
-                      placeholder="الرسوم"
-                      type="text"
-                      {...field}
-                    />
+                    <Input label="الرسوم" placeholder="الرسوم" type="text" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
