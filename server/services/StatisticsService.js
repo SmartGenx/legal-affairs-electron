@@ -98,6 +98,7 @@ class StatisticsService {
         employName = ''
         employDate = ''
       } else {
+        employName = latestEmploy.name
         employDate = latestEmploy.createdAt
       }
       const latestIssue = await prisma.issue.findFirst({
@@ -134,15 +135,20 @@ class StatisticsService {
           الجريدةالرسمية: Countbook
         },
         employtype: employarr,
-        log: {
-          latestEmploy: employName ? `تم اضافة الموضف ${employName}` : 'لم يتم اضافة قضية',
-          DateEmploy: employDate ? employDate : '00/00/0000',
-
-          latestIssue: isueName ? `تم اضافة قضية ${isueName}` : 'لم يتم اضافة قضية',
-          DateIssue: isueDate ? isueDate : '00/00/0000',
-          latestBook: bookName ? `تم اضافة كتاب ${bookName}` : 'لم يتم اضافة كتاب',
-          DateBook: bookDate ? bookDate : '00/00/0000'
-        }
+        log: [
+          {
+            name: employName ? `تم اضافة الموضف ${employName}` : 'لم يتم اضافة موضف',
+            date: employDate ? employDate : '00/00/0000'
+          },
+          {
+            name: isueName ? `تم اضافة قضية ${isueName}` : 'لم يتم اضافة قضية',
+            date: isueDate ? isueDate : '00/00/0000'
+          },
+          {
+            name: bookName ? `تم اضافة كتاب ${bookName}` : 'لم يتم اضافة كتاب',
+            date: bookDate ? bookDate : '00/00/0000'
+          }
+        ]
       }
     } catch (error) {
       throw new DatabaseError(error)
