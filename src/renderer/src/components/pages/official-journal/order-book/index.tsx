@@ -82,7 +82,7 @@ export default function OrderBookIndex() {
     <section className="relative space-y-4 ">
       <OrderBookSearch />
       <TopButtons data={data?.data.info || []}/>
-      <OrderBookTable info={infoArray || []} page="1" pageSize="0" total={0} />
+      <OrderBookTable info={infoArray || []} page={String(data?.data.page)} pageSize={String(data?.data.pageSize)} total={Number(data?.data.total)} />
     </section>
   )
 }

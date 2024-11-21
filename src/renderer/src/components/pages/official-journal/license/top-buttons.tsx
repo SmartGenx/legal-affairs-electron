@@ -97,14 +97,14 @@ const ExportCvs = () => {
           <DropdownMenuContent className="min-w-[180px]">
             <DropdownMenuGroup>
               <DropdownMenuItem className=" flex gap-2">
-                <button onClick={() => handlePrint()}>طباعة</button>
+                <button className='w-full text-start' onClick={() => handlePrint()}>طباعة</button>
               </DropdownMenuItem>
               <div className="hidden">
                 <LicensePdf ref={componentRef} data={data || []} />
               </div>
               <DropdownMenuItem className=" flex gap-2">
                 {/* <AccountBalanceIcon /> */}
-                <button onClick={ExportCvs}>الاكسل</button>
+                <button className='w-full text-start' onClick={ExportCvs}>ملف إكسل</button>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

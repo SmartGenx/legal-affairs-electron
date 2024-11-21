@@ -36,7 +36,7 @@ export default function EmployeeIndex() {
     <section className="relative space-y-4 ">
       <EmpSearch />
       <TopButtons data={data?.data.info || []}/>
-      <PersonnelAffairsTable info={infoArray || []} page={1} pageSize="0" total="0" />
+      <PersonnelAffairsTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
     </section>
   )
 }

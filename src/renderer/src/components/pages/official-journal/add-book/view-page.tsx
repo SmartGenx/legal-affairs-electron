@@ -93,6 +93,7 @@ export default function ViewBook() {
         description: 'تمت التعديل بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Books'] })
+      queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       navigate('/official-journal')
     },
     onError: (error) => {

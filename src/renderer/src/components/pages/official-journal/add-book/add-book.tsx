@@ -51,6 +51,7 @@ export default function AddBookForm() {
         description: 'تمت الاضافة بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Books'] })
+      queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       navigate('/official-journal')
     },
     onError: (error) => {
