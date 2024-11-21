@@ -16,6 +16,7 @@ const formSchema = z.object({
 })
 interface Props {
   id: number
+  onClose: () => void // Added onClose prop
 }
 export interface positionById {
   id: number
@@ -25,7 +26,7 @@ export interface positionById {
   updatedAt: Date
 }
 
-export default function GovernmentOfficesEdit({ id }: Props) {
+export default function GovernmentOfficesEdit({ id, onClose }: Props) {
   const authToken = useAuthHeader()
   const queryClient = useQueryClient()
   const { data: GovernmentOffice, isSuccess } = useQuery({
@@ -69,8 +70,9 @@ export default function GovernmentOfficesEdit({ id }: Props) {
         description: 'تمت التعديل بنجاح',
         variant: 'success'
       })
-
       queryClient.invalidateQueries({ queryKey: ['governmentOfficeTable'] })
+      form.reset()
+      onClose()
     },
     onError(error) {
       toast({

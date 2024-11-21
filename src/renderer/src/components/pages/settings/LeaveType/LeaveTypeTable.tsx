@@ -46,7 +46,9 @@ export default function LeaveTypeTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            <EditDialog content={<LeaveTypeEdit id={row.original.id} />} />
+            <EditDialog>
+              {(onClose) => <LeaveTypeEdit id={row.original.id} onClose={onClose} />}
+            </EditDialog>
             <DeleteSettingDialog
               url={`/leave-type/${row.original?.id}`}
               keys={['LeaveTypeTable']}
