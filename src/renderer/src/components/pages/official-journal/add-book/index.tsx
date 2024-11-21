@@ -36,7 +36,7 @@ export default function AddBookIndex() {
     <section className="relative space-y-4 ">
       <BookSearch />
       <TopButtons data={data?.data.info || []}/>
-      <BookTable info={infoArray || []} page={1} pageSize="0" total="0" />
+      <BookTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
     </section>
   )
 }

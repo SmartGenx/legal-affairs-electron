@@ -265,6 +265,7 @@ export default function AddIssueForm() {
         description: 'تمت الاضافة بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Issues'] })
+      queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       navigate('/state-affairs')
     },
     onError: (error) => {

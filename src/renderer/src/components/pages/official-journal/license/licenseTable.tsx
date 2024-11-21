@@ -38,12 +38,12 @@ export interface Info {
   Customer: Customer
 }
 export interface Customer {
-  id:        number;
-  name:      string;
-  type?:     number;
-  createdAt: Date;
-  updatedAt: Date;
-  isDeleted: boolean;
+  id: number
+  name: string
+  type?: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
 }
 
 export interface LicenseType {
@@ -67,16 +67,16 @@ export default function LicenseTable({ info, page, total }: Props) {
       {
         accessorKey: 'customerId',
         header: 'اسم الشركة',
-        cell:({row}) => {
-            return row.original.Customer.name
-        },
+        cell: ({ row }) => {
+          return row.original.Customer.name
+        }
       },
       {
         accessorKey: 'licenseTypeId',
         header: 'نوع الترخيص',
-        cell:({row}) => {
+        cell: ({ row }) => {
           return row.original.licenseType.name
-      },
+        }
       },
       {
         accessorKey: 'licenseYear',

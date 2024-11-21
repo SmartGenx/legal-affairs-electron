@@ -37,7 +37,7 @@ export default function GeneralizationIndex() {
     <section className="relative space-y-4 ">
       <GeneralizationSearch />
       <TopButtons data={data?.data.info || []}/>
-      <GeneralizationTable info={infoArray || []} page={1} pageSize="0" total="0" />
+      <GeneralizationTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
     </section>
   )
 }

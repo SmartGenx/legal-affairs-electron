@@ -80,7 +80,7 @@ export default function LicenseIndex() {
     <section className="relative space-y-4 ">
       <LicenseSearch />
       <TopButtons data={data?.data.info || []}/>
-      <LicenseTable info={infoArray || []} page={'1'} pageSize="0" total={0} />
+      <LicenseTable info={infoArray || []} page={String(data?.data.page)} pageSize={String(data?.data.pageSize)} total={Number(data?.data.total)} />
     </section>
   )
 }

@@ -37,7 +37,7 @@ export default function AgencyIndex() {
     <section className="relative space-y-4 ">
       <DecisionsSearch />
       <TopButtons data={data?.data.info || []}/>
-      <AgencyTable info={infoArray || []} page={1} pageSize="0" total="0" />
+      <AgencyTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
     </section>
   )
 }

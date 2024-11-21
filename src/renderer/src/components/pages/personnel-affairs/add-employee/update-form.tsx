@@ -168,6 +168,7 @@ export default function UpdateEmployeeIndex() {
       queryClient.invalidateQueries({ queryKey: ['Employ'] })
       queryClient.invalidateQueries({ queryKey: ['EmployInfo',id] })
       queryClient.invalidateQueries({ queryKey: ['EmployInfoView',id] })
+      queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       navigate('/personnel-affairs')
     },
     onError: (error) => {

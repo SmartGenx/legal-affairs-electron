@@ -19,7 +19,7 @@ export interface DashboardResp {
   invitationType: { [key: string]: number }[]
   department: { [key: string]: number }
   employtype: Employtype[]
-  log: Log
+  log: Log[]
 }
 
 export interface Employtype {
@@ -27,12 +27,8 @@ export interface Employtype {
 }
 
 export interface Log {
-  latestEmploy: string
-  DateEmploy: string
-  latestIssue: string
-  DateIssue: string
-  latestBook: string
-  DateBook: string
+  name: string
+  date: string
 }
 
 const Home = () => {
@@ -85,8 +81,8 @@ const Home = () => {
     datasets: [
       {
         data: chartDataEmp,
-        backgroundColor: ['#8400AA', '#B63479','#4C02BE'],
-        hoverBackgroundColor: ['#8400AA', '#B63479','#4C02BE']
+        backgroundColor: ['#8400AA', '#B63479', '#4C02BE'],
+        hoverBackgroundColor: ['#8400AA', '#B63479', '#4C02BE']
       }
     ]
   }
@@ -149,7 +145,7 @@ const Home = () => {
 
       {/* Radial Progress and Stats Section */}
       <div className="bg-white rounded-t-2xl border-[2px] relative border-[#E5E7EB] p-2 col-span-4 lg:col-span-3 flex flex-col md:flex-row items-center h-80">
-      <h3 className="text-start text-[#2F3746] text-lg px-9 mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] py-3 left-0 w-full absolute -top-[2px] bg-[#3734A9]/[.20]">
+        <h3 className="text-start text-[#2F3746] text-lg px-9 mb-1 font-semibold rounded-t-2xl border-t-[2px] border-[#E5E7EB] py-3 left-0 w-full absolute -top-[2px] bg-[#3734A9]/[.20]">
           الموظفين
         </h3>
         <div className="w-full h-full flex items-center justify-center mt-10 relative">
@@ -193,7 +189,7 @@ const Home = () => {
       {/* Bar Chart Section */}
       <div className="bg-white rounded-t-2xl border-[2px] border-[#E5E7EB] pb-7 col-span-2 lg:col-span-3 h-80 w-full">
         <h3 className="text-start px-5 text-[#2F3746] text-lg mb-1 font-semibold rounded-t-2xl relative -top-[2px] border-t-[2px] border-[#E5E7EB] p-2 bg-[#3734A9]/[.20]">
-        إحصائيات الإدارات
+          إحصائيات الإدارات
         </h3>
         <div className="w-full h-[92%] px-5">
           <Bar
@@ -240,38 +236,22 @@ const Home = () => {
         <div className="space-y-3 mt-4">
           {data?.data?.log && (
             <>
-              {/* Display latestEmploy */}
-              <div className="flex items-center justify-start p-2 border rounded-lg">
-                <span className="h-12 bg-[#3734A9]/[.20] flex items-center p-4 rounded-2xl">
-                  <BookIcon className="text-base font-black text-[#3734A9] w-6 h-8" />
-                </span>
-                <div className="h-12 mr-4">
-                  <p className="font-medium">{data.data.log.latestEmploy}</p>
-                  <p className="text-xs text-gray-500">{String(data.data.log.DateEmploy).split("T")[0]}</p>
-                </div>
-              </div>
-
-              {/* Display latestIssue */}
-              <div className="flex items-center justify-start p-2 border rounded-lg">
-                <span className="h-12 bg-[#3734A9]/[.20] flex items-center p-4 rounded-2xl">
-                  <BookIcon className="text-base font-black text-[#3734A9] w-6 h-8" />
-                </span>
-                <div className="h-12 mr-4">
-                  <p className="font-medium">{data.data.log.latestIssue}</p>
-                  <p className="text-xs text-gray-500">{String(data.data.log.DateIssue).split("T")[0]}</p>
-                </div>
-              </div>
-
-              {/* Display latestBook */}
-              <div className="flex items-center justify-start p-2 border rounded-lg">
-                <span className="h-12 bg-[#3734A9]/[.20] flex items-center p-4 rounded-2xl">
-                  <BookIcon className="text-base font-black text-[#3734A9] w-6 h-8" />
-                </span>
-                <div className="h-12 mr-4">
-                  <p className="font-medium">{data.data.log.latestBook}</p>
-                  <p className="text-xs text-gray-500">{String(data.data.log.DateBook).split("T")[0]}</p>
-                </div>
-              </div>
+              {data?.data?.log
+                .sort((a: Log, b: Log) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Type Log and use .getTime() to ensure it returns a number
+                .map((log, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-start p-2 border rounded-lg"
+                  >
+                    <span className="h-12 bg-[#3734A9]/[.20] flex items-center p-4 rounded-2xl">
+                      <BookIcon className="text-base font-black text-[#3734A9] w-6 h-8" />
+                    </span>
+                    <div className="h-12 mr-4">
+                      <p className="font-medium">{log.name}</p>
+                      <p className="text-xs text-gray-500">{String(log.date).split('T')[0]}</p>
+                    </div>
+                  </div>
+                ))}
             </>
           )}
         </div>

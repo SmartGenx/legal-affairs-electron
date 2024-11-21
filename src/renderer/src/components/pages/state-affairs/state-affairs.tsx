@@ -41,7 +41,7 @@ export default function StateAffairs() {
     <section className="relative space-y-4 ">
       <SearchStateAffairs />
       <TopButtons data={data?.data.info || []}/>
-      <StateTable info={infoArray || []} page={1} pageSize="0" total="0" />
+      <StateTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
     </section>
   )
 }

@@ -113,6 +113,7 @@ export default function AddEmployeeIndex() {
       queryClient.invalidateQueries({ queryKey: ['Employ'] })
       queryClient.invalidateQueries({ queryKey: ['EmployInfo'] })
       queryClient.invalidateQueries({ queryKey: ['EmployInfoView'] })
+      queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       setTimeout(() => {
         window.location.reload()
       }, 1000)
