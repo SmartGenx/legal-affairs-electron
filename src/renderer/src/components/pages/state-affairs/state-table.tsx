@@ -22,7 +22,7 @@ type Props = {
   total: string
 }
 
-export default function StateTable({ info, page, total }: Props) {
+export default function StateTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
 
   const columns = React.useMemo<ColumnDef<InfoIssue>[]>(
@@ -155,6 +155,7 @@ export default function StateTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/state-affairs/view-info/${original.id}`)
       }}

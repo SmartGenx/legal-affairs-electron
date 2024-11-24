@@ -20,7 +20,21 @@ const formSchema = z.object({
   governmentOfficeId: z.string(),
   title: z.string(),
   description: z.string(),
-  date: z.string(),
+  date: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   officeOpinian: z.string()
 })
 
@@ -51,6 +65,30 @@ export default function AddComplain() {
       console.error('Error fetching data:', error)
     }
   }
+
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
+
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+  //
   useEffect(() => {
     fetchData()
   }, [])
@@ -120,7 +158,7 @@ export default function AddComplain() {
             {/*  */}
 
             <div className=" col-span-1 h-auto">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 مقدم الشكوى
               </label>
               <FormField
@@ -130,7 +168,7 @@ export default function AddComplain() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   مقدم الشكوى "
                         {...field}
                       />
@@ -142,8 +180,8 @@ export default function AddComplain() {
             </div>
             {/*  */}
 
-            <div className="col-span-1 translate-y-2">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+            <div className="col-span-1 ">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 مصدر التوجيه
               </label>
               <FormField
@@ -152,7 +190,7 @@ export default function AddComplain() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                      <FormControl className="bg-transparent h-11 mt-2 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="مصدر التوجيه" />
                         </SelectTrigger>
@@ -172,7 +210,7 @@ export default function AddComplain() {
             </div>
 
             <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 موضوع الشكوى
               </label>
               <FormField
@@ -182,7 +220,7 @@ export default function AddComplain() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 p-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   موضوع الشكوى "
                         {...field}
                       />
@@ -199,7 +237,7 @@ export default function AddComplain() {
             {/*  */}
 
             <div className=" col-span-1 h-auto">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 رقم الشكوى
               </label>
               <FormField
@@ -209,7 +247,7 @@ export default function AddComplain() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم الشكوى "
                         {...field}
                       />
@@ -222,19 +260,19 @@ export default function AddComplain() {
             {/*  */}
           </div>
           {/*  */}
-          <div className="grid h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                رقم الشكوى
+          <div className="grid min-h-[150px] mb-5 grid-cols-1  items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 min-h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
+                تفاصيل الشكوى
               </label>
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="col-span-2">
+                  <FormItem className="col-span-2 mt-2">
                     <FormControl>
                       <Textarea
-                        className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                        className="bg-transparent text-[#595959] placeholder:text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                         rows={5}
                         {...field}
                         placeholder="تفاصيل الشكوى"
@@ -252,36 +290,9 @@ export default function AddComplain() {
             <h3 className="font-bold text-[#3734a9] p-3">رأي المكتب</h3>
           </div>
 
-          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                تاريخة
-              </label>
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخة"
-                        type="date"
-                        className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          <div className="grid h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+          <div className="grid min-h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 min-h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 نص الرأي
               </label>
               <FormField
@@ -291,7 +302,7 @@ export default function AddComplain() {
                   <FormItem className="col-span-2">
                     <FormControl>
                       <Textarea
-                        className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                        className="bg-transparent mt-2 text-[#595959] placeholder:text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                         rows={5}
                         {...field}
                         placeholder="نص الرأي"
@@ -304,6 +315,37 @@ export default function AddComplain() {
             </div>
             {/*  */}
           </div>
+
+          <div className="grid min-h-[100px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 min-h-[90px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
+                تاريخة
+              </label>
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FormInput
+                        {...field}
+                        placeholder="تاريخة"
+                        type="date"
+                        className="h-11 px-1 text-[#595959] placeholder:text-[#595959] placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        onChange={(e) => {
+                          field.onChange(e)
+                          handleDateChange(e) // Validation is triggered whenever the value changes
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {/*  */}
+          </div>
+
           <div className="w-full flex justify-end gap-2 mb-4">
             <Link to={'/the-department-of-al-lfta'}>
               <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">

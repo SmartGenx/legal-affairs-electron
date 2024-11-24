@@ -55,7 +55,7 @@ export interface LicenseType {
   isDeleted: boolean
 }
 
-export default function LicenseTable({ info, page, total }: Props) {
+export default function LicenseTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -125,6 +125,7 @@ export default function LicenseTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/license/view-license/${original.id}`)
       }}

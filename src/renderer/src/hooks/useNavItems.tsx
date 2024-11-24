@@ -20,7 +20,7 @@ export default function useNavItems() {
         {
           href: '/the-department-of-al-lfta',
           icon: 'chart',
-          label: ' إدارة الأفتاء',
+          label: ' إدارة الإفتاء',
           arrows: 'arows'
         },
         {

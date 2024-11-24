@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function DecisionTable({ info, page, total }: Props) {
+export default function DecisionTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<DecisionInfo>[]>(
     () => [
@@ -96,6 +96,7 @@ export default function DecisionTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/decisions/view-info/${original.id}`)
       }}

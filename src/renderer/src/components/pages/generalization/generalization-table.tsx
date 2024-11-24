@@ -26,13 +26,13 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function GeneralizationTable({ info, page, total }: Props) {
+export default function GeneralizationTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<GeneralizationInfo>[]>(
     () => [
       {
         accessorKey: 'id',
-        header: 'l',
+        header: 'م',
         cell: ({ row }) => (row.index + 1 + (page - 1) * 10).toString().padStart(2, '0')
       },
       {
@@ -89,6 +89,7 @@ export default function GeneralizationTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/generalization/view-generalization-info/${original.id}`)
       }}

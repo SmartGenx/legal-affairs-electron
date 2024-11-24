@@ -74,7 +74,7 @@ export interface Employ {
   isDeleted: boolean
 }
 
-export default function LeaveTable({ info, page, total }: Props) {
+export default function LeaveTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -150,6 +150,7 @@ export default function LeaveTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/personnel-affairs/view-leave/${original.id}`)
       }}
