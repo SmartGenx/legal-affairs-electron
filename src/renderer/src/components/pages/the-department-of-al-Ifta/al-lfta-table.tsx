@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function AlLftaTable({ info, page, total }: Props) {
+export default function AlLftaTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<ComplaintInfo>[]>(
     () => [
@@ -105,6 +105,7 @@ export default function AlLftaTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/the-department-of-al-lfta/view-info/${original.id}`)
       }}

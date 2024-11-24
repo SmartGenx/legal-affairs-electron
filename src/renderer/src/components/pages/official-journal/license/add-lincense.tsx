@@ -34,7 +34,21 @@ const formSchema = z.object({
   compnayCapital: z.string(),
   compnayManger: z.string(),
   referenceNum: z.string(),
-  referenceDate: z.string()
+  referenceDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  )
 })
 
 type BookFormValue = z.infer<typeof formSchema>
@@ -71,7 +85,29 @@ export default function AddLincense() {
       console.error('Error fetching data:', error)
     }
   }
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
 
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+  //
   useEffect(() => {
     fetchData()
   }, [])
@@ -144,7 +180,7 @@ export default function AddLincense() {
           </div>
 
           <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] -translate-y-2">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 نوع الرخصه
               </label>
@@ -154,7 +190,7 @@ export default function AddLincense() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                      <FormControl className="bg-transparent mt-2 h-11 text-[#595959] placeholder:text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="نوع الرخصه" />
                         </SelectTrigger>
@@ -173,7 +209,7 @@ export default function AddLincense() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 h-[50px] -translate-y-2">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 اسم الشركة
               </label>
@@ -183,7 +219,7 @@ export default function AddLincense() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                      <FormControl className="bg-transparent mt-2 h-11 text-[#595959] placeholder:text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="اسم الشركة" />
                         </SelectTrigger>
@@ -213,7 +249,7 @@ export default function AddLincense() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   مركز الشركة "
                         {...field}
                       />
@@ -240,7 +276,7 @@ export default function AddLincense() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   مسؤول الشركة "
                         {...field}
                       />
@@ -262,7 +298,7 @@ export default function AddLincense() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 text-[#595959] placeholder:text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رأس مال الشركة "
                         {...field}
                       />
@@ -290,7 +326,7 @@ export default function AddLincense() {
                   <FormItem className="col-span-2">
                     <FormControl>
                       <Textarea
-                        className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                        className="bg-transparent mt-2 text-[#595959] placeholder:text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                         rows={5}
                         {...field}
                         placeholder="غرض الشركة ( أكتب الغرض من أنشاء الشركة )"
@@ -322,7 +358,7 @@ export default function AddLincense() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 text-[#595959] placeholder:text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم الترخيص "
                         {...field}
                       />
@@ -344,7 +380,7 @@ export default function AddLincense() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base text-[#595959] placeholder:text-[#595959] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   السنة "
                         {...field}
                       />
@@ -370,7 +406,7 @@ export default function AddLincense() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم السند "
                         {...field}
                       />
@@ -395,8 +431,11 @@ export default function AddLincense() {
                         {...field}
                         placeholder="تاريخ السند"
                         type="date"
-                        className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
+                        className="h-11 px-1 placeholder:text-base text-[#595959] placeholder:text-[#595959] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        onChange={(e) => {
+                          field.onChange(e)
+                          handleDateChange(e) // Validation is triggered whenever the value changes
+                        }}
                       />
                     </FormControl>
                     <FormMessage />

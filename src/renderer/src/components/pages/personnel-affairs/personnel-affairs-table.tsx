@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function PersonnelAffairsTable({ info, page, total }: Props) {
+export default function PersonnelAffairsTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<EmployInfo>[]>(
     () => [
@@ -99,6 +99,7 @@ export default function PersonnelAffairsTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/personnel-affairs/view-employee-info/${original.id}`)
       }}

@@ -25,7 +25,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function BookTable({ info, page, total }: Props) {
+export default function BookTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<BookInfo>[]>(
     () => [
@@ -89,6 +89,7 @@ export default function BookTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/official-journal/book-info/${original.id}`)
       }}

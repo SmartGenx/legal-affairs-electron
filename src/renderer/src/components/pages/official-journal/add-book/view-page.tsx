@@ -147,7 +147,7 @@ export default function ViewBook() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 text-[#595959] placeholder:text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   اسم الكتاب "
                         {...field}
                       />
@@ -169,7 +169,7 @@ export default function ViewBook() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base  text-[#595959] placeholder:text-[#595959] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   الكميه "
                         {...field}
                       />
@@ -191,7 +191,7 @@ export default function ViewBook() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   سعر النسخة "
                         {...field}
                       />

@@ -54,7 +54,7 @@ export interface Customer {
   isDeleted: boolean
 }
 
-export default function OrderBookTable({ info, page, total }: Props) {
+export default function OrderBookTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -124,6 +124,7 @@ export default function OrderBookTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
         navigate(`/official-journal/view-order-book/${original.id}`)
       }}

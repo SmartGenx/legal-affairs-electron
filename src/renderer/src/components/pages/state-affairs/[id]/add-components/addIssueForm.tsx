@@ -9,7 +9,6 @@ import { useToast } from '../../../../ui/use-toast'
 import { useAuthHeader } from 'react-auth-kit'
 import { FormInput } from '@renderer/components/ui/form-input'
 import { kind_of_case, Level } from '@renderer/types/enum'
-
 import {
   Select,
   SelectContent,
@@ -17,7 +16,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '../../../../ui/select'
-
+import {
+  NewSelect,
+  NewSelectContent,
+  NewSelectItem,
+  NewSelectTrigger,
+  NewSelectValue
+} from '../../../../ui/new-select'
 import { Textarea } from '@renderer/components/ui/textarea'
 import { Button } from '@renderer/components/ui/button'
 import { Link, useNavigate } from 'react-router-dom'
@@ -58,7 +63,21 @@ const formSchema = z.object({
   state: z.boolean(),
   tribunalId: z.string(),
   level: z.string(),
-  detailsDate: z.string(),
+  detailsDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number);
+      const inputDate = new Date(year, month - 1, day); // Month is 0-based in JS Date
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Set today's date to midnight to ignore time
+
+      return inputDate <= today; // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.',
+    }
+  ),
   judgment: z.string(),
   refrance: z.string(),
   Resumed: z.boolean().optional()
@@ -163,6 +182,28 @@ export default function AddIssueForm() {
       setGovernmentData(response.data)
     } catch (error) {
       console.error('Error fetching data:', error)
+    }
+  }
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
+
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
     }
   }
 
@@ -302,7 +343,7 @@ export default function AddIssueForm() {
 
           <div className="grid h-[80px] mb-5  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 الإسم
               </label>
               <FormField
@@ -312,7 +353,7 @@ export default function AddIssueForm() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   الإسم "
                         {...field}
                       />
@@ -324,8 +365,8 @@ export default function AddIssueForm() {
             </div>
             {/*  */}
 
-            <div className="col-span-1 translate-y-2">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+            <div className="col-span-1 ">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 الصفة
               </label>
               <FormField
@@ -334,7 +375,7 @@ export default function AddIssueForm() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                      <FormControl className="bg-transparent h-11 mt-2 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="الصفة" />
                         </SelectTrigger>
@@ -354,8 +395,8 @@ export default function AddIssueForm() {
             </div>
             {/*  */}
 
-            <div className="col-span-1 translate-y-2">
-              <label htmlFor="" className="font-bold text-sm text-[#757575]">
+            <div className="col-span-1 ">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
                 المرفق الحكومي
               </label>
               <FormField
@@ -364,7 +405,7 @@ export default function AddIssueForm() {
                 render={({ field }) => (
                   <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                      <FormControl className="bg-transparent mt-2 h-11 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="المرفق الحكومي" />
                         </SelectTrigger>
@@ -388,8 +429,8 @@ export default function AddIssueForm() {
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">نوع القضية</h3>
           </div>
-          <div className="grid h-[60px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right mt-4 ">
-            <div className="col-span-2 h-[50px] ">
+          <div className="grid min-h-[100px]  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right mt-4 ">
+            <div className="col-span-2 min-h-[50px] ">
               <FormField
                 control={form.control}
                 name="type"
@@ -398,7 +439,7 @@ export default function AddIssueForm() {
                     {kindOfCase.map((caseType) => (
                       <div key={caseType.value} className="flex items-center ">
                         <FormControl>
-                          <div className="relative">
+                          <div className="relative top-5">
                             <input
                               type="checkbox"
                               value={caseType.value}
@@ -427,7 +468,7 @@ export default function AddIssueForm() {
                             </svg>
                           </div>
                         </FormControl>
-                        <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
+                        <FormLabel className="font-normal ml-20 text-[#595959] mr-2 relative top-4">
                           {caseType.label}
                         </FormLabel>
                       </div>
@@ -439,7 +480,10 @@ export default function AddIssueForm() {
             </div>
             {/*  */}
 
-            <div className=" col-span-1 h-auto">
+            <div className=" col-span-1 h-auto -translate-y-2">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
+                اختار نوع الدعوة
+              </label>
               {selectedValue === kind_of_case.civilian ? (
                 <FormField
                   control={form.control}
@@ -447,7 +491,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent h-11 mt-2 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -471,7 +515,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent h-11 mt-2 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -495,7 +539,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent h-11 mt-2 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -519,7 +563,7 @@ export default function AddIssueForm() {
                   render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent h-11 mt-2 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اختار واحد" />
                           </SelectTrigger>
@@ -544,7 +588,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent border-[3px] border-[#E5E7EB] rounded-xl">
+                          <FormControl className="bg-transparent h-11 mt-2 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="اختار واحد" />
                             </SelectTrigger>
@@ -572,32 +616,32 @@ export default function AddIssueForm() {
             <div className="col-span-2">
               <h3 className="font-bold text-[#3734a9] p-3">درجة التقاضي</h3>
             </div>
-            <div className="col-span-1 ">
+            <div className="col-span-1 p-2 ">
               <FormField
                 control={form.control}
                 name="level"
                 render={({ field }) => (
                   <FormItem>
-                    <Select
+                    <NewSelect
                       onValueChange={(value) => {
                         field.onChange(value)
                         setSelectedOption(parseInt(value, 10))
                       }}
                       defaultValue={field.value}
                     >
-                      <FormControl className="w-full h-[50px] rounded-xl bg-transparent border-[1px] border-transparent ">
-                        <SelectTrigger>
-                          <SelectValue placeholder="الصفة" />
-                        </SelectTrigger>
+                      <FormControl className="w-full  h-[50px] rounded-xl bg-transparent text-[#595959] text-base border-[3px] border-[#a6a3ee]/[.40] ">
+                        <NewSelectTrigger>
+                          <NewSelectValue placeholder="اختار درجة التقاضي" />
+                        </NewSelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <NewSelectContent>
                         {DegreeOfLitigationOptions.map((options) => (
-                          <SelectItem key={options.value} value={String(options.value)}>
+                          <NewSelectItem key={options.value} value={String(options.value)}>
                             {options.label}
-                          </SelectItem>
+                          </NewSelectItem>
                         ))}
-                      </SelectContent>
-                    </Select>
+                      </NewSelectContent>
+                    </NewSelect>
 
                     <FormMessage />
                   </FormItem>
@@ -609,7 +653,7 @@ export default function AddIssueForm() {
             <>
               <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     المحكمة
                   </label>
                   <FormField
@@ -618,7 +662,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <FormControl className="bg-transparent mt-2 h-11 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="المحكمة" />
                             </SelectTrigger>
@@ -639,7 +683,7 @@ export default function AddIssueForm() {
               </div>
               <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[50px] ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     عنوان القضية
                   </label>
                   <FormField
@@ -649,7 +693,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-11 placeholder:text-[#757575] px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            className="h-11 px-3 placeholder:px-0 placeholder:text-[#595959] text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="عنوان القضية"
                             {...field}
                           />
@@ -663,7 +707,7 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
               <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                <label htmlFor="" className="font-bold text-sm text-[#595959]">
                   نص الحكم
                 </label>
                 <div className=" col-span-1 min-h-[40px] ">
@@ -674,7 +718,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                            className="bg-transparent placeholder:text-base placeholder:text-[#595959] rounded-xl border-[3px] border-[#E5E7EB]"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -692,7 +736,7 @@ export default function AddIssueForm() {
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     تاريخة
                   </label>
                   <FormField
@@ -705,8 +749,11 @@ export default function AddIssueForm() {
                             {...field}
                             placeholder="تاريخة"
                             type="date"
-                            className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                            onChange={(e) => field.onChange(e.target.value)}
+                            className="h-11 px-1 placeholder:text-base  text-[#595959] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            onChange={(e) => {
+                              field.onChange(e)
+                              handleDateChange(e) // Validation is triggered whenever the value changes
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -716,7 +763,7 @@ export default function AddIssueForm() {
                 </div>
 
                 <div className=" col-span-1 h-[40px] ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     رقم الحكم
                   </label>
                   <FormField
@@ -726,7 +773,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            className="h-11 p-0 placeholder:text-base placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="   رقم الحكم "
                             {...field}
                           />
@@ -775,7 +822,7 @@ export default function AddIssueForm() {
                                 </svg>
                               </div>
                             </FormControl>
-                            <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
+                            <FormLabel className="font-normal ml-20 mr-2 text-[#595959] relative -top-1">
                               {caseType.label}
                             </FormLabel>
                           </div>
@@ -793,7 +840,7 @@ export default function AddIssueForm() {
             <>
               <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     المحكمة
                   </label>
                   <FormField
@@ -802,7 +849,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <FormControl className="bg-transparent mt-2 h-11 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="المحكمة" />
                             </SelectTrigger>
@@ -823,7 +870,7 @@ export default function AddIssueForm() {
               </div>
               <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[50px] ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     عنوان القضية
                   </label>
                   <FormField
@@ -833,7 +880,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-11 px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            className="h-11 px-2 placeholder:text-base text-[#595959] placeholder:text-[#595959] mt-2  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="عنوان القضية"
                             {...field}
                           />
@@ -848,7 +895,7 @@ export default function AddIssueForm() {
               </div>
               <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[40px] ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     نص الحكم
                   </label>
                   <FormField
@@ -858,7 +905,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                            className="bg-transparent mt-2 text-[#595959] placeholder:text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -876,7 +923,7 @@ export default function AddIssueForm() {
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     تاريخة
                   </label>
                   <FormField
@@ -889,8 +936,11 @@ export default function AddIssueForm() {
                             {...field}
                             placeholder="تاريخة"
                             type="date"
-                            className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                            onChange={(e) => field.onChange(e.target.value)}
+                            className="h-11 px-1 placeholder:text-base text-[#595959] placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            onChange={(e) => {
+                              field.onChange(e)
+                              handleDateChange(e) // Validation is triggered whenever the value changes
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -900,7 +950,7 @@ export default function AddIssueForm() {
                 </div>
 
                 <div className=" col-span-1 h-[40px] ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     رقم الحكم
                   </label>
                   <FormField
@@ -910,7 +960,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            className="h-11 px-3 placeholder:px-0 text-[#595959] placeholder:text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="   رقم الحكم "
                             {...field}
                           />
@@ -926,7 +976,7 @@ export default function AddIssueForm() {
             <>
               <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
                 <div className="col-span-1 ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     المحكمة
                   </label>
                   <FormField
@@ -935,7 +985,7 @@ export default function AddIssueForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <FormControl className="bg-transparent mt-2 h-11 text-[#595959] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                             <SelectTrigger>
                               <SelectValue placeholder="المحكمة" />
                             </SelectTrigger>
@@ -956,7 +1006,7 @@ export default function AddIssueForm() {
               </div>
               <div className="grid h-[85px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
                 <div className=" col-span-1 h-[50px] ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     عنوان القضية
                   </label>
                   <FormField
@@ -966,7 +1016,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-11 px-2 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            className="h-11 px-2 mt-2 text-[#595959] placeholder:text-[#595959] placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="عنوان القضية"
                             {...field}
                           />
@@ -980,7 +1030,7 @@ export default function AddIssueForm() {
                 {/*  */}
               </div>
               <div className="grid min-h-[160px] mb-5  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                <label htmlFor="" className="font-bold text-sm text-[#595959]">
                   نص الحكم
                 </label>
                 <div className=" col-span-1 min-h-[40px] ">
@@ -991,7 +1041,7 @@ export default function AddIssueForm() {
                       <FormItem className="col-span-2">
                         <FormControl>
                           <Textarea
-                            className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                            className="bg-transparent placeholder:text-[#595959] text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                             rows={5}
                             {...field}
                             placeholder="نص الحكم"
@@ -1009,7 +1059,7 @@ export default function AddIssueForm() {
                 {/*  */}
 
                 <div className=" col-span-1 h-auto">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     تاريخة
                   </label>
                   <FormField
@@ -1022,8 +1072,11 @@ export default function AddIssueForm() {
                             {...field}
                             placeholder="تاريخه"
                             type="date"
-                            className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                            onChange={(e) => field.onChange(e.target.value)}
+                            className="h-11 px-1 placeholder:text-[#595959] text-[#595959] placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            onChange={(e) => {
+                              field.onChange(e)
+                              handleDateChange(e) // Validation is triggered whenever the value changes
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -1033,7 +1086,7 @@ export default function AddIssueForm() {
                 </div>
 
                 <div className=" col-span-1 h-[40px] ">
-                  <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  <label htmlFor="" className="font-bold text-sm text-[#595959]">
                     رقم الحكم
                   </label>
                   <FormField
@@ -1043,7 +1096,7 @@ export default function AddIssueForm() {
                       <FormItem>
                         <FormControl>
                           <FormInput
-                            className="h-11 p-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                            className="h-11 px-3 placeholder:px-0 placeholder:text-[#595959] text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                             placeholder="   رقم الحكم "
                             {...field}
                           />
@@ -1092,7 +1145,7 @@ export default function AddIssueForm() {
                                 </svg>
                               </div>
                             </FormControl>
-                            <FormLabel className="font-normal ml-20 mr-2 relative -top-1">
+                            <FormLabel className="font-normal text-[#595959] ml-20 mr-2 relative -top-1">
                               {caseType.label}
                             </FormLabel>
                           </div>
@@ -1151,7 +1204,7 @@ export default function AddIssueForm() {
                             </svg>
                           </div>
                         </FormControl>
-                        <FormLabel className="font-normal ml-20 relative -top-1 mr-2">
+                        <FormLabel className="font-normal ml-20 text-[#595959] relative -top-1 mr-2">
                           {caseType.label}
                         </FormLabel>
                       </div>
