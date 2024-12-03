@@ -94,9 +94,9 @@ export default function AddAgency() {
     <>
     <div className=" flex items-center text-3xl">
         <Link to={'/Agency'}>
-          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
             <ArrowRight size={20} />
-          </Button>
+          </button>
         </Link>
         <h1 className="mr-2 text-[#3734a9] font-bold">إضافة توكيل</h1>
       </div>
