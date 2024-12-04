@@ -307,9 +307,9 @@ export default function UpdateEmployeeIndex() {
     <>
       <div className=" flex items-center text-3xl">
         <Link to={'/personnel-affairs'}>
-          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
             <ArrowRight size={20} />
-          </Button>
+          </button>
         </Link>
         <h1 className="mr-2 text-[#3734a9] font-bold">{EmployeeData?.name}</h1>
       </div>
@@ -343,7 +343,7 @@ export default function UpdateEmployeeIndex() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   اسم الموظف "
                           {...field}
                         />
@@ -498,7 +498,7 @@ export default function UpdateEmployeeIndex() {
                 />
               </div>
 
-              <div className=" col-span-1 h-[50px] -translate-y-0">
+              <div className=" col-span-2 h-[50px] -translate-y-0">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   تاريخ التخرج
                 </label>
@@ -525,6 +525,14 @@ export default function UpdateEmployeeIndex() {
                 />
               </div>
 
+              {/*  */}
+            </div>
+
+            {/*  */}
+            <div className="mb-7 mt-9 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">بيانات الهوية الشخصية</h3>
+            </div>
+            <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
               <div className=" col-span-1 h-[50px] -translate-y-0">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   نوع الهوية
@@ -557,12 +565,6 @@ export default function UpdateEmployeeIndex() {
                   )}
                 />
               </div>
-              {/*  */}
-            </div>
-
-            {/*  */}
-
-            <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
               <div className=" col-span-1 h-[50px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   رقم الهوية
@@ -611,7 +613,11 @@ export default function UpdateEmployeeIndex() {
                   )}
                 />
               </div>
+            </div>
 
+            {/*  */}
+
+            <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
               <div className=" col-span-1 h-[50px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   مكان الاصدار
@@ -633,11 +639,11 @@ export default function UpdateEmployeeIndex() {
                   )}
                 />
               </div>
-              {/*  */}
             </div>
 
-            {/*  */}
-
+            <div className="mb-7 mt-9 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">بيانات العمل</h3>
+            </div>
             <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
               <div className=" col-span-1 h-[50px] -translate-y-0">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">

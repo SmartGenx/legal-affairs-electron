@@ -437,7 +437,7 @@ export default function AddEmployeeIndex() {
               />
             </div>
 
-            <div className=" col-span-1 h-[50px] -translate-y-0">
+            <div className=" col-span-2 h-[50px] -translate-y-0">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 تاريخ التخرج
               </label>
@@ -464,6 +464,14 @@ export default function AddEmployeeIndex() {
               />
             </div>
 
+            {/*  */}
+          </div>
+
+          {/*  */}
+          <div className="mb-7 mt-9 bg-[#dedef8] rounded-t-lg">
+            <h3 className="font-bold text-[#3734a9] p-3">بيانات الهوية الشخصية</h3>
+          </div>
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] -translate-y-0">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 نوع الهوية
@@ -492,12 +500,6 @@ export default function AddEmployeeIndex() {
                 )}
               />
             </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-
-          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 رقم الهوية
@@ -547,6 +549,12 @@ export default function AddEmployeeIndex() {
               />
             </div>
 
+            {/*  */}
+          </div>
+
+          {/*  */}
+
+          <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 مكان الاصدار
@@ -568,11 +576,11 @@ export default function AddEmployeeIndex() {
                 )}
               />
             </div>
-            {/*  */}
           </div>
 
-          {/*  */}
-
+          <div className="mb-7 mt-9 bg-[#dedef8] rounded-t-lg">
+            <h3 className="font-bold text-[#3734a9] p-3">بيانات العمل</h3>
+          </div>
           <div className="grid h-[80px] mb-4   grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 h-[50px] -translate-y-0">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
