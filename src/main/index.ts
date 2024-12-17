@@ -141,20 +141,20 @@ function checkForUpdates() {
   // })
 
   // Event: Update downloaded
-  autoUpdater.on('update-downloaded', (info) => {
-    log.info('Update downloaded:', info)
-    dialog
-      .showMessageBox({
-        type: 'info',
-        title: 'التحديث جاهز',
-        message: 'تم تنزيل التحديث. ستتم إعادة تشغيل التطبيق الآن لتثبيت التحديث.',
-        buttons: ['أعد التشغيل الآن']
-      })
+  // autoUpdater.on('update-downloaded', (info) => {
+  //   log.info('Update downloaded:', info)
+  //   dialog
+  //     .showMessageBox({
+  //       type: 'info',
+  //       title: 'التحديث جاهز',
+  //       message: 'تم تنزيل التحديث. ستتم إعادة تشغيل التطبيق الآن لتثبيت التحديث.',
+  //       buttons: ['أعد التشغيل الآن']
+  //     })
 
-      .then(() => {
-        autoUpdater.quitAndInstall() // Restart and install the update
-      })
-  })
+  //     .then(() => {
+  //       autoUpdater.quitAndInstall() // Restart and install the update
+  //     })
+  // })
 
   // Event: Error
   autoUpdater.on('error', (error) => {
