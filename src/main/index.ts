@@ -141,31 +141,31 @@ function checkForUpdates() {
   // })
 
   // Event: Update downloaded
-  // autoUpdater.on('update-downloaded', (info) => {
-  //   log.info('Update downloaded:', info)
-  //   dialog
-  //     .showMessageBox({
-  //       type: 'info',
-  //       title: 'التحديث جاهز',
-  //       message: 'تم تنزيل التحديث. ستتم إعادة تشغيل التطبيق الآن لتثبيت التحديث.',
-  //       buttons: ['أعد التشغيل الآن']
-  //     })
+  autoUpdater.on('update-downloaded', (info) => {
+    log.info('Update downloaded:', info)
+    dialog
+      .showMessageBox({
+        type: 'info',
+        title: 'التحديث جاهز',
+        message: 'تم تنزيل التحديث. ستتم إعادة تشغيل التطبيق الآن لتثبيت التحديث.',
+        buttons: ['أعد التشغيل الآن']
+      })
 
-  //     .then(() => {
-  //       autoUpdater.quitAndInstall() // Restart and install the update
-  //     })
-  // })
+      .then(() => {
+        autoUpdater.quitAndInstall() // Restart and install the update
+      })
+  })
 
   // Event: Error
-  autoUpdater.on('error', (error) => {
-    log.error('Error during update:', error)
-    dialog.showMessageBox({
-      type: 'error',
-      title: 'خطأ في التحديث',
-      message: `حدث خطأ أثناء التحقق من التحديثات: ${error.message}`,
-      buttons: ['موافق']
-    })
-  })
+  // autoUpdater.on('error', (error) => {
+  //   log.error('Error during update:', error)
+  //   dialog.showMessageBox({
+  //     type: 'error',
+  //     title: 'خطأ في التحديث',
+  //     message: `حدث خطأ أثناء التحقق من التحديثات: ${error.message}`,
+  //     buttons: ['موافق']
+  //   })
+  // })
 }
 
 app.on('window-all-closed', () => {
