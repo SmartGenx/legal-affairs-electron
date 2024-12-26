@@ -63,7 +63,9 @@ export default function AddUserForm() {
       formData.append('email', datas.email) // Corrected this from decisionDate to decisionName
       formData.append('username', datas.username)
       formData.append('password', datas.password)
-      // formData.append('roleId', datas.roleId)
+      datas.roleId.map((x) => {
+        formData.append('roleId', x.toString())
+      })
       formData.append('phone', datas.phone)
 
       if (datas.file) {
@@ -220,7 +222,7 @@ export default function AddUserForm() {
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   الادوار
                 </label>
-               
+
                 <FormField
                   name="roleId"
                   control={form.control}

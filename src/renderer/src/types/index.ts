@@ -7,6 +7,7 @@ export type NavItem = {
     href: string
     disabled?: boolean
     external?: boolean
+    role?: number[]
     icon?: keyof typeof Icons
     label: string
     description?: string
