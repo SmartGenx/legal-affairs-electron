@@ -12,13 +12,15 @@ import { useToast } from '@renderer/components/ui/use-toast'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import FileUploader from '../decisions/add-decisions/FileUploader'
 import { ArrowRight, Plus } from 'lucide-react'
+import { useState } from 'react'
+import MultiSelect from '@renderer/components/ui/MultiSelect'
 
 const formSchema = z.object({
   email: z.string(),
   username: z.string(),
   password: z.string(),
   file: z.instanceof(File).optional(),
-  roleId: z.string(),
+  roleId: z.array(z.number()),
   phone: z.string()
 })
 export interface RolesResp {
@@ -41,6 +43,10 @@ export default function AddUserForm() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
+  const [rolesId, setRolesId] = useState<Info[]>([])
+  const isSelected = (code: string): boolean => {
+    return rolesId.some((city) => String(city.id) === code)
+  }
   const { data: RoleIds } = useQuery({
     queryKey: ['RoleIdsData'],
     queryFn: () =>
@@ -62,7 +68,7 @@ export default function AddUserForm() {
       formData.append('email', datas.email) // Corrected this from decisionDate to decisionName
       formData.append('username', datas.username)
       formData.append('password', datas.password)
-      formData.append('roleId', datas.roleId)
+      // formData.append('roleId', datas.roleId)
       formData.append('phone', datas.phone)
 
       if (datas.file) {
@@ -178,7 +184,7 @@ export default function AddUserForm() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                        type="password"
+                          type="password"
                           className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="  كلمة المرور "
                           {...field}
@@ -193,7 +199,7 @@ export default function AddUserForm() {
             </div>
 
             <div className="grid min-h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[50px] ">
+              <div className=" col-span-1 min-h-[50px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   رقم الهاتف
                 </label>
@@ -204,7 +210,6 @@ export default function AddUserForm() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          
                           className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="  رقم الهاتف "
                           {...field}
@@ -216,36 +221,29 @@ export default function AddUserForm() {
                 />
               </div>
 
-              <div className=" col-span-1 h-[50px] ">
+              <div className=" col-span-1 min-h-[50px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   الادوار
                 </label>
+               
                 <FormField
-                  control={form.control}
                   name="roleId"
-                  render={({ field }) => (
+                  control={form.control}
+                  render={({ field: { onChange, value } }) => (
                     <FormItem>
                       <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          defaultValue={field.value}
-                        >
-                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl translate-y-2">
-                            <SelectTrigger>
-                              <SelectValue placeholder="اختار الدور" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {RoleIds?.data.info.map((options) => (
-                              <SelectItem key={options.name} value={String(options.id)}>
-                                {options.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <MultiSelect
+                          label="اختار الدور"
+                          required
+                          options={RoleIds?.data.info || []}
+                          value={
+                            RoleIds?.data.info?.filter((field) => value?.includes(field.id)) || []
+                          }
+                          getLabel={(option) => option.name}
+                          getValue={(option) => option.id}
+                          onChange={(values) => onChange(values.map(({ id }) => id))}
+                        />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
