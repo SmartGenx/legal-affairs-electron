@@ -50,7 +50,7 @@ export default function MultiSelect<T>({
   const isInvalid = props['aria-invalid']
 
   return (
-    <div ref={ref} className="relative mt-2 w-full">
+    <div ref={ref} className=" mt-2 w-full min-h-0">
       <button
         type="button"
         className={cn(
@@ -61,7 +61,7 @@ export default function MultiSelect<T>({
       >
         <span className="line-clamp-1 font-medium">
           {label}
-          {required && <span className=" text-lg font-bold text-red-600">*</span>}
+          {/* {required && <span className=" text-lg font-bold text-red-600">*</span>} */}
           {/* {values.length
             ? values.map((v) => getLabel(v)).join(", ")
             : "مجال عمل المؤسسة"} */}
@@ -69,8 +69,8 @@ export default function MultiSelect<T>({
         <ChevronDown size={16} strokeWidth={2.5} />
       </button>
       {isOpen && (
-        <div className="absolute z-10 mt-2 w-full rounded-md border bg-white shadow-lg">
-          <ScrollArea className="max-h-60 overflow-y-scroll">
+        <div className="  z-10 mt-2 w-full rounded-md border bg-white shadow-lg">
+          <ScrollArea className="max-h-36 overflow-y-scroll">
             <ul className="flex flex-col gap-1 p-2">
               {options.map((option) => (
                 <li

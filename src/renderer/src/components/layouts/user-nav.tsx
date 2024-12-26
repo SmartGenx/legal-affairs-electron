@@ -30,7 +30,7 @@ export default function UserNav() {
   const authToken = useAuthHeader()
   const authUser = useAuthUser()
   const user = authUser()
-  console.log('🚀 ~ UserNav ~ user:', user?.user?.username)
+
   if (!authToken) {
     navigate('/login')
   }
