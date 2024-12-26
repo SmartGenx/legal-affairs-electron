@@ -45,7 +45,6 @@ class UserController {
       }
       let filePath = ''
 
-
       if (req.file) {
         filePath = req.file.local
       }
@@ -70,26 +69,19 @@ class UserController {
       const userData = req.body
       let filePath = ''
 
-
-            if (req.file) {
-                filePath = `${req.file.local}`;
-            }
-            const updatedUser = await UserService.updateUser(id, userData, filePath);
-            if (!updatedUser) {
-                return next(new NotFoundError(`User with id ${id} not found.`));
-            }
-
-            res.status(200).json(updatedUser);
-        } catch (error) {
-            next(new ApiError(500, 'InternalServer', `${error}`));
-        }
-
-
-
-
-
-
+      if (req.file) {
+        filePath = `${req.file.local}`
       }
+      const updatedUser = await UserService.updateUser(id, userData, filePath)
+      if (!updatedUser) {
+        return next(new NotFoundError(`User with id ${id} not found.`))
+      }
+
+      res.status(200).json(updatedUser)
+    } catch (error) {
+      next(new ApiError(500, 'InternalServer', `${error}`))
+    }
+  }
   // Logout
   async logout(req, res, next) {
     try {
