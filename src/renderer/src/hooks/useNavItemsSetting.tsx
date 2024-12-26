@@ -12,7 +12,7 @@ export default function useNavItemsSetting() {
           arrows: 'arows'
         },
         {
-          href: '/backup',
+          href: '/login',
           icon: 'signOut',
           label: 'تسجيل الخروج',
           disabled: false,
