@@ -47,7 +47,7 @@ const Home = () => {
 
   // Data for Doughnut Chart
   const doughnutDatas = {
-    labels: ['جنائية', 'إدارية', 'تجارية', 'مدنية'],
+    labels: ['جنائية', 'إدارية', 'مدنية', 'تجارية'],
     datasets: [
       {
         data: [25, 30, 20, 25],

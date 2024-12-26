@@ -1,4 +1,3 @@
-
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useAuthHeader } from 'react-auth-kit'
@@ -26,10 +25,9 @@ export interface Info {
   updatedAt: Date
 }
 const formSchema = z.object({
-  name: z.string()
+  name: z.string().min(1, 'لا يمكن أن يكون الاسم فارغًا')
 })
 export default function ManageRoles() {
-  
   const authToken = useAuthHeader()
   const [searchParams] = useSearchParams()
   // const query = searchParams.get('query')
@@ -43,8 +41,8 @@ export default function ManageRoles() {
       name: ''
     }
   })
-  const { isLoading, error, data,refetch } = useQuery({
-    queryKey: ['Roles',page],
+  const { isLoading, error, data, refetch } = useQuery({
+    queryKey: ['Roles', page],
     queryFn: () =>
       getApi<Roles>('/Role', {
         params: {

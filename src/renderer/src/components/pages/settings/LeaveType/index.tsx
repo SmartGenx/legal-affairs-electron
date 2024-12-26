@@ -15,7 +15,7 @@ export interface Potions {
 }
 
 const formSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1, 'لا يمكن أن يكون الاسم فارغًا'),
   defaultDay: z.string()
 })
 

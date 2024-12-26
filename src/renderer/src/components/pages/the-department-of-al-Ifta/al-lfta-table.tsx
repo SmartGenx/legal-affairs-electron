@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function AlLftaTable({ info, page, total,pageSize }: Props) {
+export default function AlLftaTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<ComplaintInfo>[]>(
     () => [
@@ -60,7 +60,17 @@ export default function AlLftaTable({ info, page, total,pageSize }: Props) {
       },
       {
         accessorKey: 'officeOpinian',
-        header: 'نص رأي المكتب'
+        header: 'نص رأي المكتب',
+        cell: ({ row }) => {
+          return (
+            <p
+              className="whitespace-nowrap overflow-hidden text-ellipsis"
+              style={{ maxWidth: '20ch' }}
+            >
+              {row.original.officeOpinian}
+            </p>
+          )
+        }
       },
       {
         accessorKey: 'createdAt',
