@@ -45,8 +45,9 @@ class UserController {
       }
       let filePath = ''
 
+
       if (req.file) {
-        filePath = `${req.file.local}-User`
+        filePath = req.file.local
       }
 
       const newUser = await UserService.createUser(userData, filePath)
@@ -82,11 +83,11 @@ class UserController {
         } catch (error) {
             next(new ApiError(500, 'InternalServer', `${error}`));
         }
-    
 
 
 
-  
+
+
 
       }
   // Logout
