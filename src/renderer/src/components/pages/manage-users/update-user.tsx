@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../ui/form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
@@ -13,13 +12,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import FileUploader from '../decisions/add-decisions/FileUploader'
 import { ArrowRight, Plus } from 'lucide-react'
 import { useEffect } from 'react'
+import MultiSelect from '@renderer/components/ui/MultiSelect'
 
 const formSchema = z.object({
   email: z.string(),
   username: z.string(),
   password: z.string().optional(),
   file: z.instanceof(File).optional(),
-  roleId: z.string(),
+  roleId: z.array(z.number()),
   phone: z.string()
 })
 export interface RolesResp {
@@ -84,6 +84,11 @@ export default function UpdateUserForm() {
         }
       })
   })
+  console.log(
+    'user role',
+    UserById?.data.info[0].roles.map((x) => x.role.id)
+  )
+
   const { data: RoleIds } = useQuery({
     queryKey: ['RoleIdsData'],
     queryFn: () =>
@@ -100,7 +105,7 @@ export default function UpdateUserForm() {
         username: UserById?.data.info[0].name,
         // password: UserById.data.info[0].,
         phone: UserById.data.info[0].phone,
-        roleId: String(UserById.data.info[0].roles[0].role.id)
+        roleId: UserById.data.info[0].roles.map((roleElement) => roleElement.role.id),
         // decisionDate: new Date(DecisionData.decisionDate).toISOString().split('T')[0]
       })
     }
@@ -115,7 +120,9 @@ export default function UpdateUserForm() {
       const formData = new FormData()
       formData.append('email', datas.email) // Corrected this from decisionDate to decisionName
       formData.append('username', datas.username)
-      formData.append('roleId', datas.roleId)
+      datas.roleId.map((x) => {
+        formData.append('roleId', x.toString())
+      })
       formData.append('phone', datas.phone)
 
       // Append the password only if it is defined
@@ -251,7 +258,7 @@ export default function UpdateUserForm() {
             </div>
 
             <div className="grid min-h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[50px] ">
+              <div className=" col-span-1 min-h-[50px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   رقم الهاتف
                 </label>
@@ -273,42 +280,28 @@ export default function UpdateUserForm() {
                 />
               </div>
 
-              <div className=" col-span-1 h-[50px] ">
+              <div className=" col-span-1 min-h-[50px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   الادوار
                 </label>
                 <FormField
-                  control={form.control}
                   name="roleId"
-                  render={({ field }) => (
+                  control={form.control}
+                  render={({ field: { onChange, value } }) => (
                     <FormItem>
                       <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
+                        <MultiSelect
+                          label="اختار الدور"
+                          required
+                          options={RoleIds?.data.info || []}
                           value={
-                            field.value
-                              ? String(field.value)
-                              : UserById && UserById.data.info[0]
-                                ? String(UserById.data.info[0].roles[0].role.id)
-                                : ''
+                            RoleIds?.data.info?.filter((field) => value?.includes(field.id)) || []
                           }
-                          defaultValue={field.value}
-                        >
-                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl translate-y-2">
-                            <SelectTrigger>
-                              <SelectValue placeholder="اختار الدور" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {RoleIds?.data.info.map((options) => (
-                              <SelectItem key={options.name} value={String(options.id)}>
-                                {options.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          getLabel={(option) => option.name}
+                          getValue={(option) => option.id}
+                          onChange={(values) => onChange(values.map(({ id }) => id))}
+                        />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
