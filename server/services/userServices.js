@@ -162,6 +162,8 @@ class UserService {
   async updateUser(id, userData, filePath) {
     try {
       const roleId = userData.roleId
+      console.log('🚀 ~ UserService ~ updateUser ~ roleId:', roleId)
+      delete userData.file
       delete userData.roleId
       const existingUser = await prisma.user.findUnique({ where: { id } })
       if (!existingUser) {
@@ -194,23 +196,21 @@ class UserService {
       })
       console.log('🚀 ~ UserService ~ updateUser ~ updateUser:', updateUser)
 
-      if (roleId) {
-        const userRole = await prisma.userRole.findFirst({
-          where: {
-            userId: +updateUser.id
-          }
-        })
-        if (userRole) {
-          await prisma.userRole.update({
-            where: {
-              id: userRole.id
-            },
+      if (roleId.length > 0) {
+        console.log(
+          '222222222222222222222222222222222222222222222222222222222222222222222222222222222222'
+        )
+
+        await prisma.userRole.deleteMany()
+
+        roleId.map(async (role) => {
+          await prisma.userRole.create({
             data: {
-              roleId: +roleId,
+              roleId: +role,
               userId: +updateUser.id
             }
           })
-        }
+        })
       }
 
       return updateUser

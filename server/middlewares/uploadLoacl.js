@@ -22,7 +22,6 @@ const upload = multer({
 })
 
 const copyFileToProfileDir = () => async (req, res, next) => {
-  console.log('🚀 ~ copyFileToProfileDir ~  req.route:', req?.route)
   if (!req.file) {
     //  next(new Error('No file uploaded'));
     next()
