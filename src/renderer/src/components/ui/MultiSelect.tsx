@@ -54,8 +54,8 @@ export default function MultiSelect<T>({
       <button
         type="button"
         className={cn(
-          'flex h-12 w-full items-center justify-between rounded-md border bg-primary-foreground px-4 py-2 text-left shadow-sm focus:outline-none',
-          isInvalid ? 'border-red-500' : 'border-gray-300'
+          'flex h-11 text-[#757575] rounded-xl border-[3px] border-[#E5E7EB] w-full items-center justify-between  px-4 py-2 text-left shadow-sm focus:outline-none',
+          isInvalid ? 'border-red-500' : 'border-[#E5E7EB]'
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
