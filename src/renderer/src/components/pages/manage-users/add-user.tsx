@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../../ui/form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAuthHeader } from 'react-auth-kit'
@@ -12,7 +11,6 @@ import { useToast } from '@renderer/components/ui/use-toast'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import FileUploader from '../decisions/add-decisions/FileUploader'
 import { ArrowRight, Plus } from 'lucide-react'
-import { useState } from 'react'
 import MultiSelect from '@renderer/components/ui/MultiSelect'
 
 const formSchema = z.object({
@@ -43,10 +41,7 @@ export default function AddUserForm() {
   const { toast } = useToast()
   const authToken = useAuthHeader()
   const navigate = useNavigate()
-  const [rolesId, setRolesId] = useState<Info[]>([])
-  const isSelected = (code: string): boolean => {
-    return rolesId.some((city) => String(city.id) === code)
-  }
+
   const { data: RoleIds } = useQuery({
     queryKey: ['RoleIdsData'],
     queryFn: () =>
