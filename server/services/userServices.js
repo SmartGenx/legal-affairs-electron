@@ -112,15 +112,9 @@ class UserService {
     try {
       const { email } = userData
       const roleId = userData.roleId
+      delete userData.file
       delete userData.roleId
 
-      const existRole = await prisma.role.findFirst({
-        where: { id: +roleId }
-      })
-      if (!existRole) {
-        throw new NotFoundError(`Role with id ${roleId} not found.`)
-      }
-      // Ensure a User with the same email does not already exist
       const existingUser = await prisma.user.findFirst({
         where: { email }
       })
@@ -144,12 +138,13 @@ class UserService {
         }
       })
       console.log('🚀 ~ UserService ~ createUser ~ NewUser:', NewUser.username)
-
-      await prisma.userRole.create({
-        data: {
-          roleId: +roleId,
-          userId: +NewUser.id
-        }
+      roleId.map(async (role) => {
+        await prisma.userRole.create({
+          data: {
+            roleId: +role,
+            userId: NewUser.id
+          }
+        })
       })
 
       return NewUser
@@ -181,8 +176,6 @@ class UserService {
         hashPass = await hashPassword(userData.password)
       }
 
-
-
       const updateUser = await prisma.user.update({
         where: { id },
         data: {
@@ -199,16 +192,15 @@ class UserService {
           image: true
         }
       })
-      console.log("🚀 ~ UserService ~ updateUser ~ updateUser:", updateUser)
+      console.log('🚀 ~ UserService ~ updateUser ~ updateUser:', updateUser)
 
       if (roleId) {
         const userRole = await prisma.userRole.findFirst({
-          where:{
-            userId: +updateUser.id,
+          where: {
+            userId: +updateUser.id
           }
-
         })
-        if(userRole){
+        if (userRole) {
           await prisma.userRole.update({
             where: {
               id: userRole.id
@@ -219,7 +211,6 @@ class UserService {
             }
           })
         }
-
       }
 
       return updateUser
