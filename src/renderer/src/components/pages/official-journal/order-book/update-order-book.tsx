@@ -22,7 +22,21 @@ const formSchema = z.object({
   customerId: z.string(),
   reference: z.string(),
   description: z.string(),
-  sellingDate: z.string(),
+  sellingDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   orderNumber: z.string()
 })
 
@@ -142,6 +156,29 @@ export default function UpdateOrderBook() {
     }
   }
   //
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
+
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+  //
   const fetchOrder = async () => {
     try {
       const response = await axiosInstance.get('/book', {
@@ -208,9 +245,9 @@ export default function UpdateOrderBook() {
     <>
       <div className=" flex items-center text-3xl">
         <Link to={'/official-journal'}>
-          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
             <ArrowRight size={20} />
-          </Button>
+          </button>
         </Link>
         {BookData?.[0] && (
           <h1 className="mr-2 text-[#3734a9] font-bold">{BookData[0].Book.name}</h1>
@@ -235,7 +272,7 @@ export default function UpdateOrderBook() {
             </div>
 
             <div className="grid min-h-[80px] mb-4  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[50px] ">
+              <div className=" col-span-1 min-h-[50px] -translate-y-2 ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   اسم الكتاب
                 </label>
@@ -274,7 +311,7 @@ export default function UpdateOrderBook() {
                               : ''
                         }
                       >
-                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent h-11 mt-2 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اسم الكتاب" />
                           </SelectTrigger>
@@ -305,7 +342,7 @@ export default function UpdateOrderBook() {
                   سعر الكتاب
                 </label>
                 <FormInput
-                  className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                  className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                   placeholder="سعر الكتاب"
                   value={order.find((x) => bookId === String(x.id))?.price || ''} // Find the price by matching the bookId
                   disabled
@@ -324,7 +361,7 @@ export default function UpdateOrderBook() {
                       <FormControl>
                         <FormInput
                           {...field}
-                          className="h-11 p-0 placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   عدد الكتب "
                           onChange={(e) => {
                             const value = e.target.value
@@ -349,7 +386,7 @@ export default function UpdateOrderBook() {
                   الإجمالي
                 </label>
                 <FormInput
-                  className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                  className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                   disabled
                   value={total}
                   placeholder="   الإجمالي "
@@ -373,7 +410,10 @@ export default function UpdateOrderBook() {
                           placeholder="تاريخ التخرج"
                           type="date"
                           className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          onChange={(e) => field.onChange(e.target.value)}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -386,7 +426,7 @@ export default function UpdateOrderBook() {
             {/*  */}
 
             <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-2 h-[50px] ">
+              <div className=" col-span-2 min-h-[50px] -translate-y-2">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   اسم المشتري
                 </label>
@@ -406,7 +446,7 @@ export default function UpdateOrderBook() {
                         }
                         defaultValue={field.value}
                       >
-                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent mt-2 h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اسم المشتري" />
                           </SelectTrigger>
@@ -442,7 +482,7 @@ export default function UpdateOrderBook() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   رقم الصرف "
                           {...field}
                         />
@@ -464,7 +504,7 @@ export default function UpdateOrderBook() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   رقم السند "
                           {...field}
                         />

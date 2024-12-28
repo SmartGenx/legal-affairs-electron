@@ -72,8 +72,6 @@ export default function FileUploader({
          text-gray-700 decoration-2 hover:underline dark:text-primary"
         >
           <span className="rounded bg-gray-200 p-2 text-blue-500">رفع ملف</span>
-          <Upload size={24} />
-          اسحب الملف للرفع
         </label>
       ) : (
         <label
@@ -85,7 +83,6 @@ export default function FileUploader({
           <span className="text-blue-500 underline decoration-2 hover:text-blue-600">
             اختر الملف
           </span>{' '}
-          أو اسحب الملف للرفع
         </label>
       )}
       {uploadedFiles && (
@@ -102,7 +99,7 @@ export default function FileUploader({
                   ) : (
                     <Check className="text-blue-500" size={20} />
                   )}
-                  <span className="font-medium">{file}</span>
+                  <span className="font-medium w-80">{file}</span>
                 </div>
 
                 <Button size={'icon'} variant={'ghost'} onClick={() => handleFileRemove(file)}>

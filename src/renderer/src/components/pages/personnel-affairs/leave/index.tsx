@@ -98,7 +98,7 @@ export default function LeaveIndex() {
     <section className="relative space-y-4 ">
       <LeaveSearch />
       <TopButtons data={data?.data.info || []} />
-      <LeaveTable info={infoArray || []} page="1" pageSize="0" total={0} />
+      <LeaveTable info={infoArray || []} page={String(data?.data.page)} pageSize={String(data?.data.pageSize)} total={Number(data?.data.total)} />
     </section>
   )
 }

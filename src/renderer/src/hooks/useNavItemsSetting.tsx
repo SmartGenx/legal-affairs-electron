@@ -9,14 +9,16 @@ export default function useNavItemsSetting() {
           icon: 'gear',
           label: 'الأعدادات',
           disabled: false,
-          arrows: 'arows'
+          arrows: 'arows',
+          role: [1,9]
         },
         {
-          href: '/backup',
+          href: '/login',
           icon: 'signOut',
           label: 'تسجيل الخروج',
           disabled: false,
-          arrows: 'arows'
+          arrows: 'arows',
+          role: [1,2,3,4,5,6,7,8,9]
         }
       ]
     }

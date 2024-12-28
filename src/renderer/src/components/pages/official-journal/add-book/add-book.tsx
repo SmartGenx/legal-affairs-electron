@@ -51,6 +51,7 @@ export default function AddBookForm() {
         description: 'تمت الاضافة بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Books'] })
+      queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       navigate('/official-journal')
     },
     onError: (error) => {
@@ -68,9 +69,9 @@ export default function AddBookForm() {
     <>
     <div className="flex items-center text-3xl">
         <Link to={'/official-journal'}>
-          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
             <ArrowRight size={20} />
-          </Button>
+          </button>
         </Link>
         <h1 className="mr-2 text-[#3734a9] font-bold">إضافة كتاب</h1>
       </div>
@@ -104,7 +105,7 @@ export default function AddBookForm() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 text-[#595959] placeholder:text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   اسم الكتاب "
                         {...field}
                       />
@@ -126,7 +127,7 @@ export default function AddBookForm() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 text-[#595959] placeholder:text-[#595959] placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   الكميه "
                         {...field}
                       />
@@ -148,7 +149,7 @@ export default function AddBookForm() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base  text-[#595959] placeholder:text-[#595959] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   سعر النسخة "
                         {...field}
                       />

@@ -15,7 +15,7 @@ export interface Potions {
 }
 
 const formSchema = z.object({
-  name: z.string()
+  name: z.string().min(1, 'لا يمكن أن يكون الاسم فارغًا')
 })
 
 export interface PotionsResp {
@@ -103,8 +103,8 @@ export default function PostionIndex() {
                 <FormItem>
                   <FormControl>
                     <FormInput
-                      label="اسم المنصب"
-                      placeholder="اسم المنصب"
+                      label="اسم الصفة"
+                      placeholder="اسم الصفة"
                       type="text"
                       {...field}
                       className="w-full h-11 rounded-xl -translate-y-0 px-2"

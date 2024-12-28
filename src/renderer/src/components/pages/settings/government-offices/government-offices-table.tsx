@@ -42,7 +42,10 @@ export default function GovernmentOfficesTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            <EditDialog content={<GovernmentOfficesEdit id={row.original.id} />} />
+            <EditDialog>
+              {(onClose) => <GovernmentOfficesEdit id={row.original.id} onClose={onClose} />}
+            </EditDialog>
+
             <DeleteSettingDialog
               url={`/government-office/${row.original?.id}`}
               keys={['governmentOfficeTable']}

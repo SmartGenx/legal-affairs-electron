@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function AlLftaTable({ info, page, total }: Props) {
+export default function AlLftaTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<ComplaintInfo>[]>(
     () => [
@@ -60,7 +60,17 @@ export default function AlLftaTable({ info, page, total }: Props) {
       },
       {
         accessorKey: 'officeOpinian',
-        header: 'نص رأي المكتب'
+        header: 'نص رأي المكتب',
+        cell: ({ row }) => {
+          return (
+            <p
+              className="whitespace-nowrap overflow-hidden text-ellipsis"
+              style={{ maxWidth: '20ch' }}
+            >
+              {row.original.officeOpinian}
+            </p>
+          )
+        }
       },
       {
         accessorKey: 'createdAt',
@@ -82,7 +92,7 @@ export default function AlLftaTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/the-department-of-al-lfta/view-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/the-department-of-al-lfta/info/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -105,8 +115,9 @@ export default function AlLftaTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/the-department-of-al-lfta/info/${original.id}`)
+        navigate(`/the-department-of-al-lfta/view-info/${original.id}`)
       }}
     />
   )

@@ -26,13 +26,13 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function GeneralizationTable({ info, page, total }: Props) {
+export default function GeneralizationTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<GeneralizationInfo>[]>(
     () => [
       {
         accessorKey: 'id',
-        header: 'l',
+        header: 'م',
         cell: ({ row }) => (row.index + 1 + (page - 1) * 10).toString().padStart(2, '0')
       },
       {
@@ -66,7 +66,7 @@ export default function GeneralizationTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/generalization/view-generalization-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/generalization/update-generalization/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -89,8 +89,9 @@ export default function GeneralizationTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/generalization/update-generalization/${original.id}`)
+        navigate(`/generalization/view-generalization-info/${original.id}`)
       }}
     />
   )

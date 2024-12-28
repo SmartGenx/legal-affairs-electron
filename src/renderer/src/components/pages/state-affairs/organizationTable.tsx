@@ -14,6 +14,7 @@ interface DataTableProps<TData, TValue> {
   lightHeader?: boolean
   total: number
   page: string
+  pageSize?: number
   shadow?: boolean
   containerClaasName?: string
 }
@@ -27,6 +28,7 @@ export function OrganizationTable<TData, TValue>({
   lightHeader = false,
   total,
   page,
+  pageSize,
   shadow = true,
   containerClaasName
 }: DataTableProps<TData, TValue>) {
@@ -146,7 +148,7 @@ export function OrganizationTable<TData, TValue>({
           </ScrollArea>
         </Table>
       </div>
-      <TablePagination total={total} page={parseInt(page, 10) || 1} pageSize={10} />
+      <TablePagination total={total} page={parseInt(page, 10) || 1} pageSize={pageSize || 0} />
     </>
   )
 }

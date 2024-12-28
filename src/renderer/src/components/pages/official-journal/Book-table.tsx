@@ -25,7 +25,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function BookTable({ info, page, total }: Props) {
+export default function BookTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<BookInfo>[]>(
     () => [
@@ -66,7 +66,7 @@ export default function BookTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/official-journal/book-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/official-journal/view-book/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -89,8 +89,9 @@ export default function BookTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/official-journal/view-book/${original.id}`)
+        navigate(`/official-journal/book-info/${original.id}`)
       }}
     />
   )

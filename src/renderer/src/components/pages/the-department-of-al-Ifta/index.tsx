@@ -37,7 +37,7 @@ export default function TheDepartmentOfAllfta() {
     <section className="relative space-y-4 ">
       <DepartmentOfAlLftaSearch />
       <TopButtons data={data?.data.info || []} />
-      <AlLftaTable info={infoArray || []} page={1} pageSize="0" total="0" />
+      <AlLftaTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
     </section>
   )
 }

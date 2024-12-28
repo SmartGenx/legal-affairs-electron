@@ -46,7 +46,9 @@ export default function LicenseTypeTable({ info, page, total }: Props) {
 
         cell: ({ row }) => (
           <div className="flex w-fit">
-            <EditDialog content={<LicenseTypeEdit id={row.original.id} />} />
+            <EditDialog>
+              {(onClose) => <LicenseTypeEdit id={row.original.id} onClose={onClose} />}
+            </EditDialog>
             <DeleteSettingDialog
               url={`/license-type/${row.original?.id}`}
               keys={['LicenseTypeTable']}

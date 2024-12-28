@@ -2,7 +2,7 @@ const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 
 const PORT = process.env.PORT
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = "bvhdbvsbvjksbksvvns"
 
 module.exports = {
   PORT,

@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function DecisionTable({ info, page, total }: Props) {
+export default function DecisionTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<DecisionInfo>[]>(
     () => [
@@ -73,7 +73,7 @@ export default function DecisionTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/decisions/view-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/decisions/update-Decision/info/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -96,8 +96,9 @@ export default function DecisionTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/decisions/update-Decision/info/${original.id}`)
+        navigate(`/decisions/view-info/${original.id}`)
       }}
     />
   )

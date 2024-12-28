@@ -7,11 +7,11 @@ import { useAuthHeader } from 'react-auth-kit'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@renderer/components/ui/button'
 import { FormInput } from '@renderer/components/ui/form-input'
-import { axiosInstance, postApi } from '@renderer/lib/http'
+import { axiosInstance, getApi, postApi } from '@renderer/lib/http'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select'
 import { Textarea } from '@renderer/components/ui/textarea'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BookInfo } from '@renderer/types'
 import AddCustomerDialog from '../../dailogs/add-customer'
 import { Plus } from 'lucide-react'
@@ -22,7 +22,21 @@ const formSchema = z.object({
   customerId: z.string(),
   reference: z.string(),
   description: z.string(),
-  sellingDate: z.string(),
+  sellingDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   orderNumber: z.string()
 })
 
@@ -45,26 +59,47 @@ export default function OrderBook() {
   const [bookId, setBookId] = useState<string | null>(null)
   const [quantity, setQuantity] = useState<number>(0)
 
-  const [data, setData] = useState<customer[]>([])
+  // const [data, setData] = useState<customer[]>([])
   const [order, setOrder] = useState<BookInfo[]>([])
+
+  const { data: customerDate } = useQuery({
+    queryKey: ['customerData'],
+    queryFn: () =>
+      getApi<customer[]>('/customer', {
+        headers: {
+          Authorization: authToken()
+        }
+      })
+  })
 
   // Find the selected book's price
   const selectedBook = order.find((x) => bookId === String(x.id))
   const price = selectedBook ? selectedBook.price : 0
   const total = price * quantity
 
-  const fetchData = async () => {
-    try {
-      const response = await axiosInstance.get('/customer', {
-        headers: {
-          Authorization: `${authToken()}`
-        }
-      })
-      setData(response.data)
-    } catch (error) {
-      console.error('Error fetching data:', error)
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
+
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
     }
   }
+  //
   //
   const fetchOrder = async () => {
     try {
@@ -78,13 +113,12 @@ export default function OrderBook() {
       console.error('Error fetching data:', error)
     }
   }
-  //
-  // console.log('bookId', bookId)
-  // console.log('data', data)
+
   useEffect(() => {
-    fetchData()
+    // fetchData()
     fetchOrder()
   }, [])
+
   const form = useForm<BookFormValue>({
     resolver: zodResolver(formSchema)
   })
@@ -125,7 +159,9 @@ export default function OrderBook() {
       })
     }
   })
-  const onSubmit = (datas: BookFormValue) => {
+  const onSubmit = (datas: BookFormValue, event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();  // Prevent default form submission behavior
+    event.stopPropagation();
     mutate(datas)
   }
   return (
@@ -134,7 +170,9 @@ export default function OrderBook() {
         <form
           id="OrderBookForm"
           //   key={key}
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={(e) => {
+            form.handleSubmit((data) => onSubmit(data, e))(e)
+          }}
           className=""
         >
           {process.env.NODE_ENV === 'development' && (
@@ -148,7 +186,7 @@ export default function OrderBook() {
           </div>
 
           <div className="grid min-h-[80px] mb-4  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
+            <div className=" col-span-1 min-h-[50px] -translate-y-2 ">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 اسم الكتاب
               </label>
@@ -165,7 +203,7 @@ export default function OrderBook() {
                       value={field.value}
                       defaultValue={field.value}
                     >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                      <FormControl className="bg-transparent h-11 mt-2 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="اسم الكتاب" />
                         </SelectTrigger>
@@ -195,7 +233,7 @@ export default function OrderBook() {
                 سعر الكتاب
               </label>
               <FormInput
-                className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                 placeholder="سعر الكتاب"
                 value={order.find((x) => bookId === String(x.id))?.price || ''} // Find the price by matching the bookId
                 disabled
@@ -214,7 +252,7 @@ export default function OrderBook() {
                     <FormControl>
                       <FormInput
                         {...field}
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   عدد الكتب "
                         onChange={(e) => {
                           const value = Number(e.target.value)
@@ -234,7 +272,7 @@ export default function OrderBook() {
                 الإجمالي
               </label>
               <FormInput
-                className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                 disabled
                 value={total}
                 placeholder="   الإجمالي "
@@ -258,7 +296,10 @@ export default function OrderBook() {
                         placeholder="تاريخ التخرج"
                         type="date"
                         className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
+                        onChange={(e) => {
+                          field.onChange(e)
+                          handleDateChange(e) // Validation is triggered whenever the value changes
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -271,7 +312,7 @@ export default function OrderBook() {
           {/*  */}
 
           <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-2 h-[50px] ">
+            <div className=" col-span-2 min-h-[50px] -translate-y-2">
               <label htmlFor="" className="font-bold text-sm text-[#757575]">
                 اسم المشتري
               </label>
@@ -285,13 +326,13 @@ export default function OrderBook() {
                       value={field.value}
                       defaultValue={field.value}
                     >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                      <FormControl className="bg-transparent mt-2 h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                         <SelectTrigger>
                           <SelectValue placeholder="اسم المشتري" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {data.map((options) => (
+                        {customerDate?.data.map((options) => (
                           <SelectItem key={options.name} value={String(options.id)}>
                             {options.name}
                           </SelectItem>
@@ -321,7 +362,7 @@ export default function OrderBook() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم الصرف "
                         {...field}
                       />
@@ -343,7 +384,7 @@ export default function OrderBook() {
                   <FormItem>
                     <FormControl>
                       <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         placeholder="   رقم السند "
                         {...field}
                       />
@@ -388,8 +429,9 @@ export default function OrderBook() {
             </Link>
 
             <Button
-              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
+              form="OrderBookForm"
               type="submit"
+              className="text-sm h-10 md:w-30 lg:w-30  bg-[#3734a9] border-2 border-[#3734a9] text-[#fff] hover:border-2 hover:border-[#2f2b94] hover:bg-[#fff] hover:text-[#2f2b94] rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm"
             >
               <p className="font-bold text-base">حفظ</p>
               <Plus className="mr-2" />

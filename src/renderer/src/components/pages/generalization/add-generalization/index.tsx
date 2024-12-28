@@ -73,9 +73,9 @@ export default function AddGeneralizationForm() {
     <>
       <div className=" flex items-center text-3xl">
         <Link to={'/generalization'}>
-          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
             <ArrowRight size={20} />
-          </Button>
+          </button>
         </Link>
         <h1 className="mr-2 text-[#3734a9] font-bold">إضافة تعميم</h1>
       </div>
@@ -109,7 +109,7 @@ export default function AddGeneralizationForm() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 placeholder:pl-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="  رقم التعميم "
                           {...field}
                         />
@@ -131,7 +131,7 @@ export default function AddGeneralizationForm() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 placeholder:pl-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   موضوع التعميم "
                           {...field}
                         />
@@ -145,7 +145,7 @@ export default function AddGeneralizationForm() {
               {/*  */}
             </div>
             <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[40px] ">
+              <div className=" col-span-1 min-h-[40px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   تفاصيل التعميم
                 </label>
@@ -153,7 +153,7 @@ export default function AddGeneralizationForm() {
                   control={form.control}
                   name="description"
                   render={({ field }) => (
-                    <FormItem className="col-span-2">
+                    <FormItem className="col-span-2 mt-2">
                       <FormControl>
                         <Textarea
                           className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"

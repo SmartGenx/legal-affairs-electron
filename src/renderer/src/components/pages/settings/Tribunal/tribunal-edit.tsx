@@ -16,6 +16,7 @@ const formSchema = z.object({
 })
 interface Props {
   id: number
+  onClose: () => void // Added onClose prop
 }
 export interface tribunalById {
   id: number
@@ -24,7 +25,7 @@ export interface tribunalById {
   createdAt: Date
   updatedAt: Date
 }
-export default function TribunalEdit({ id }: Props) {
+export default function TribunalEdit({ id, onClose }: Props) {
   const authToken = useAuthHeader()
   const queryClient = useQueryClient()
   const { data: tribunalByIdData, isSuccess } = useQuery({
@@ -68,8 +69,9 @@ export default function TribunalEdit({ id }: Props) {
         description: 'تمت التعديل بنجاح',
         variant: 'success'
       })
-
       queryClient.invalidateQueries({ queryKey: ['TribunalTable'] })
+      form.reset()
+      onClose()
     },
     onError(error) {
       toast({

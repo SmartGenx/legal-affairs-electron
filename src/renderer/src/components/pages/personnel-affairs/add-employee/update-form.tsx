@@ -20,59 +20,141 @@ const formSchema = z.object({
   reference: z.string(),
   phone: z.string(),
   address: z.string(),
-  dob: z.string(),
+  dob: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   education: z.string(),
   megor: z.string(),
-  graduationDate: z.string(),
+  graduationDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   idtype: z.string(),
   idNumber: z.string(),
-  issuerDate: z.string(),
+  issuerDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   issuerPlace: z.string(),
   empLeaved: z.string(),
   empDgree: z.string(),
   position: z.string(),
   salary: z.string(),
-  firstEmployment: z.string(),
-  employmentDate: z.string(),
+  firstEmployment: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
+  employmentDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   currentUnit: z.string(),
-  currentEmploymentDate: z.string(),
+  currentEmploymentDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   legalStatus: z.string(),
   employeeStatus: z.string(),
   file: z.instanceof(File).optional(),
-  detailsDate: z.string()
+  detailsDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  )
 })
 
 type AddEmployeeValue = z.infer<typeof formSchema>
 
-const major = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
-]
 const idTypes = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
-]
-const units = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
-]
-const legalStatus = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
+  { label: 'بطاقة', value: 1 },
+  { label: 'جواز', value: 2 },
+  { label: 'شهادة ميلاد', value: 3 }
 ]
 const empStatus = [
-  { label: 'aa', value: 1 },
-  { label: 'asdada', value: 2 },
-  { label: 'azxczxczxa', value: 3 },
-  { label: 'wwww', value: 4 }
+  { label: 'موظف', value: 1 },
+  { label: 'متقاعد', value: 2 },
+  { label: 'اجر يومي', value: 3 }
+]
+const LeaveStatus = [
+  { label: 'Yes', value: 'Yes' },
+  { label: 'No', value: 'No' }
 ]
 export default function UpdateEmployeeIndex() {
   const { id } = useParams<{ id: string }>()
@@ -94,7 +176,7 @@ export default function UpdateEmployeeIndex() {
     error: _EmployeeError,
     isLoading: _EmployeeIsLoading
   } = useQuery({
-    queryKey: ['Employ', id],
+    queryKey: ['EmployInfo', id],
     queryFn: fetchData,
     enabled: !!id
   })
@@ -135,7 +217,29 @@ export default function UpdateEmployeeIndex() {
     }
   }, [EmployeeData])
 
-console.log("EmployeeData?.currentUnit",EmployeeData?.currentUnit)
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
+
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+  //
 
   const { mutate } = useMutation({
     mutationKey: ['UpdateEmployee'],
@@ -182,6 +286,9 @@ console.log("EmployeeData?.currentUnit",EmployeeData?.currentUnit)
         description: 'تمت التعديل بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['Employ'] })
+      queryClient.invalidateQueries({ queryKey: ['EmployInfo', id] })
+      queryClient.invalidateQueries({ queryKey: ['EmployInfoView', id] })
+      queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       navigate('/personnel-affairs')
     },
     onError: (error) => {
@@ -198,682 +305,686 @@ console.log("EmployeeData?.currentUnit",EmployeeData?.currentUnit)
   }
   return (
     <>
-    <div className=" flex items-center text-3xl">
-      <Link to={'/personnel-affairs'}>
-        <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
-          <ArrowRight size={20} />
-        </Button>
-      </Link>
-      <h1 className="mr-2 text-[#3734a9] font-bold">{EmployeeData?.name}</h1>
-    </div>
-    <div className="min-h-[50vh] w-full mt-5">
-      <Form {...form}>
-        <form
-          id="complainsForm"
-          //   key={key}
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=""
-        >
-          {process.env.NODE_ENV === 'development' && (
-            <>
-              <p>Ignore it, it just in dev mode</p>
-              <div>{JSON.stringify(form.formState.errors)}</div>
-            </>
-          )}
-          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
-          </div>
-
-          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                اسم الموظف
-              </label>
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   اسم الموظف "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+      <div className=" flex items-center text-3xl">
+        <Link to={'/personnel-affairs'}>
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+            <ArrowRight size={20} />
+          </button>
+        </Link>
+        <h1 className="mr-2 text-[#3734a9] font-bold">{EmployeeData?.name}</h1>
+      </div>
+      <div className="min-h-[50vh] w-full mt-5">
+        <Form {...form}>
+          <form
+            id="complainsForm"
+            //   key={key}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className=""
+          >
+            {process.env.NODE_ENV === 'development' && (
+              <>
+                <p>Ignore it, it just in dev mode</p>
+                <div>{JSON.stringify(form.formState.errors)}</div>
+              </>
+            )}
+            <div className="mb-4 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
             </div>
 
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              رقم الموظف
-              </label>
-              <FormField
-                control={form.control}
-                name="reference"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   رقم الموظف "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              رقم الهاتف
-              </label>
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   رقم الهاتف "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              العنوان
-              </label>
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   العنوان "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ الميلاد
-              </label>
-              <FormField
-                control={form.control}
-                name="dob"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ الميلاد"
-                        type="date"
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              المؤهل التعليمي
-              </label>
-              <FormField
-                control={form.control}
-                name="education"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   المؤهل التعليمي "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-
-          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              التخصص
-              </label>
-              <FormField
-                control={form.control}
-                name="megor"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value ? String(field.value) : String(EmployeeData?.megor)}
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="التخصص" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {major.map((type) => (
-                          <SelectItem key={type.value} value={String(type.value)}>
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] -translate-y-2">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ التخرج
-              </label>
-              <FormField
-                control={form.control}
-                name="graduationDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ التخرج"
-                        type="date"
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              نوع الهوية
-              </label>
-              <FormField
-                control={form.control}
-                name="idtype"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value ? String(field.value) : String(EmployeeData?.idtype)}
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="نوع الهوية" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {idTypes.map((type) => (
-                          <SelectItem key={type.value} value={String(type.value)}>
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-
-          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              رقم الهوية
-              </label>
-              <FormField
-                control={form.control}
-                name="idNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   رقم الهوية "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ الإصدار
-              </label>
-              <FormField
-                name="issuerDate"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ الإصدار"
-                        type="date"
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              مكان الاصدار
-              </label>
-              <FormField
-                control={form.control}
-                name="issuerPlace"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   مكان الاصدار "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-
-          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              اجازة الموظف
-              </label>
-              <FormField
-                control={form.control}
-                name="empLeaved"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   اجازة الموظف "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              درجة الموظف
-              </label>
-              <FormField
-                control={form.control}
-                name="empDgree"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   درجة الموظف "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              المنصب
-              </label>
-              <FormField
-                control={form.control}
-                name="position"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   المنصب "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              الراتب
-              </label>
-              <FormField
-                control={form.control}
-                name="salary"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   الراتب "
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ التوظيف الاول
-              </label>
-              <FormField
-                control={form.control}
-                name="firstEmployment"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ التوظيف الاول"
-                        type="date"
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ التوظيف
-              </label>
-              <FormField
-                control={form.control}
-                name="employmentDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ التوظيف"
-                        type="date"
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-
-          <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              الوحدة الحالية
-              </label>
-              <FormField
-                control={form.control}
-                name="currentUnit"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value ? String(field.value) : String(EmployeeData?.currentUnit)}
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="الوحدة الحالية" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {units.map((unit) => (
-                          <SelectItem key={unit.value} value={String(unit.value)}>
-                            {unit.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] -translate-y-2">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              تاريخ  التوظيف في
-              </label>
-              <FormField
-                control={form.control}
-                name="currentEmploymentDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ  التوظيف في الوحدة"
-                        type="date"
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575]">
-              المركز القانوني
-              </label>
-              <FormField
-                control={form.control}
-                name="legalStatus"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value ? String(field.value) : String(EmployeeData?.legalStatus)}
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="المركز القانوني" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {legalStatus.map((legal) => (
-                          <SelectItem key={legal.value} value={String(legal.value)}>
-                            {legal.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
-          {/*  */}
-          <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[50px] ">
-            <label htmlFor="" className="font-bold text-sm text-[#757575] ">
-              حالة الموظف
-              </label>
-              <FormField
-                control={form.control}
-                name="employeeStatus"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={
-                        field.value ? String(field.value) : String(EmployeeData?.employeeStatus)
-                      }
-                      defaultValue={field.value}
-                    >
-                      <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
-                        <SelectTrigger>
-                          <SelectValue placeholder="حالة الموظف" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {empStatus.map((status) => (
-                          <SelectItem key={status.value} value={String(status.value)}>
-                            {status.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className=" col-span-1 h-[50px] -translate-y-2">
-            <label htmlFor="" className="font-bold text-sm text-[#757575] ">
-              تاريخ  التوظيف في الوحدة
-              </label>
-              <FormField
-                control={form.control}
-                name="detailsDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FormInput
-                        {...field}
-                        placeholder="تاريخ  التوظيف في الوحدة"
-                        type="date"
-                        className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/*  */}
-          </div>
-
-          <div className="mb-4 bg-[#dedef8] rounded-t-lg">
-            <h3 className="font-bold text-[#3734a9] p-3">أرفاق مرفق</h3>
-          </div>
-
-          <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 h-[40px] ">
-              <FormField
-                control={form.control}
-                name="file"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div>
-                        <p className="mb-2 text-start text-lg font-medium">أرفاق صورة القرار</p>
-                        <FileUploader
-                          setValue={form.setValue}
-                          inputId={'file'}
-                          isMultiple={false}
+            <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  اسم الموظف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   اسم الموظف "
                           {...field}
-                          onChange={async (files) => {
-                            try {
-                              if (!files?.[0]) return
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-                              field.onChange(files[0])
-                            } catch (error) {
-                              JSON.stringify(error)
-                            }
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  رقم الموظف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="reference"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   رقم الموظف "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  رقم الهاتف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   رقم الهاتف "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
+            </div>
+
+            {/*  */}
+            <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  العنوان
+                </label>
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   العنوان "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ الميلاد
+                </label>
+                <FormField
+                  control={form.control}
+                  name="dob"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ الميلاد"
+                          type="date"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
                           }}
                         />
-                      </div>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  المؤهل التعليمي
+                </label>
+                <FormField
+                  control={form.control}
+                  name="education"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   المؤهل التعليمي "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
             </div>
-          </div>
-          <div className="w-full flex justify-end gap-2 mb-4">
-          <Link to={'/personnel-affairs'}>
+
+            {/*  */}
+
+            <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  التخصص
+                </label>
+                <FormField
+                  control={form.control}
+                  name="megor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormInput
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        placeholder="التخصص "
+                        {...field}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-2 h-[50px] -translate-y-0">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ التخرج
+                </label>
+                <FormField
+                  control={form.control}
+                  name="graduationDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ التخرج"
+                          type="date"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/*  */}
+            </div>
+
+            {/*  */}
+            <div className="mb-7 mt-9 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">بيانات الهوية الشخصية</h3>
+            </div>
+            <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] -translate-y-0">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  نوع الهوية
+                </label>
+                <FormField
+                  control={form.control}
+                  name="idtype"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value ? String(field.value) : String(EmployeeData?.idtype)}
+                        defaultValue={field.value}
+                      >
+                        <FormControl className="bg-transparent mt-2 h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <SelectTrigger>
+                            <SelectValue placeholder="نوع الهوية" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {idTypes.map((type) => (
+                            <SelectItem key={type.value} value={String(type.value)}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  رقم الهوية
+                </label>
+                <FormField
+                  control={form.control}
+                  name="idNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   رقم الهوية "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ الإصدار
+                </label>
+                <FormField
+                  name="issuerDate"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ الإصدار"
+                          type="date"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/*  */}
+
+            <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  مكان الاصدار
+                </label>
+                <FormField
+                  control={form.control}
+                  name="issuerPlace"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   مكان الاصدار "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="mb-7 mt-9 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">بيانات العمل</h3>
+            </div>
+            <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] -translate-y-0">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  اجازة الموظف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="empLeaved"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={
+                            field.value ? String(field.value) : String(EmployeeData?.empLeaved)
+                          }
+                          defaultValue={field.value}
+                        >
+                          <FormControl className="bg-transparent mt-2 h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                            <SelectTrigger>
+                              <SelectValue placeholder="اجازة الموظف" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {LeaveStatus.map((status) => (
+                              <SelectItem key={status.value} value={String(status.value)}>
+                                {status.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  درجة الموظف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="empDgree"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   درجة الموظف "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  المنصب
+                </label>
+                <FormField
+                  control={form.control}
+                  name="position"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   المنصب "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
+            </div>
+
+            {/*  */}
+            <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  الراتب
+                </label>
+                <FormField
+                  control={form.control}
+                  name="salary"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          placeholder="   الراتب "
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ التوظيف الاول
+                </label>
+                <FormField
+                  control={form.control}
+                  name="firstEmployment"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ التوظيف الاول"
+                          type="date"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ التوظيف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="employmentDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ التوظيف"
+                          type="date"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
+            </div>
+
+            {/*  */}
+
+            <div className="grid h-[80px]  mb-4 grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  الوحدة الحالية
+                </label>
+                <FormField
+                  control={form.control}
+                  name="currentUnit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormInput
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        placeholder="الوحدة الحالية "
+                        {...field}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] -translate-y-0">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  تاريخ التوظيف في الوحدة
+                </label>
+                <FormField
+                  control={form.control}
+                  name="currentEmploymentDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ  التوظيف في الوحدة"
+                          type="date"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575]">
+                  المركز القانوني
+                </label>
+                <FormField
+                  control={form.control}
+                  name="legalStatus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormInput
+                        className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                        placeholder="المركز القانوني"
+                        {...field}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
+            </div>
+
+            {/*  */}
+            <div className="grid h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[50px] ">
+                <label htmlFor="" className="font-bold text-sm text-[#757575] ">
+                  حالة الموظف
+                </label>
+                <FormField
+                  control={form.control}
+                  name="employeeStatus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={
+                          field.value ? String(field.value) : String(EmployeeData?.employeeStatus)
+                        }
+                        defaultValue={field.value}
+                      >
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                          <SelectTrigger>
+                            <SelectValue placeholder="حالة الموظف" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {empStatus.map((status) => (
+                            <SelectItem key={status.value} value={String(status.value)}>
+                              {status.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className=" col-span-1 h-[50px] -translate-y-2">
+                <label htmlFor="" className="font-bold text-sm text-[#757575] ">
+                  تاريخ التفاصيل
+                </label>
+                <FormField
+                  control={form.control}
+                  name="detailsDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FormInput
+                          {...field}
+                          placeholder="تاريخ التفاصيل"
+                          type="date"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/*  */}
+            </div>
+
+            <div className="mb-4 bg-[#dedef8] rounded-t-lg">
+              <h3 className="font-bold text-[#3734a9] p-3">أرفاق مرفق</h3>
+            </div>
+
+            <div className="grid h-[150px]  grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+              <div className=" col-span-1 h-[40px] ">
+                <FormField
+                  control={form.control}
+                  name="file"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div>
+                          <p className="mb-2 text-start text-lg font-medium">أرفاق صورة القرار</p>
+                          <FileUploader
+                            setValue={form.setValue}
+                            inputId={'file'}
+                            isMultiple={false}
+                            {...field}
+                            onChange={async (files) => {
+                              try {
+                                if (!files?.[0]) return
+
+                                field.onChange(files[0])
+                              } catch (error) {
+                                JSON.stringify(error)
+                              }
+                            }}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="w-full flex justify-end gap-2 mb-4">
+              <Link to={'/personnel-affairs'}>
                 <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">
                   إلغاء
                 </Button>
@@ -885,10 +996,10 @@ console.log("EmployeeData?.currentUnit",EmployeeData?.currentUnit)
               >
                 <p className="font-bold text-base">تعديل</p>
               </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+            </div>
+          </form>
+        </Form>
+      </div>
     </>
   )
 }

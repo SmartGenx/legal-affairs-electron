@@ -76,7 +76,7 @@ class LeaveTypeServices {
         where: { name:name },
       });
       console.log("🚀 ~ LeaveTypeServices ~ createleaveType ~ existingleaveType:", existingleaveType)
-      
+
       if (existingleaveType) {
         throw new NotFoundError(`leaveType with name ${name} already exists.`);
       }
@@ -103,7 +103,7 @@ class LeaveTypeServices {
       const existingleaveType = await prisma.leaveType.findFirst({
         where: { name },
       });
-      if (existingleaveType) {
+      if (existingleaveType.id !== id) {
         throw new NotFoundError(`leaveType with name ${name} already exists.`);
       }
 
@@ -128,7 +128,7 @@ class LeaveTypeServices {
         if (!leaveType) {
           throw new NotFoundError(`leaveType with id ${id} not found.`);
         }
-    
+
       return await prisma.leaveType.update({
         where: { id },
         data: { isDeleted: true },

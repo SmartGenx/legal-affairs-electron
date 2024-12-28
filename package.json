@@ -1,9 +1,9 @@
 {
-  "name": "electron_app",
+  "name": "LegalAffairs",
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "SmartGenx",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
@@ -25,9 +25,9 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@hookform/resolvers": "^3.9.0",
-    "@prisma/client": "^5.18.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-checkbox": "^1.1.3",
     "@radix-ui/react-context-menu": "^2.2.1",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-direction": "^1.1.0",
@@ -45,31 +45,24 @@
     "@tanstack/react-query": "^5.51.23",
     "@tanstack/react-query-devtools": "^5.51.23",
     "@tanstack/react-table": "^8.20.1",
+    "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.7.3",
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
+    "bluebird": "^3.7.2",
+    "chart.js": "^4.4.6",
     "class-variance-authority": "^0.7.0",
     "cmdk": "^1.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-validator": "^7.2.0",
-    "fs": "^0.0.1-security",
+    "electron-log": "^5.2.4",
+    "electron-updater": "^6.3.9",
     "js-cookie": "^3.0.5",
-    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.427.0",
-    "multer": "^1.4.5-lts.1",
-    "passport": "^0.7.0",
-    "passport-local": "^1.0.0",
-    "path": "^0.12.7",
-    "prisma": "^5.18.0",
+    "primereact": "^10.8.5",
     "react-auth-kit": "^2.12.4",
+    "react-chartjs-2": "^5.2.0",
     "react-hook-form": "^7.52.2",
     "react-router-dom": "^6.26.0",
     "react-select": "^5.8.3",
     "react-to-print": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
-    "util": "^0.12.5",
     "xlsx": "^0.18.5",
     "zod": "^3.23.8"
   },
@@ -77,6 +70,10 @@
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
     "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -89,6 +86,8 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
     "postcss": "^8.4.41",
+    "husky": "^9.1.7",
+    "semantic-release": "^22.0.0",
     "prettier": "^3.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -98,19 +97,45 @@
     "typescript": "^5.5.2",
     "vite": "^5.3.1"
   },
+  "resolutions": {
+    "cli-table3": "^0.6.2"
+  },
+ 
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/SmartGenx/legal-affairs-electron.git"
+    }
+,
   "build": {
+    "win": {
+      "icon": "resources/Frame123.ico"
+    },
     "files": [
       "dist/**/*",
       "out/**/*",
       "main/**/*",
       "preload/**/*",
       "renderer/**/*",
-      "server/**/*"
+      "!**/node_modules/**/test/**/*",
+      "!**/node_modules/**/docs/**/*",
+      "!**/node_modules/**/examples/**/*",
+      "!**/node_modules/**/demo/**/*",
+      "!**/*.map",
+      "!**/tsconfig.*",
+      "!**/*.test.js",
+      "!**/*.spec.js"
     ],
     "extraResources": [
       {
         "from": "server",
         "to": "server",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources",
+        "to": "resources",
         "filter": [
           "**/*"
         ]

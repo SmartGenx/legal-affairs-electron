@@ -38,12 +38,12 @@ export interface Info {
   Customer: Customer
 }
 export interface Customer {
-  id:        number;
-  name:      string;
-  type?:     number;
-  createdAt: Date;
-  updatedAt: Date;
-  isDeleted: boolean;
+  id: number
+  name: string
+  type?: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
 }
 
 export interface LicenseType {
@@ -55,7 +55,7 @@ export interface LicenseType {
   isDeleted: boolean
 }
 
-export default function LicenseTable({ info, page, total }: Props) {
+export default function LicenseTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -67,16 +67,16 @@ export default function LicenseTable({ info, page, total }: Props) {
       {
         accessorKey: 'customerId',
         header: 'اسم الشركة',
-        cell:({row}) => {
-            return row.original.Customer.name
-        },
+        cell: ({ row }) => {
+          return row.original.Customer.name
+        }
       },
       {
         accessorKey: 'licenseTypeId',
         header: 'نوع الترخيص',
-        cell:({row}) => {
+        cell: ({ row }) => {
           return row.original.licenseType.name
-      },
+        }
       },
       {
         accessorKey: 'licenseYear',
@@ -102,7 +102,7 @@ export default function LicenseTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/license/view-license/${row.original.id}`}>عرض</Link>
+                <Link to={`/license/update-license/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -125,8 +125,9 @@ export default function LicenseTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/license/update-license/${original.id}`)
+        navigate(`/license/view-license/${original.id}`)
       }}
     />
   )

@@ -19,8 +19,36 @@ const formSchema = z.object({
   employeeeId: z.string(),
   leaveTypeId: z.string(),
   dayNumber: z.string(),
-  startDate: z.string(),
-  endDate: z.string(),
+  startDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
+  endDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   leaveNote: z.string()
 })
 
@@ -154,10 +182,29 @@ export default function UpdateLeaveIndex() {
   const infoArray = employData?.data || []
   const DataArray = LeaveTypeData?.data?.info || [] // Changed LeaveTypeLoading to LeaveTypeData here
 
-  console.log('DataArray', DataArray)
-  //   useEffect(() => {
-  //     fetchData()
-  //   }, [])
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
+
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+  //
   const form = useForm<AddEmployeeValue>({
     resolver: zodResolver(formSchema)
   })
@@ -210,9 +257,9 @@ export default function UpdateLeaveIndex() {
     <>
       <div className=" flex items-center text-3xl">
         <Link to={'/personnel-affairs'}>
-          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
             <ArrowRight size={20} />
-          </Button>
+          </button>
         </Link>
         {BookData?.[0] && (
           <h1 className="mr-2 text-[#3734a9] font-bold">{BookData[0].employ.name}</h1>
@@ -237,7 +284,7 @@ export default function UpdateLeaveIndex() {
             </div>
 
             <div className="grid min-h-[80px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className="col-span-1 h-[50px]">
+              <div className="col-span-1 min-h-[50px] -translate-y-2">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   اسم الموظف
                 </label>
@@ -257,7 +304,7 @@ export default function UpdateLeaveIndex() {
                         }
                         defaultValue={field.value}
                       >
-                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent h-11 mt-2 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="اسم الموظف" />
                           </SelectTrigger>
@@ -282,7 +329,7 @@ export default function UpdateLeaveIndex() {
                 />
               </div>
 
-              <div className=" col-span-1 h-[50px] ">
+              <div className=" col-span-1 h-[50px] -translate-y-2">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   نوع الإجازة
                 </label>
@@ -302,7 +349,7 @@ export default function UpdateLeaveIndex() {
                         }
                         defaultValue={field.value}
                       >
-                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="bg-transparent mt-2 h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="نوع الإجازة" />
                           </SelectTrigger>
@@ -332,7 +379,7 @@ export default function UpdateLeaveIndex() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   الايام "
                           {...field}
                         />
@@ -362,7 +409,10 @@ export default function UpdateLeaveIndex() {
                           placeholder="تاريخ بداية الإجازة"
                           type="date"
                           className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          onChange={(e) => field.onChange(e.target.value)}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -385,7 +435,10 @@ export default function UpdateLeaveIndex() {
                           placeholder="تاريخ انتهاء الإجازة"
                           type="date"
                           className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          onChange={(e) => field.onChange(e.target.value)}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -398,7 +451,7 @@ export default function UpdateLeaveIndex() {
             {/*  */}
 
             <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[40px] ">
+              <div className=" col-span-1 min-h-[40px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   ملاحظات
                 </label>
@@ -409,7 +462,7 @@ export default function UpdateLeaveIndex() {
                     <FormItem className="col-span-2">
                       <FormControl>
                         <Textarea
-                          className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                          className="bg-transparent mt-2 placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                           rows={5}
                           {...field}
                           placeholder="ملاحظات"

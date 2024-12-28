@@ -16,6 +16,7 @@ const formSchema = z.object({
 })
 interface Props {
   id: number
+  onClose: () => void // Added onClose prop
 }
 export interface leaveTypeById {
   id: number
@@ -25,7 +26,7 @@ export interface leaveTypeById {
   createdAt: Date
   updatedAt: Date
 }
-export default function LeaveTypeEdit({ id }: Props) {
+export default function LeaveTypeEdit({ id, onClose }: Props) {
   const authToken = useAuthHeader()
   const queryClient = useQueryClient()
   const { data: GovernmentOffice, isSuccess } = useQuery({
@@ -70,8 +71,9 @@ export default function LeaveTypeEdit({ id }: Props) {
         description: 'تمت التعديل بنجاح',
         variant: 'success'
       })
-
       queryClient.invalidateQueries({ queryKey: ['LeaveTypeTable'] })
+      form.reset()
+      onClose()
     },
     onError(error) {
       toast({

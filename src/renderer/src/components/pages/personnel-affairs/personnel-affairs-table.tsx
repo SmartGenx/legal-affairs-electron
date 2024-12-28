@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function PersonnelAffairsTable({ info, page, total }: Props) {
+export default function PersonnelAffairsTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<EmployInfo>[]>(
     () => [
@@ -76,7 +76,7 @@ export default function PersonnelAffairsTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/personnel-affairs/view-employee-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/personnel-affairs/update-employee/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -99,8 +99,9 @@ export default function PersonnelAffairsTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/personnel-affairs/update-employee/${original.id}`)
+        navigate(`/personnel-affairs/view-employee-info/${original.id}`)
       }}
     />
   )

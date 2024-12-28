@@ -39,7 +39,21 @@ const formSchema = z.object({
   description: z.string(),
   decisionSource: z.string(),
   nameSource: z.string(),
-  decisionDate: z.string(),
+  decisionDate: z.string().refine(
+    (date) => {
+      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
+      const [year, month, day] = date.split('-').map(Number)
+      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
+
+      return inputDate <= today // Return true if inputDate is today or before
+    },
+    {
+      message: 'Date must be today or before.'
+    }
+  ),
   file: z.instanceof(File).optional()
 })
 
@@ -109,7 +123,29 @@ export default function UpdateDecisions() {
   const form = useForm<DecisionsFormValue>({
     resolver: zodResolver(formSchema)
   })
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
 
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
+
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
+    }
+  }
+  //
   const { mutate } = useMutation({
     mutationKey: ['UpdateDecisions'],
     mutationFn: (datas: DecisionsFormValue) => {
@@ -160,9 +196,9 @@ export default function UpdateDecisions() {
     <>
       <div className="flex items-center text-3xl">
         <Link to={'/decisions'}>
-          <Button className="w-16 h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
+          <button className="w-12 flex justify-center items-center h-12 bg-transparent text-[#3734a9] hover:bg-[#3734a9] hover:text-white rounded-2xl border-2 border-[#3734a9] hover:border-2 hover:border-[#fff]">
             <ArrowRight size={20} />
-          </Button>
+          </button>
         </Link>
         <h1 className="mr-2 text-[#3734a9] font-bold">{DecisionData?.refrance}</h1>
       </div>
@@ -198,7 +234,7 @@ export default function UpdateDecisions() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 text-[#595959] placeholder:text-[#595959] px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   رقم القرار "
                           {...field}
                         />
@@ -223,8 +259,11 @@ export default function UpdateDecisions() {
                           {...field}
                           placeholder="تاريخة"
                           type="date"
-                          className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          onChange={(e) => field.onChange(e.target.value)}
+                          className="h-11 px-1 text-[#595959] placeholder:text-[#595959] placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            handleDateChange(e) // Validation is triggered whenever the value changes
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -232,7 +271,7 @@ export default function UpdateDecisions() {
                   )}
                 />
               </div>
-              <div className="col-span-1 translate-y-2">
+              <div className="col-span-1">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   مصدر التوجيه
                 </label>
@@ -250,7 +289,7 @@ export default function UpdateDecisions() {
                         }
                         defaultValue={String(field.value)}
                       >
-                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
+                        <FormControl className="mt-2 text-[#595959] placeholder:text-[#595959] bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
                           <SelectTrigger>
                             <SelectValue placeholder="مصدر التوجيه" />
                           </SelectTrigger>
@@ -281,7 +320,7 @@ export default function UpdateDecisions() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   اسم القرار "
                           {...field}
                         />
@@ -303,7 +342,7 @@ export default function UpdateDecisions() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   عنوان القرار "
                           {...field}
                         />
@@ -317,7 +356,7 @@ export default function UpdateDecisions() {
 
             {/*  */}
             <div className="grid min-h-[150px] mb-4 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-              <div className=" col-span-1 h-[40px] ">
+              <div className=" col-span-1 min-h-[40px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
                   نص القرار
                 </label>
@@ -328,7 +367,7 @@ export default function UpdateDecisions() {
                     <FormItem className="col-span-2">
                       <FormControl>
                         <Textarea
-                          className="bg-transparent placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                          className="bg-transparent text-[#595959] placeholder:text-[#595959] mt-2 placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                           rows={5}
                           {...field}
                           placeholder="نص القرار"
@@ -354,7 +393,7 @@ export default function UpdateDecisions() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   إسم صاحب القرار "
                           {...field}
                         />
@@ -377,7 +416,7 @@ export default function UpdateDecisions() {
                     <FormItem>
                       <FormControl>
                         <FormInput
-                          className="h-11 p-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
+                          className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                           placeholder="   جهة القرار   "
                           {...field}
                         />

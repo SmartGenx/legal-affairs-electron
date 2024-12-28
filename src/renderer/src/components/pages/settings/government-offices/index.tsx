@@ -15,7 +15,7 @@ export interface Potions {
 }
 
 const formSchema = z.object({
-  name: z.string()
+  name: z.string().min(1, 'لا يمكن أن يكون الاسم فارغًا')
 })
 
 export interface PotionsResp {
@@ -125,7 +125,12 @@ export default function GovernmentOfficesIndex() {
           </Button>
         </form>
       </Form>
-      <GovernmentOfficesTable info={governmentOfficeTable?.data || []} pageSize="5" page="2" total={5} />
+      <GovernmentOfficesTable
+        info={governmentOfficeTable?.data || []}
+        pageSize="5"
+        page="2"
+        total={5}
+      />
     </div>
   )
 }

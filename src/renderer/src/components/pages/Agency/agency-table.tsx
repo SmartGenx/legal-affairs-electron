@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function AgencyTable({ info, page, total }: Props) {
+export default function AgencyTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<AgencyInfo>[]>(
     () => [
@@ -37,11 +37,11 @@ export default function AgencyTable({ info, page, total }: Props) {
       },
       {
         accessorKey: 'legalName',
-        header: 'الاسم القانوني'
+        header: 'اسم القانوني'
       },
       {
         accessorKey: 'providedDocument',
-        header: 'المرفق الذي يمثله'
+        header: 'رقم الوثيقة المقدمه'
       },
       {
         accessorKey: 'governmentOfficeId',
@@ -68,7 +68,7 @@ export default function AgencyTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/Agency/view-agency-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/Agency/update-agency/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -91,8 +91,9 @@ export default function AgencyTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/Agency/update-agency/${original.id}`)
+        navigate(`/Agency/view-agency-info/${original.id}`)
       }}
     />
   )

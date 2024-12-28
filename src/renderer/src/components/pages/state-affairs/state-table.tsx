@@ -22,7 +22,7 @@ type Props = {
   total: string
 }
 
-export default function StateTable({ info, page, total }: Props) {
+export default function StateTable({ info, page, total,pageSize }: Props) {
   const navigate = useNavigate()
 
   const columns = React.useMemo<ColumnDef<InfoIssue>[]>(
@@ -132,7 +132,7 @@ export default function StateTable({ info, page, total }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="h-17 -mt-[70px] ml-7 min-w-[84.51px] p-0">
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Link to={`/state-affairs/view-info/${row.original.id}`}>عرض</Link>
+                <Link to={`/state-affairs/info/${row.original.id}`}>تعديل</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <DeleteDialog
@@ -155,8 +155,9 @@ export default function StateTable({ info, page, total }: Props) {
       data={info}
       page={page.toString()}
       total={Number(total)}
+      pageSize={Number(pageSize)}
       onRowClick={(_, { original }) => {
-        navigate(`/state-affairs/info/${original.id}`)
+        navigate(`/state-affairs/view-info/${original.id}`)
       }}
     />
   )
