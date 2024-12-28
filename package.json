@@ -100,12 +100,10 @@
   "resolutions": {
     "cli-table3": "^0.6.2"
   },
- 
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/SmartGenx/legal-affairs-electron.git"
-    }
-,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SmartGenx/legal-affairs-electron.git"
+  },
   "build": {
     "win": {
       "icon": "resources/Frame123.ico"
