@@ -7,12 +7,12 @@ const RootLayout = () => {
   return (
     <>
       <div className="flex h-screen overflow-hidden bg-muted">
-        <div className="hidden md:block">
+        <div className="hidden md:block ">
           <Sidebar />
         </div>
         <div className="flex flex-auto flex-col overflow-y-auto">
           <Header />
-          <main className="p-6 bg-[#f3f4f8] ">
+          <main className="p-6 bg-[#ffff] ">
             <Outlet />
             <Toaster />
           </main>

@@ -52,10 +52,18 @@ class LicenseService {
     }
   }
 
-  async getLicenseById(id) {
+  async getLicenseById(id,LicenseFilter) {
     try {
+      let { include } = LicenseFilter;
+      delete LicenseFilter.include
+      
+      if (include) {
+        include = convertTopLevelStringBooleans(include);
+      } else {
+        include = {};
+      }
       const license = await prisma.license.findUnique({
-        where: { id, isDeleted: false },
+        where: { id, isDeleted: false },include
       });
       if (!license) {
         throw new NotFoundError(`License with id ${id} not found.`);

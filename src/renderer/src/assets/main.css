@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'NeoSansArabic';
-  src: url('./font/alfont_com_NeoSansArabic.ttf');
+  font-family: 'Cairo';
+  src: url('./font/Cairo-Medium.ttf');
 }
 
 * {
-  font-family: 'NeoSansArabic';
+  font-family: 'Cairo';
 }
 @layer base {
   :root {
@@ -74,4 +74,35 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+details > summary {
+  list-style: none;
+}
+
+details > summary::marker, /* Latest Chrome, Edge, Firefox */ 
+details > summary::-webkit-details-marker /* Safari */ {
+  display: none;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  opacity: 0;
+  /* border-radius: 5px; */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  opacity: 0;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0;
 }

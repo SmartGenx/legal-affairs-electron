@@ -20,6 +20,10 @@ const LeaveAllocationRoutes = require('./LeaveAllocationRouters.js')
 const CustomerRoutes = require('./CustomerRoutes.js')
 const BookRoutes = require('./BookRouters.js')
 const BookOrderRoutes = require('./BookOrderRoutes.js')
+const TribunalRoutes = require('./TribunalRouters.js')
+const StateIssueAgencyRoutes = require('./StateIssueAgencyRouters.js')
+const AgencyRoutes = require('./AgencyRouters.js')
+const StatisticsRoutes = require('./StatisticsRoutes.js')
 
 const rootRouter = Router()
 
@@ -43,5 +47,9 @@ rootRouter.use('/leave-allocation', LeaveAllocationRoutes)
 rootRouter.use('/customer', CustomerRoutes)
 rootRouter.use('/book', BookRoutes)
 rootRouter.use('/book-order', BookOrderRoutes)
+rootRouter.use('/tribunal', TribunalRoutes)
+rootRouter.use('/state-issue-agency', StateIssueAgencyRoutes)
+rootRouter.use('/agency', AgencyRoutes)
+rootRouter.use('/statistics', StatisticsRoutes)
 
 module.exports = rootRouter

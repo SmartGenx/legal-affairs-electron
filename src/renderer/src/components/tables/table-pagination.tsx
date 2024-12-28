@@ -1,8 +1,8 @@
-import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import * as React from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '../ui/button'
+import { Pagination, PaginationContent, PaginationItem } from '../ui/pagination'
 
 interface TablePaginationProps {
   total: number
@@ -11,9 +11,10 @@ interface TablePaginationProps {
 }
 
 const TablePagination: React.FC<TablePaginationProps> = ({ total, page, pageSize }) => {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
-  const router = useRouter()
+  const [searchParams] = useSearchParams()
+  const location = useLocation()
+  const pathname = location.pathname
+  const navigate = useNavigate()
 
   const pages: number[] = []
   for (let index = 0; index < Math.ceil(total / pageSize); index++) {
@@ -24,7 +25,7 @@ const TablePagination: React.FC<TablePaginationProps> = ({ total, page, pageSize
     if (newPage === page) return
     const params = new URLSearchParams(searchParams.toString())
     params.set('page', newPage.toString())
-    router.replace(`${pathname}?${params.toString()}`)
+    navigate(`${pathname}?${params.toString()}`, { replace: true })
   }
 
   const handlePreviousPage = () => {
@@ -40,7 +41,7 @@ const TablePagination: React.FC<TablePaginationProps> = ({ total, page, pageSize
   }
 
   const getPageItems = () => {
-    const items: any[] = []
+    const items: (number | string)[] = []
     if (page > 2) items.push(1, '...')
     if (page > 1) items.push(page - 1)
     items.push(page)
@@ -67,7 +68,7 @@ const TablePagination: React.FC<TablePaginationProps> = ({ total, page, pageSize
           typeof item === 'number' ? (
             <PaginationItem key={index}>
               <Button
-                className={`dark:text-white hover:text-primary ${item !== page && 'bg-[#EEEFEF] text-[#434749] '}`}
+                className={`dark:text-white bg-[#eef0f8] font-bold hover:bg-[#8c94b4] hover:text-[#3734a9] text-[#3734a9] ${item !== page && 'bg-[#EEEFEF] text-[#3734a9] '}`}
                 variant={'default'}
                 size="sm"
                 onClick={() => updatePage(item)}

@@ -5,3 +5,6 @@ out
 *.log*
 build/*
 build
+# local env files
+.env*.local
+.env
