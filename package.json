@@ -1,9 +1,14 @@
 {
   "name": "LegalAffairs",
   "version": "1.0.0",
+  "private": true,
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
-  "author": "SmartGenx",
+ "author": {
+    "name": "SmartGenx",
+    "email": "info@smartgenx.net",
+    "url": "https://smartgenx.net"
+  },
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
