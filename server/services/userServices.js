@@ -196,11 +196,7 @@ class UserService {
       })
       console.log('🚀 ~ UserService ~ updateUser ~ updateUser:', updateUser)
 
-      if (roleId.length > 0) {
-        console.log(
-          '222222222222222222222222222222222222222222222222222222222222222222222222222222222222'
-        )
-
+      if (Array.isArray(roleId)) {
         await prisma.userRole.deleteMany()
 
         roleId.map(async (role) => {
@@ -210,6 +206,14 @@ class UserService {
               userId: +updateUser.id
             }
           })
+        })
+      } else {
+        await prisma.userRole.deleteMany({})
+        await prisma.userRole.create({
+          data: {
+            roleId: +roleId,
+            userId: +updateUser.id
+          }
         })
       }
 
