@@ -10,7 +10,7 @@ export default function Header() {
           <ArrowRight size={20} />
         </button>
       </Link>
-      <h1 className="mr-2 text-[#3734a9] font-bold">إضافة شكوى</h1>
+      <h1 className="mr-2 text-[#3734a9] font-bold">إضافة رأي</h1>
     </div>
   )
 }

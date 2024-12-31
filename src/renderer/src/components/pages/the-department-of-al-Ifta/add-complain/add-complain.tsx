@@ -159,7 +159,7 @@ export default function AddComplain() {
 
             <div className=" col-span-1 h-auto">
               <label htmlFor="" className="font-bold text-sm text-[#595959]">
-                مقدم الشكوى
+                مقدم رأي
               </label>
               <FormField
                 control={form.control}
@@ -169,7 +169,7 @@ export default function AddComplain() {
                     <FormControl>
                       <FormInput
                         className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   مقدم الشكوى "
+                        placeholder="   مقدم رأي "
                         {...field}
                       />
                     </FormControl>
@@ -211,7 +211,7 @@ export default function AddComplain() {
 
             <div className=" col-span-1 h-[50px] ">
               <label htmlFor="" className="font-bold text-sm text-[#595959]">
-                موضوع الشكوى
+                موضوع رأي
               </label>
               <FormField
                 control={form.control}
@@ -221,7 +221,7 @@ export default function AddComplain() {
                     <FormControl>
                       <FormInput
                         className="h-11 p-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   موضوع الشكوى "
+                        placeholder="   موضوع رأي "
                         {...field}
                       />
                     </FormControl>
@@ -238,7 +238,7 @@ export default function AddComplain() {
 
             <div className=" col-span-1 h-auto">
               <label htmlFor="" className="font-bold text-sm text-[#595959]">
-                رقم الشكوى
+                رقم رأي
               </label>
               <FormField
                 control={form.control}
@@ -248,7 +248,7 @@ export default function AddComplain() {
                     <FormControl>
                       <FormInput
                         className="h-11 px-3 text-[#595959] placeholder:text-[#595959] placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   رقم الشكوى "
+                        placeholder="   رقم رأي "
                         {...field}
                       />
                     </FormControl>
@@ -263,7 +263,7 @@ export default function AddComplain() {
           <div className="grid min-h-[150px] mb-5 grid-cols-1  items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 min-h-[40px] ">
               <label htmlFor="" className="font-bold text-sm text-[#595959]">
-                تفاصيل الشكوى
+                تفاصيل رأي
               </label>
               <FormField
                 control={form.control}
@@ -275,7 +275,7 @@ export default function AddComplain() {
                         className="bg-transparent text-[#595959] placeholder:text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                         rows={5}
                         {...field}
-                        placeholder="تفاصيل الشكوى"
+                        placeholder="تفاصيل رأي"
                       ></Textarea>
                     </FormControl>
                     <FormMessage />
@@ -289,33 +289,6 @@ export default function AddComplain() {
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">رأي المكتب</h3>
           </div>
-
-          <div className="grid min-h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
-            <div className=" col-span-1 min-h-[40px] ">
-              <label htmlFor="" className="font-bold text-sm text-[#595959]">
-                نص الرأي
-              </label>
-              <FormField
-                control={form.control}
-                name="officeOpinian"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormControl>
-                      <Textarea
-                        className="bg-transparent mt-2 text-[#595959] placeholder:text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
-                        rows={5}
-                        {...field}
-                        placeholder="نص الرأي"
-                      ></Textarea>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            {/*  */}
-          </div>
-
           <div className="grid min-h-[100px] mb-4  grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
             <div className=" col-span-1 min-h-[90px] ">
               <label htmlFor="" className="font-bold text-sm text-[#595959]">
@@ -337,6 +310,31 @@ export default function AddComplain() {
                           handleDateChange(e) // Validation is triggered whenever the value changes
                         }}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {/*  */}
+          </div>
+          <div className="grid min-h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
+            <div className=" col-span-1 min-h-[40px] ">
+              <label htmlFor="" className="font-bold text-sm text-[#595959]">
+                نص الرأي
+              </label>
+              <FormField
+                control={form.control}
+                name="officeOpinian"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormControl>
+                      <Textarea
+                        className="bg-transparent mt-2 text-[#595959] placeholder:text-[#595959] placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
+                        rows={5}
+                        {...field}
+                        placeholder="نص الرأي"
+                      ></Textarea>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

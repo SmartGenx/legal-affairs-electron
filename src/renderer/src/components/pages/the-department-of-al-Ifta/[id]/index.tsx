@@ -217,7 +217,7 @@ export default function AlLftaIndex() {
 
               <div className=" col-span-1 h-auto">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                  مقدم الشكوى
+                  مقدم رأي
                 </label>
                 <FormField
                   control={form.control}
@@ -227,7 +227,7 @@ export default function AlLftaIndex() {
                       <FormControl>
                         <FormInput
                           className="h-11 text-[#595959] placeholder:text-[#595959] px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          placeholder="   مقدم الشكوى "
+                          placeholder="   مقدم رأي "
                           {...field}
                         />
                       </FormControl>
@@ -277,7 +277,7 @@ export default function AlLftaIndex() {
 
               <div className=" col-span-1 h-[50px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                  موضوع الشكوى
+                  موضوع رأي
                 </label>
                 <FormField
                   control={form.control}
@@ -287,7 +287,7 @@ export default function AlLftaIndex() {
                       <FormControl>
                         <FormInput
                           className="h-11 p-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          placeholder="   موضوع الشكوى "
+                          placeholder="   موضوع رأي "
                           {...field}
                         />
                       </FormControl>
@@ -304,7 +304,7 @@ export default function AlLftaIndex() {
 
               <div className=" col-span-1 h-auto">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                  رقم الشكوى
+                  رقم رأي
                 </label>
                 <FormField
                   control={form.control}
@@ -314,7 +314,7 @@ export default function AlLftaIndex() {
                       <FormControl>
                         <FormInput
                           className="h-11 text-[#595959] placeholder:text-[#595959] px-3 placeholder:px-0 placeholder:text-base   rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          placeholder="   رقم الشكوى "
+                          placeholder="   رقم رأي "
                           {...field}
                         />
                       </FormControl>
@@ -329,7 +329,7 @@ export default function AlLftaIndex() {
             <div className="grid min-h-[150px] mb-5 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right">
               <div className=" col-span-1 min-h-[40px] ">
                 <label htmlFor="" className="font-bold text-sm text-[#757575]">
-                  رقم الشكوى
+                  رقم رأي
                 </label>
                 <FormField
                   control={form.control}
@@ -341,7 +341,7 @@ export default function AlLftaIndex() {
                           className="bg-transparent text-[#595959] placeholder:text-[#595959] mt-2 placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB]"
                           rows={5}
                           {...field}
-                          placeholder="تفاصيل الشكوى"
+                          placeholder="تفاصيل رأي"
                         ></Textarea>
                       </FormControl>
                       <FormMessage />
