@@ -58,28 +58,28 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
           return new Date(date).toISOString().split('T')[0]
         }
       },
-      {
-        accessorKey: 'officeOpinian',
-        header: 'نص الرأي والإفتاء',
-        cell: ({ row }) => {
-          return (
-            <p
-              className="whitespace-nowrap overflow-hidden text-ellipsis"
-              style={{ maxWidth: '20ch' }}
-            >
-              {row.original.officeOpinian}
-            </p>
-          )
-        }
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'تاريخ الإضافة',
-        cell: ({ row }) => {
-          const date = row.original.createdAt
-          return new Date(date).toISOString().split('T')[0]
-        }
-      },
+      // {
+      //   accessorKey: 'officeOpinian',
+      //   header: 'نص الرأي والإفتاء',
+      //   cell: ({ row }) => {
+      //     return (
+      //       <p
+      //         className="whitespace-nowrap overflow-hidden text-ellipsis"
+      //         style={{ maxWidth: '20ch' }}
+      //       >
+      //         {row.original.officeOpinian}
+      //       </p>
+      //     )
+      //   }
+      // },
+      // {
+      //   accessorKey: 'createdAt',
+      //   header: 'تاريخ الإضافة',
+      //   cell: ({ row }) => {
+      //     const date = row.original.createdAt
+      //     return new Date(date).toISOString().split('T')[0]
+      //   }
+      // },
 
       {
         id: 'actions',
