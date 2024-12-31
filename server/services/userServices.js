@@ -181,6 +181,8 @@ class UserService {
       if (existingUser.isDeleted) {
         throw new NotFoundError(`User was deleted.`)
       }
+  
+
 
       let hashPass = ''
       if (userData.password) {
@@ -191,6 +193,7 @@ class UserService {
         where: { id },
         data: {
           ...userData,
+          email: existingUser.email,
           image: filePath.length > 0 ? filePath : existingUser.profileImage,
           password: userData.password ? hashPass : existingUser.password
         },
@@ -210,7 +213,7 @@ class UserService {
           '222222222222222222222222222222222222222222222222222222222222222222222222222222222222'
         )
         const someRole = await prisma.userRole.findMany({ where: { userId: +updateUser.id } })
-        console.log("🚀 ~ UserService ~ updateUser ~ someRole:", someRole)
+        console.log('🚀 ~ UserService ~ updateUser ~ someRole:', someRole)
         if (someRole.length == 1) {
           await prisma.userRole.delete({
             where: {
@@ -240,22 +243,21 @@ class UserService {
         }
       } else {
         const someRole = await prisma.userRole.findMany({ where: { userId: updateUser.id } })
-        console.log("🚀 ~ UserService ~ updateUser ~ someRole:", someRole)
-        if (someRole.length == 1) {
-          // await prisma.userRole.delete({
-          //   where: {
-          //     id: +someRole.id
-          //   }
-          // })
-          // roleId.map(async (role) => {
-          //   await prisma.userRole.create({
-          //     data: {
-          //       roleId: +role,
-          //       userId: +updateUser.id
-          //     }
-          //   })
-          // })
-          console.log(someRole);
+        console.log('🚀 ~ UserService ~ updateUser ~ someRole:', someRole)
+        if (someRole.length === 1) {
+          await prisma.userRole.delete({
+            where: {
+              id: +someRole[0].id
+            }
+          })
+          roleId.map(async (role) => {
+            await prisma.userRole.create({
+              data: {
+                roleId: +role,
+                userId: +updateUser.id
+              }
+            })
+          })
 
         } else {
           someRole.map(async (role) => {
@@ -265,7 +267,7 @@ class UserService {
               }
             })
           })
-          
+
           roleId.map(async (role) => {
             await prisma.userRole.create({
               data: {
