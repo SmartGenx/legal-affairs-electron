@@ -37,7 +37,7 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
       },
       {
         accessorKey: 'name',
-        header: 'مقدم الشكوى'
+        header: 'مقدم رأي'
       },
       {
         accessorKey: 'governmentOfficeId',
@@ -48,11 +48,11 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
       },
       {
         accessorKey: 'title',
-        header: 'موضوع الشكوى'
+        header: 'موضوع رأي'
       },
       {
         accessorKey: 'date',
-        header: 'تاريخ رأي المكتب',
+        header: 'تاريخ الرأي والإفتاء',
         cell: ({ row }) => {
           const date = row.original.date
           return new Date(date).toISOString().split('T')[0]
@@ -60,7 +60,7 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
       },
       {
         accessorKey: 'officeOpinian',
-        header: 'نص رأي المكتب',
+        header: 'نص الرأي والإفتاء',
         cell: ({ row }) => {
           return (
             <p

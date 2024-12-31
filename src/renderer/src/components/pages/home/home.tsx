@@ -14,7 +14,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuthHeader } from 'react-auth-kit'
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
-
+const colorMap = {
+  جنائية: '#4C02BE',
+  إدارية: '#8400AA',
+  مدنية: '#B63479',
+  تجارية: '#EF8357'
+}
 export interface DashboardResp {
   invitationType: { [key: string]: number }[]
   department: { [key: string]: number }
@@ -45,29 +50,23 @@ const Home = () => {
 
   console.log('data', data?.data)
 
+  // 2. Extract labels and data from invitationType
+  const invitationType = data?.data?.invitationType || []
+  const labelsDon = invitationType.map((item) => Object.keys(item)[0])
+  const chartDataDon = invitationType.map((item) => Object.values(item)[0])
+
+  // 3. Assign colors based on labels
+  const backgroundColors = labelsDon.map((label) => colorMap[label] || '#CCCCCC') // Fallback color if label not found
+  const hoverBackgroundColors = labelsDon.map((label) => colorMap[label] || '#CCCCCC')
+
   // Data for Doughnut Chart
-  const doughnutDatas = {
-    labels: ['جنائية', 'إدارية', 'مدنية', 'تجارية'],
-    datasets: [
-      {
-        data: [25, 30, 20, 25],
-        backgroundColor: ['#4C02BE', '#8400AA', '#B63479', '#EF8357'],
-        hoverBackgroundColor: ['#4C02BE', '#8400AA', '#B63479', '#EF8357']
-      }
-    ]
-  }
-
-  const invitationType = data?.data?.invitationType
-  const labelsDon = invitationType ? invitationType.map((item) => Object.keys(item)[0]) : []
-  const chartDataDon = invitationType ? invitationType.map((item) => Object.values(item)[0]) : []
-
   const doughnutData = {
-    labelsDon,
+    labels: labelsDon,
     datasets: [
       {
         data: chartDataDon,
-        backgroundColor: ['#4C02BE', '#8400AA', '#B63479', '#EF8357'],
-        hoverBackgroundColor: ['#4C02BE', '#8400AA', '#B63479', '#EF8357']
+        backgroundColor: backgroundColors,
+        hoverBackgroundColor: hoverBackgroundColors
       }
     ]
   }
@@ -115,7 +114,7 @@ const Home = () => {
           {/* Legend Container */}
           <div className="w-[100%] flex justify-start pr-4 absolute -left-12">
             <ul className="text-right">
-              {doughnutDatas.labels.map((label, index) => (
+              {doughnutData.labels.map((label, index) => (
                 <li key={index} className="flex items-center pt-4">
                   <span
                     className="w-3 h-3 rounded-full ml-2"

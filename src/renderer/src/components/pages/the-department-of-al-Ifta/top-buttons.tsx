@@ -20,43 +20,42 @@ export interface propDetails {
 }
 export default function TopButtons({ data }: propDetails) {
   const [dataPrint, setDataPrint] = useState<ComplaintInfo[] | any[]>([])
-  const componentRef = useRef<HTMLDivElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null)
 
-const handlePrint = useReactToPrint({
-  contentRef: componentRef,
-});
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef
+  })
 
-useEffect(() => {
-  if (data) {
-    const dataToExport = data?.map((item) => {
+  useEffect(() => {
+    if (data) {
+      const dataToExport = data?.map((item) => {
+        return {
+          id: item.id,
+          'مقدم الشكوى': item.name,
+          'مصدر التوجية': item.governmentOffice.name,
+          'موضوع الشكوى': item.title,
+          'تاريخ رأي المكتب': new Date(item.date).toISOString().split('T')[0],
+          'نص رأي المكتب': item.officeOpinian,
+          'تاريخ الإضافة': new Date(item.createdAt).toISOString().split('T')[0]
+        }
+      })
 
-      return {
-        "id": item.id,
-        "مقدم الشكوى": item.name,
-        "مصدر التوجية": item.governmentOffice.name,
-        'موضوع الشكوى': item.title,
-        'تاريخ رأي المكتب': new Date(item.date).toISOString().split('T')[0],
-        "نص رأي المكتب":item.officeOpinian,
-        'تاريخ الإضافة': new Date(item.createdAt).toISOString().split('T')[0],
-      }
-    })
+      setDataPrint(dataToExport)
+    }
+  }, [data])
+  const ExportCvs = () => {
+    const workbook = XLSX.utils.book_new()
+    const worksheet = XLSX.utils.json_to_sheet(dataPrint)
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
 
-    setDataPrint(dataToExport)
+    const fileName = 'جدول الشكاوى.xlsx'
+    XLSX.writeFile(workbook, fileName)
   }
-}, [data])
-const ExportCvs = () => {
-  const workbook = XLSX.utils.book_new()
-  const worksheet = XLSX.utils.json_to_sheet(dataPrint)
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
-
-  const fileName = 'جدول الشكاوى.xlsx'
-  XLSX.writeFile(workbook, fileName)
-}
   return (
     <div className="flex justify-between">
-      <div className="text-3xl text-[#3734a9]">جدول الشكاوى</div>
+      <div className="text-3xl text-[#3734a9]">الآراء والفتوى</div>
       <div className="sm:flex flex-col-reverse lg:block md:block">
-      <DropdownMenu>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="text-sm h-11  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
               <h1 className="text-[13px] font-black">تصدير الكشف</h1>
@@ -66,22 +65,26 @@ const ExportCvs = () => {
           <DropdownMenuContent className="min-w-[180px]">
             <DropdownMenuGroup>
               <DropdownMenuItem className=" flex gap-2">
-                <button className='w-full text-start' onClick={() => handlePrint()}>طباعة</button>
+                <button className="w-full text-start" onClick={() => handlePrint()}>
+                  طباعة
+                </button>
               </DropdownMenuItem>
               <div className="hidden">
                 <TheDepartmentOfAlIftaPdf ref={componentRef} data={data || []} />
               </div>
               <DropdownMenuItem className=" flex gap-2">
                 {/* <AccountBalanceIcon /> */}
-                <button className='w-full text-start' onClick={ExportCvs}>ملف إكسل</button>
+                <button className="w-full text-start" onClick={ExportCvs}>
+                  ملف إكسل
+                </button>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
         <Link to={'/the-department-of-al-lfta/add-complaint'}>
-          <Button className="text-sm h-11  bg-[#3734a9] mr-2 border-2 border-[#3734a9] text-[#fff] hover:bg-[#fff] hover:text-[#3734a9] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
-            <h1 className="text-[13px] font-black">إضافة شكوى</h1>
-            <Plus className="mr-2" size={28} />
+          <Button className="text-sm h-11  bg-[#3734a9] relative mr-2 border-2 border-[#3734a9] text-[#fff] hover:bg-[#fff] hover:text-[#3734a9] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
+            <h1 className="text-[13px] font-black ml-5">إضافة رأي</h1>
+            <Plus className="ml-2 absolute left-2" size={28} />
           </Button>
         </Link>
       </div>

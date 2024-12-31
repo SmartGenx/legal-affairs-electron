@@ -20,41 +20,40 @@ export interface propDetails {
 }
 export default function TopButtons({ data }: propDetails) {
   const [dataPrint, setDataPrint] = useState<DecisionInfo[] | any[]>([])
-  const componentRef = useRef<HTMLDivElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null)
 
-const handlePrint = useReactToPrint({
-  contentRef: componentRef,
-});
-useEffect(() => {
-  if (data) {
-    const dataToExport = data?.map((item) => {
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef
+  })
+  useEffect(() => {
+    if (data) {
+      const dataToExport = data?.map((item) => {
+        return {
+          id: item.id,
+          'رقم القرار': item.refrance,
+          'تاريخ القرار': new Date(item.decisionDate).toISOString().split('T')[0],
+          'جهة القرار': item.governmentOffice.name,
+          'اسم صاحب القرار': item.nameSource,
+          'تاريخ الإضافة': new Date(item.createdAt).toISOString().split('T')[0]
+        }
+      })
 
-      return {
-        "id": item.id,
-        "رقم القرار": item.refrance,
-        "تاريخ القرار": new Date(item.decisionDate).toISOString().split('T')[0],
-        'جهة القرار': item.governmentOffice.name,
-        'اسم صاحب القرار': item.nameSource,
-        'تاريخ الإضافة': new Date(item.createdAt).toISOString().split('T')[0],
-      }
-    })
+      setDataPrint(dataToExport)
+    }
+  }, [data])
+  const ExportCvs = () => {
+    const workbook = XLSX.utils.book_new()
+    const worksheet = XLSX.utils.json_to_sheet(dataPrint)
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
 
-    setDataPrint(dataToExport)
+    const fileName = 'جدول القرارات.xlsx'
+    XLSX.writeFile(workbook, fileName)
   }
-}, [data])
-const ExportCvs = () => {
-  const workbook = XLSX.utils.book_new()
-  const worksheet = XLSX.utils.json_to_sheet(dataPrint)
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
-
-  const fileName = 'جدول القرارات.xlsx'
-  XLSX.writeFile(workbook, fileName)
-}
   return (
     <div className="flex justify-between">
       <div className="text-3xl text-[#3734a9]">جدول القرارات</div>
       <div className="sm:flex flex-col-reverse lg:block md:block ">
-      <DropdownMenu>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="text-sm h-11  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] rounded-[12px] sm:w-28 sm:text-[10px] lg:w-40 lg:text-sm">
               <h1 className="text-[13px] font-black">تصدير الكشف</h1>
@@ -64,14 +63,18 @@ const ExportCvs = () => {
           <DropdownMenuContent className="min-w-[180px]">
             <DropdownMenuGroup>
               <DropdownMenuItem className=" flex gap-2">
-                <button className='w-full text-start' onClick={() => handlePrint()}>طباعة</button>
+                <button className="w-full text-start" onClick={() => handlePrint()}>
+                  طباعة
+                </button>
               </DropdownMenuItem>
               <div className="hidden">
                 <DecisionsPdf ref={componentRef} data={data || []} />
               </div>
               <DropdownMenuItem className=" flex gap-2">
                 {/* <AccountBalanceIcon /> */}
-                <button className='w-full text-start' onClick={ExportCvs}>ملف إكسل</button>
+                <button className="w-full text-start" onClick={ExportCvs}>
+                  ملف إكسل
+                </button>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
