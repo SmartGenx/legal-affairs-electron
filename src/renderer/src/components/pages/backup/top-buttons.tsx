@@ -1,16 +1,17 @@
+import FolderDownload from '@renderer/components/icons/folder-download'
 import { Button } from '@renderer/components/ui/button'
 import { getApi } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
-import { Search } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { useState } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import AsyncSelect from 'react-select/async'
 
 interface data {
-  name: string
+  legalName: string
 }
-const DepartmentOfAlLftaSearch = () => {
+const BackupSearch = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
   const [searchParams] = useSearchParams()
@@ -19,9 +20,9 @@ const DepartmentOfAlLftaSearch = () => {
   const pathname = location.pathname
   const selectedVal = searchParams.get('query')
   const { data: issuesSearch } = useQuery({
-    queryKey: ['Complaint'],
+    queryKey: ['Agency'],
     queryFn: () =>
-      getApi<data[]>('/complaint', {
+      getApi<data[]>('/agency', {
         headers: {
           Authorization: authToken()
         }
@@ -29,9 +30,9 @@ const DepartmentOfAlLftaSearch = () => {
   })
   const loadOptions = async (value: string) => {
     if (!value) return []
-    const data = await getApi<data[]>('/complaint', {
+    const data = await getApi<data[]>('/agency', {
       params: {
-        'name[contains]': value
+        'legalName[contains]': value
       },
       headers: {
         Authorization: authToken()
@@ -43,10 +44,10 @@ const DepartmentOfAlLftaSearch = () => {
     DropdownIndicator: () => null,
     IndicatorSeparator: () => null
   }
-  const onChange = (val: { name: string } | null) => {
+  const onChange = (val: { legalName: string } | null) => {
     const params = new URLSearchParams(searchParams.toString())
-    if (val?.name) {
-      params.set('query', val.name)
+    if (val?.legalName) {
+      params.set('query', val.legalName)
     } else {
       params.delete('query')
     }
@@ -84,17 +85,17 @@ const DepartmentOfAlLftaSearch = () => {
         <div className="flex w-full items-center justify-center rounded-xl border-[3px] border-[#E5E7EB] ">
           <Search className="mr-2 text-gray-500" />
           <AsyncSelect<data>
-            placeholder="ابحث برأي.."
+            placeholder="البحث عن.."
             loadingMessage={() => 'جارٍ البحث ...'}
             noOptionsMessage={() => 'لا توجد نتائج'}
             cacheOptions
             instanceId="products-search"
-            value={selectedVal?.length ? { name: selectedVal } : undefined}
+            value={selectedVal?.length ? { legalName: selectedVal } : undefined}
             defaultOptions={issuesSearch?.data}
             loadOptions={loadOptions}
             onChange={onChange}
-            getOptionLabel={({ name }) => name}
-            getOptionValue={({ name }) => name}
+            getOptionLabel={({ legalName }) => legalName}
+            getOptionValue={({ legalName }) => legalName}
             components={customComponents}
             isClearable
             menuIsOpen={isMenuOpen}
@@ -106,13 +107,20 @@ const DepartmentOfAlLftaSearch = () => {
           />
         </div>
         <div>
-          <Button className="flex items-center text-xl  w-28 mr-3 h-11 bg-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px] px-4">
-            <p className="text-xl">بحث</p>
-            <Search className="text-md mr-2" size={22} />
+          <Button className="flex items-center text-xl  w-40 mr-3 h-11 bg-[#fff] text-[#3734a9] border-2 border-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px] px-4">
+            <p className="text-base">استعادة نسخة</p>
+            <FolderDownload className="mr-2" />
+            {/* <Plus className="text-md mr-2" size={22} /> */}
+          </Button>
+        </div>
+        <div>
+          <Button className="flex items-center text-xl  w-40 mr-3 h-11 bg-[#3734a9] hover:border-2 hover:border-[#3734a9] hover:bg-[#fff] hover:text-[#2e2b8b] rounded-[12px] px-4">
+            <p className="text-base">إنشاء نسخة</p>
+            <Plus className="text-md mr-2" size={22} />
           </Button>
         </div>
       </div>
     </div>
   )
 }
-export default DepartmentOfAlLftaSearch
+export default BackupSearch
