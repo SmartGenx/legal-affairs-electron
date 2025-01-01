@@ -106,11 +106,11 @@ export default function ViewUser() {
                 </label>
                 <p className="mt-2">{UserById?.data.info[0].phone}</p>
               </div>
-              <div className="text-[#757575] col-span-1 min-h-[60px] ">
+              <div className="text-[#757575] col-span-1 min-h-[70px] ">
                 <label htmlFor="" className="font-bold text-lg">
                   الدور
                 </label>
-                <ul className="mt-2">
+                <ul className="mt-2 ">
                   {UserById?.data.info[0].roles.map((x) => <li>{x.role.name}</li>)}
                 </ul>
               </div>

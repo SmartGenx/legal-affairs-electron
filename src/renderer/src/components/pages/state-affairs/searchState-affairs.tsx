@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import AsyncSelect from 'react-select/async'
+import FilterDrawer from './filter'
 
 interface data {
   name: string
@@ -104,6 +105,9 @@ const SearchStateAffairs = () => {
             styles={customStyles}
             className="flex-grow"
           />
+        </div>
+        <div>
+          <FilterDrawer />
         </div>
         <div>
           <Button className="flex items-center text-xl  w-28 mr-3 h-11 bg-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px] px-4">

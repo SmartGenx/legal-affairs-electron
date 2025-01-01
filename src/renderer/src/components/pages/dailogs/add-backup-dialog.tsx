@@ -12,8 +12,6 @@ import {
 import { Plus } from 'lucide-react'
 import { useAuthHeader } from 'react-auth-kit'
 import { z } from 'zod'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useToast } from '@renderer/components/ui/use-toast'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postApi } from '@renderer/lib/http'
@@ -23,13 +21,13 @@ import { FormInput } from '@renderer/components/ui/form-input'
 const formSchema = z.object({
   backupName: z.string().min(1, 'اسم النسخة')
 })
-type BookFormValue = z.infer<typeof formSchema>
+// type BookFormValue = z.infer<typeof formSchema>
 
 export default function AddBackupDialog() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const authToken = useAuthHeader()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)

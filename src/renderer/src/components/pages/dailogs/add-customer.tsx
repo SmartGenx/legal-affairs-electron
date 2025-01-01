@@ -68,6 +68,7 @@ export default function AddCustomerDialog() {
         description: 'تمت الاضافة بنجاح'
       })
       queryClient.invalidateQueries({ queryKey: ['customerData'] })
+      queryClient.invalidateQueries({ queryKey: ['customers'] })
       navigate('/official-journal/order-book')
     },
     onError: (error) => {
