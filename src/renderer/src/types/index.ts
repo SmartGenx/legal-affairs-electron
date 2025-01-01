@@ -52,19 +52,20 @@ export interface IssuesResponse {
   postionId: number
   governmentOfficeId: number
   title: string
-  type: number
+  type: string
   invitationType: number
   isDeleted: boolean
   state: boolean
   createdAt: Date
   updatedAt: Date
+  IssueDetails: IssueDetail[]
 }
 
 export interface IssuesDetailInfo {
   id: number
   issueId: number
   tribunalId: number
-  level: number
+  level: string
   createdAt: Date
   updatedAt: Date
   detailsDate: Date

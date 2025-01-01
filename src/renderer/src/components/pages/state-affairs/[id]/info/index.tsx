@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { useParams, Link } from 'react-router-dom'
-import { InfoIssue, IssuesDetailInfo, IssuesResponse } from '@renderer/types'
+import { InfoIssue, IssuesResponse } from '@renderer/types'
 import { useAuthHeader } from 'react-auth-kit'
 import { axiosInstance } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
@@ -143,21 +143,24 @@ export default function StateAffairsInfo() {
   }, [selectedOption])
 
   const fetchIssueById = async () => {
-    const response = await axiosInstance.get<IssuesResponse>(`/issue?id=${id}`, {
-      headers: {
-        Authorization: `${authToken()}`
+    const response = await axiosInstance.get<IssuesResponse[]>(
+      `issue?include[IssueDetails]=true&id=${id}`,
+      {
+        headers: {
+          Authorization: `${authToken()}`
+        }
       }
-    })
+    )
     return response.data
   }
-  const fetchIssueDetailsById = async () => {
-    const response = await axiosInstance.get<IssuesDetailInfo[]>(`/issue-details?issueId=${id}`, {
-      headers: {
-        Authorization: `${authToken()}`
-      }
-    })
-    return response.data
-  }
+  // const fetchIssueDetailsById = async () => {
+  //   const response = await axiosInstance.get<IssuesDetailInfo[]>(`/issue-details?issueId=${id}`, {
+  //     headers: {
+  //       Authorization: `${authToken()}`
+  //     }
+  //   })
+  //   return response.data
+  // }
 
   // Use the useQuery hook to fetch issue data
   const {
@@ -169,19 +172,19 @@ export default function StateAffairsInfo() {
     queryFn: fetchIssueById,
     enabled: !!id // Only fetch if ID exists
   })
+  console.log('issueData', issueData?.[0].name)
+  // //   Use the useQuery hook to fetch issue Details data
+  // const {
+  //   data: issueDetailsData,
+  //   error: issueDetailsError,
+  //   isLoading: isIssueDetailsLoading
+  // } = useQuery({
+  //   queryKey: ['issueDetails', id],
+  //   queryFn: fetchIssueDetailsById,
+  //   enabled: !!id // Only fetch if ID exists
+  // })
 
-  //   Use the useQuery hook to fetch issue Details data
-  const {
-    data: issueDetailsData,
-    error: issueDetailsError,
-    isLoading: isIssueDetailsLoading
-  } = useQuery({
-    queryKey: ['issueDetails', id],
-    queryFn: fetchIssueDetailsById,
-    enabled: !!id // Only fetch if ID exists
-  })
-
-  console.log('issueDetailsData?.level', issueDetailsData?.[0]?.level)
+  // console.log('issueDetailsData?.level', issueDetailsData?.[0]?.level)
   // if (issueDetailsData?.length > 0) {
   //   console.log('Level:', issueDetailsData[0]?.level)
   // } else {
@@ -220,9 +223,9 @@ export default function StateAffairsInfo() {
   //   // Update the selected value when checkbox is clicked
   //   setSelectedValue((prev) => (prev === value ? null : value))
   // }
-  if (isIssueLoading && isIssueDetailsLoading) return <div>Loading...</div>
+  if (isIssueLoading) return <div>Loading...</div>
   if (issueError) return <div>Error fetching issue data</div>
-  if (issueDetailsError) return <div>Error fetching issue details data</div>
+  // if (issueDetailsError) return <div>Error fetching issue details data</div>
   // const [delayedSubmitting, setDelayedSubmitting] = useState(form.formState.isSubmitting)
   return (
     <>
@@ -329,9 +332,9 @@ export default function StateAffairsInfo() {
               <div className="col-span-1 ">
                 <label className="text-[#757575] font-bold text-lg">درجة التقاضي</label>
                 <p className="mt-2 text-[#757575]">
-                  {issueDetailsData !== null
+                  {issueData !== null
                     ? DegreeOfLitigationOptions.filter(
-                        (x) => x.value === issueDetailsData?.[0]?.level
+                        (x) => x.value === Number(issueData?.[0]?.IssueDetails[0].level)
                       ).map((x) => x.label)
                     : 'No data found for issueDetailsData'}
                 </p>
@@ -341,11 +344,11 @@ export default function StateAffairsInfo() {
             <div className="col-span-1 h-auto">
               {(() => {
                 const level =
-                  issueDetailsData !== null
-                    ? issueDetailsData?.[0]?.level // We extract the first item since .map returns an array
+                  issueData !== null
+                    ? issueData?.[0]?.IssueDetails[0].level // We extract the first item since .map returns an array
                     : 'No data found for issueDetailsData'
 
-                if (level === 1) {
+                if (level === '1') {
                   return (
                     <>
                       <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
@@ -355,7 +358,7 @@ export default function StateAffairsInfo() {
                           </label>
                           <p className="mt-2">
                             {tribunal
-                              .filter((x) => x.id === issueDetailsData?.[0]?.tribunalId)
+                              .filter((x) => x.id === issueData?.[0]?.IssueDetails[0].tribunalId)
                               .map((x) => x.name)}
                           </p>
                         </div>
@@ -369,7 +372,7 @@ export default function StateAffairsInfo() {
                           <label htmlFor="" className="font-bold text-lg">
                             نص الحكم
                           </label>
-                          <p className="mt-2">{issueDetailsData?.[0]?.judgment}</p>
+                          <p className="mt-2">{issueData?.[0]?.IssueDetails[0].judgment}</p>
                         </div>
                       </div>
 
@@ -379,20 +382,20 @@ export default function StateAffairsInfo() {
                             تاريخه
                           </label>
                           <p className="mt-2">
-                            {String(issueDetailsData?.[0]?.detailsDate).split('T')[0]}
+                            {String(issueData?.[0]?.IssueDetails[0].detailsDate).split('T')[0]}
                           </p>
                         </div>
                         <div className="text-[#757575] col-span-1">
                           <label htmlFor="" className="font-bold text-lg">
                             رقم الحكم
                           </label>
-                          <p className="mt-2">{issueDetailsData?.[0]?.refrance}</p>
+                          <p className="mt-2">{issueData?.[0]?.IssueDetails[0].refrance}</p>
                         </div>
                         <div className="text-[#757575] col-span-1">
                           <p className="mt-10">
-                            {Resumed.filter((x) => x.value === issueDetailsData?.[0]?.Resumed).map(
-                              (x) => x.label
-                            )}
+                            {Resumed.filter(
+                              (x) => x.value === issueData?.[0]?.IssueDetails[0].Resumed
+                            ).map((x) => x.label)}
                           </p>
                         </div>
                       </div>
@@ -410,7 +413,7 @@ export default function StateAffairsInfo() {
                       </div>
                     </>
                   )
-                } else if (level === 2) {
+                } else if (level === '2') {
                   return (
                     <>
                       <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
@@ -420,7 +423,7 @@ export default function StateAffairsInfo() {
                           </label>
                           <p className="mt-2">
                             {tribunal
-                              .filter((x) => x.id === issueDetailsData?.[0]?.tribunalId)
+                              .filter((x) => x.id === issueData?.[0]?.IssueDetails[0].tribunalId)
                               .map((x) => x.name)}
                           </p>
                         </div>
@@ -434,7 +437,7 @@ export default function StateAffairsInfo() {
                           <label htmlFor="" className="font-bold text-lg">
                             نص الحكم
                           </label>
-                          <p className="mt-2">{issueDetailsData?.[0]?.judgment}</p>
+                          <p className="mt-2">{issueData?.[0]?.IssueDetails[0].judgment}</p>
                         </div>
                       </div>
 
@@ -443,13 +446,15 @@ export default function StateAffairsInfo() {
                           <label htmlFor="" className="font-bold text-lg">
                             تاريخه
                           </label>
-                          <p className='mt-2'>{String(issueDetailsData?.[0]?.detailsDate).split('T')[0]}</p>
+                          <p className="mt-2">
+                            {String(issueData?.[0]?.IssueDetails[0].detailsDate).split('T')[0]}
+                          </p>
                         </div>
                         <div className="col-span-1 text-[#757575]">
                           <label htmlFor="" className="font-bold text-lg">
                             رقم الحكم
                           </label>
-                          <p className="mt-2">{issueDetailsData?.[0]?.refrance}</p>
+                          <p className="mt-2">{issueData?.[0]?.IssueDetails[0].refrance}</p>
                         </div>
                         <div className="col-span-1 text-[#757575]">
                           <label htmlFor="" className="font-bold text-lg">
@@ -464,7 +469,7 @@ export default function StateAffairsInfo() {
                       </div>
                     </>
                   )
-                } else if (level === 3) {
+                } else if (level === '3') {
                   return (
                     <>
                       <div className="grid min-h-[15vh] grid-cols-3 items-start gap-4 overflow-y-scroll scroll-smooth text-right">
@@ -474,7 +479,7 @@ export default function StateAffairsInfo() {
                           </label>
                           <p className="mt-2">
                             {tribunal
-                              .filter((x) => x.id === issueDetailsData?.[0]?.tribunalId)
+                              .filter((x) => x.id === issueData?.[0]?.IssueDetails[0].tribunalId)
                               .map((x) => x.name)}
                           </p>
                         </div>
@@ -488,7 +493,7 @@ export default function StateAffairsInfo() {
                           <label htmlFor="" className="font-bold text-lg">
                             نص الحكم
                           </label>
-                          <p className="mt-2">{issueDetailsData?.[0]?.judgment}</p>
+                          <p className="mt-2">{issueData?.[0]?.IssueDetails[0].judgment}</p>
                         </div>
                       </div>
 
@@ -499,19 +504,19 @@ export default function StateAffairsInfo() {
                             تاريخه
                           </label>
                           <p className="mt-2">
-                            {String(issueDetailsData?.[0]?.detailsDate).split('T')[0]}
+                            {String(issueData?.[0]?.IssueDetails[0].detailsDate).split('T')[0]}
                           </p>
                         </div>
                         <div className="col-span-1 text-[#757575]">
                           <label htmlFor="" className="font-bold text-lg">
                             رقم الحكم
                           </label>
-                          <p className="mt-2">{issueDetailsData?.[0]?.refrance}</p>
+                          <p className="mt-2">{issueData?.[0]?.IssueDetails[0].refrance}</p>
                         </div>
                         <div className="col-span-1 text-[#757575]">
                           <p className="mt-10">
                             {contested
-                              .filter((x) => x.value === issueDetailsData?.[0]?.Resumed)
+                              .filter((x) => x.value === issueData?.[0]?.IssueDetails[0].Resumed)
                               .map((x) => x.label)}
                           </p>
                         </div>
