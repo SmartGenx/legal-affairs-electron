@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useAuthHeader } from 'react-auth-kit'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import AsyncSelect from 'react-select/async'
+import AddBackupDialog from '../dailogs/add-backup-dialog'
 
 interface data {
   legalName: string
@@ -114,10 +115,7 @@ const BackupSearch = () => {
           </Button>
         </div>
         <div>
-          <Button className="flex items-center text-xl  w-40 mr-3 h-11 bg-[#3734a9] hover:border-2 hover:border-[#3734a9] hover:bg-[#fff] hover:text-[#2e2b8b] rounded-[12px] px-4">
-            <p className="text-base">إنشاء نسخة</p>
-            <Plus className="text-md mr-2" size={22} />
-          </Button>
+          <AddBackupDialog />
         </div>
       </div>
     </div>
