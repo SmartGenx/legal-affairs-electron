@@ -1,5 +1,3 @@
-import FolderDownload from '@renderer/components/icons/folder-download'
-import { Button } from '@renderer/components/ui/button'
 import { getApi } from '@renderer/lib/http'
 import { useQuery } from '@tanstack/react-query'
 import { Search } from 'lucide-react'
@@ -8,9 +6,10 @@ import { useAuthHeader } from 'react-auth-kit'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import AsyncSelect from 'react-select/async'
 import AddBackupDialog from '../dailogs/add-backup-dialog'
+import RestoreBackupDialog from '../dailogs/restor-backup'
 
 interface data {
-  legalName: string
+  name: string
 }
 const BackupSearch = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -21,9 +20,9 @@ const BackupSearch = () => {
   const pathname = location.pathname
   const selectedVal = searchParams.get('query')
   const { data: issuesSearch } = useQuery({
-    queryKey: ['Agency'],
+    queryKey: ['backup'],
     queryFn: () =>
-      getApi<data[]>('/agency', {
+      getApi<data[]>('/backup', {
         headers: {
           Authorization: authToken()
         }
@@ -31,9 +30,9 @@ const BackupSearch = () => {
   })
   const loadOptions = async (value: string) => {
     if (!value) return []
-    const data = await getApi<data[]>('/agency', {
+    const data = await getApi<data[]>('/backup', {
       params: {
-        'legalName[contains]': value
+        'name[contains]': value
       },
       headers: {
         Authorization: authToken()
@@ -45,10 +44,10 @@ const BackupSearch = () => {
     DropdownIndicator: () => null,
     IndicatorSeparator: () => null
   }
-  const onChange = (val: { legalName: string } | null) => {
+  const onChange = (val: { name: string } | null) => {
     const params = new URLSearchParams(searchParams.toString())
-    if (val?.legalName) {
-      params.set('query', val.legalName)
+    if (val?.name) {
+      params.set('query', val.name)
     } else {
       params.delete('query')
     }
@@ -91,12 +90,12 @@ const BackupSearch = () => {
             noOptionsMessage={() => 'لا توجد نتائج'}
             cacheOptions
             instanceId="products-search"
-            value={selectedVal?.length ? { legalName: selectedVal } : undefined}
+            value={selectedVal?.length ? { name: selectedVal } : undefined}
             defaultOptions={issuesSearch?.data}
             loadOptions={loadOptions}
             onChange={onChange}
-            getOptionLabel={({ legalName }) => legalName}
-            getOptionValue={({ legalName }) => legalName}
+            getOptionLabel={({ name }) => name}
+            getOptionValue={({ name }) => name}
             components={customComponents}
             isClearable
             menuIsOpen={isMenuOpen}
@@ -108,11 +107,7 @@ const BackupSearch = () => {
           />
         </div>
         <div>
-          <Button className="flex items-center text-xl  w-40 mr-3 h-11 bg-[#fff] text-[#3734a9] border-2 border-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px] px-4">
-            <p className="text-base">استعادة نسخة</p>
-            <FolderDownload className="mr-2" />
-            {/* <Plus className="text-md mr-2" size={22} /> */}
-          </Button>
+          <RestoreBackupDialog />
         </div>
         <div>
           <AddBackupDialog />

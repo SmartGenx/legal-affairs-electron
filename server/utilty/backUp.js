@@ -6,7 +6,7 @@ const backupDatabase = async (req, res) => {
   try {
     const dbName = 'legalDB';
     const dbUser = 'postgres';
-    const dbPassword = '12345';
+    const dbPassword = '123';
     const dbPort = 5432;
     const backupPath = 'D:\\backup';
     const backupName = req.body.backupName;
