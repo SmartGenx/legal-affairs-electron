@@ -3,26 +3,19 @@ import BackupSearch from './top-buttons'
 import { getApi } from '@renderer/lib/http'
 import { useAuthHeader } from 'react-auth-kit'
 import BackupTable from './backup-table'
-export interface PotionsResp {
-  info: Info[]
-  total: number
-  page: string
-  pageSize: string
-}
-
-export interface Info {
+export interface BackUp {
   id: number
   name: string
-  isDeleted: boolean
-  createdAt: Date
-  updatedAt: Date
+  path: string
+  createAt: Date
+  deleted: boolean
 }
 export default function BackupIndex() {
   const authToken = useAuthHeader()
-  const { data: TribunalTable, refetch } = useQuery({
-    queryKey: ['TribunalTable'],
+  const { data: BackUPTable } = useQuery({
+    queryKey: ['BackupsTable'],
     queryFn: () =>
-      getApi<Info[]>('/tribunal', {
+      getApi<BackUp[]>('/backup', {
         headers: {
           Authorization: authToken()
         }
@@ -31,7 +24,7 @@ export default function BackupIndex() {
   return (
     <div>
       <BackupSearch />
-      <BackupTable info={TribunalTable?.data || []} pageSize="5" page="2" total={5} />
+      <BackupTable info={BackUPTable?.data || []} pageSize="5" page="2" total={5} />
     </div>
   )
 }

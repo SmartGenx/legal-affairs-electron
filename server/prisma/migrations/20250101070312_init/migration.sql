@@ -341,6 +341,17 @@ CREATE TABLE "Tribunal" (
     CONSTRAINT "Tribunal_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "BackUp" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
+    "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "BackUp_pkey" PRIMARY KEY ("id")
+);
+
 -- AddForeignKey
 ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
