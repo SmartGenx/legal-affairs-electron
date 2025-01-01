@@ -4,6 +4,8 @@ const fs = require('fs')
 const BackUpServices = require('../services/BackUpServices') // Adjust the import path as needed
 const backupDatabase = async (req, res) => {
   try {
+
+
     const dbName = 'legalDB'
     const dbUser = 'postgres'
     const dbPassword = '123'
@@ -12,46 +14,52 @@ const backupDatabase = async (req, res) => {
     const backupPath = 'D:\\backup'
     const backupName = req.body.backupName
 
-    // const payload = jwt.verify(token, JWT_SECRET)
 
-    if (!dbName || !dbUser || !dbPassword || !backupPath || !backupName) {
-      res.status(400).json({
-        error: 'Database name, user, password, backup path, and backup name are required.'
-      })
-      return
+    if (!backupName) {
+      return res.status(400).json({
+        error: 'Backup name is required.',
+      });
     }
 
     if (!fs.existsSync(backupPath)) {
-      fs.mkdirSync(backupPath, { recursive: true })
+      fs.mkdirSync(backupPath, { recursive: true });
     }
 
-    const filename = `${backupName}-${Date.now()}.sql`
-    const outputPath = path.join(backupPath, filename)
+    const filename = `${backupName}-${Date.now()}.backup`; // Use .backup for custom format
+    const outputPath = path.join(backupPath, filename);
 
-    // Set the PGPASSWORD environment variable securely
-    process.env.PGPASSWORD = dbPassword
+    process.env.PGPASSWORD = dbPassword;
 
-    const pgDumpPath = 'C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump'
-    const command = `"${pgDumpPath}" -U ${dbUser} -d ${dbName} -p ${dbPort} -f "${outputPath}"`
+    const pgDumpPath = 'C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump';
+    const command = `"${pgDumpPath}" -U ${dbUser} -d ${dbName} -p ${dbPort} --format=c --blobs --no-owner --clean --if-exists -f "${outputPath}"`;
 
     exec(command, async (error, stdout, stderr) => {
-      // Clear the PGPASSWORD environment variable immediately after use
-      delete process.env.PGPASSWORD
+      delete process.env.PGPASSWORD;
 
       if (error) {
-        console.error(`Backup error: ${error}`)
-        return res.status(500).json({ error: 'Backup process failed.' })
-      }
-      if (stderr) {
-        console.error(`Backup stderr: ${stderr}`)
-        return res.status(500).json({ error: 'Error during the backup process.' })
+        console.error(`Backup error: ${error}`);
+        return res.status(500).json({ error: 'Backup process failed.' });
       }
 
-      // Move the file to a specified download folder
-      const downloadPath = backupPath
-      if (!fs.existsSync(downloadPath)) {
-        fs.mkdirSync(downloadPath, { recursive: true })
+      if (stderr) {
+        console.error(`Backup stderr: ${stderr}`);
+        return res.status(500).json({ error: 'Error during the backup process.' });
       }
+
+      try {
+        await BackUpServices.createbackup(outputPath, filename);
+        res.status(200).json({
+          message: `Backup successfully created at ${outputPath}`,
+        });
+      } catch (dbError) {
+        console.error('Error saving backup info to the database:', dbError);
+        res.status(500).json({
+          error: 'Backup created but failed to save information to the database.',
+        });
+      }
+
+    });
+
       const downloadOutputPath = path.join(backupPath, filename)
 
       fs.rename(outputPath, downloadOutputPath, async (err) => {
@@ -74,10 +82,12 @@ const backupDatabase = async (req, res) => {
         }
       })
     })
-  } catch (error) {
-    console.error('Unexpected error:', error)
-    res.status(500).json({ error: 'An unexpected error occurred.' })
-  }
-}
 
-module.exports = { backupDatabase }
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    res.status(500).json({ error: 'An unexpected error occurred.' });
+  }
+};
+
+module.exports = { backupDatabase };
+
