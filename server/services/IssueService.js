@@ -20,8 +20,8 @@ class IssueService {
       } else {
         include = {}
       }
-      const convertString = convertEqualsToInt(IssueFilter)
-      IssueFilter = convertString
+      // const convertString = convertEqualsToInt(IssueFilter)
+      // IssueFilter = convertString
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize
         const take = +pageSize
