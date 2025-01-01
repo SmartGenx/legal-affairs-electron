@@ -29,8 +29,8 @@ const handlePrint = useReactToPrint({
   useEffect(() => {
     if (data) {
       const dataToExport = data?.map((item) => {
-        const typeExcal = item.type
-        const levelExcal = item.IssueDetails[0].level
+        const typeExcal = Number(item.type)
+        const levelExcal = Number(item.IssueDetails[0].level)
         return {
           "id": item.id,
           "الأسم": item.name,

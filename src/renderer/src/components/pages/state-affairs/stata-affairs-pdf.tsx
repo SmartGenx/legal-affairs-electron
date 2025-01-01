@@ -23,7 +23,7 @@ const StataAffairsPdf = React.forwardRef<HTMLDivElement, Props>(function Compone
       <table dir="rtl" className="w-full h-full rounded-t-lg">
         <tr className="  h-10 text-black border-2 border-gray-300 py-5 bg-[#eef0f8]">
           <th>رقم</th>
-          <th className='translate-x-16'>الأسم</th>
+          <th className="translate-x-4">الأسم</th>
           <th>الصفة</th>
           <th>المرفق الحكومي</th>
           <th>نوع القضية</th>
@@ -31,39 +31,42 @@ const StataAffairsPdf = React.forwardRef<HTMLDivElement, Props>(function Compone
           <th>رقم الحكم</th>
         </tr>
         {data.map((item, index) => (
-          
           // eslint-disable-next-line react/jsx-key
           <tr className=" -translate-x-3 h-10 text-black border-2 border-gray-300 py-5">
             <td className="px-2">{index + 1}</td>
             <td>{item.name}</td>
             <td>{item.postion.name}</td>
             <td>{item.governmentOffice.name}</td>
-            <td>{(() => {
-            switch (item.type) {
-              case kind_of_case.civilian:
-                return 'مدني'
-              case kind_of_case.criminal:
-                return 'جنائية'
-              case kind_of_case.administrative:
-                return 'إدارية'
-              case kind_of_case.business:
-                return 'تجارية'
-              default:
-                return ''
-            }
-          })()}</td>
-            <td>{(() => {
-            switch (item.IssueDetails[0].level) {
-              case Level.appeal:
-                return 'إستئناف'
-              case Level.elementary:
-                return 'ابتدائي'
-              case Level.high:
-                return 'عليا'
-              default:
-                return ''
-            }
-          })()}</td>
+            <td>
+              {(() => {
+                switch (Number(item.type)) {
+                  case kind_of_case.civilian:
+                    return 'مدني'
+                  case kind_of_case.criminal:
+                    return 'جنائية'
+                  case kind_of_case.administrative:
+                    return 'إدارية'
+                  case kind_of_case.business:
+                    return 'تجارية'
+                  default:
+                    return ''
+                }
+              })()}
+            </td>
+            <td>
+              {(() => {
+                switch (Number(item.IssueDetails[0].level)) {
+                  case Level.appeal:
+                    return 'إستئناف'
+                  case Level.elementary:
+                    return 'ابتدائي'
+                  case Level.high:
+                    return 'عليا'
+                  default:
+                    return ''
+                }
+              })()}
+            </td>
             <td>{item.IssueDetails[0].refrance}</td>
           </tr>
         ))}
