@@ -14,9 +14,13 @@ export default function StateAffairs() {
   const page = searchParams.get('page')
   // const name = searchParams.get('name[contains]')
   const reference = searchParams.get('IssueDetails[some][refrance]')
+  const type = searchParams.get('type')
+  const level = searchParams.get('IssueDetails[some][level]')
+  const dateFrom = searchParams.get('createdAt[gte]')
+  const dateTo = searchParams.get('createdAt[lte]')
 
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Issues', query, page, name, reference],
+    queryKey: ['Issues', query, page, name, reference, dateFrom, dateTo, type, level],
     queryFn: () =>
       getApi<Issues>('/issue', {
         params: {
@@ -24,7 +28,11 @@ export default function StateAffairs() {
           'include[IssueDetails]': true,
           'include[governmentOffice]': true,
           'include[postion]': true,
+          "type": type,
           'IssueDetails[some][refrance]': reference,
+          'IssueDetails[some][level]': level,
+          'createdAt[gte]': dateFrom,
+          'createdAt[lte]': dateTo,
           page: page || 1,
           pageSize: 5
         },

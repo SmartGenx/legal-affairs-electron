@@ -22,7 +22,7 @@ type Props = {
   total: string
 }
 
-export default function StateTable({ info, page, total,pageSize }: Props) {
+export default function StateTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
 
   const columns = React.useMemo<ColumnDef<InfoIssue>[]>(
@@ -54,10 +54,10 @@ export default function StateTable({ info, page, total,pageSize }: Props) {
         accessorKey: 'type',
         header: 'نوع القضية',
         cell: ({ row }) => {
-          const state = row.original.type as kind_of_case
+          const state = Number(row.original.type) as kind_of_case
           switch (state) {
             case kind_of_case.civilian:
-              return 'مدني'
+              return 'مدنية'
             case kind_of_case.criminal:
               return 'جنائية'
             case kind_of_case.administrative:
@@ -73,7 +73,7 @@ export default function StateTable({ info, page, total,pageSize }: Props) {
         accessorKey: 'IssueDetails[0].level',
         header: 'درجة التقاضي',
         cell({ row }) {
-          const levels = row.original.IssueDetails[0].level as Level
+          const levels = Number(row.original.IssueDetails[0].level) as Level
           switch (levels) {
             case Level.appeal:
               return 'إستئناف'
@@ -83,9 +83,8 @@ export default function StateTable({ info, page, total,pageSize }: Props) {
               return 'عليا'
 
             default:
-              return undefined;
+              return undefined
           }
-          
         }
       },
       {

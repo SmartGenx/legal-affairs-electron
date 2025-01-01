@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:12345@localhost:5432/legalDB?schema=public"
+  url      = "postgresql://postgres:123@localhost:5432/legalDB?schema=public"
 }
 
 model User {
@@ -69,8 +69,8 @@ model Issue {
   governmentOfficeId Int
   governmentOffice   GovernmentOffice   @relation(fields: [governmentOfficeId], references: [id])
   title              String
-  type               Int
-  invitationType     String
+  type               String
+  invitationType     Int
   isDeleted          Boolean            @default(false)
   state              Boolean            @default(false)
   createdAt          DateTime           @default(now())

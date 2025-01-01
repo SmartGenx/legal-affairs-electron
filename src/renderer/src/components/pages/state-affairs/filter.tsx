@@ -1,5 +1,4 @@
 import { Separator } from '@radix-ui/react-separator'
-import { FormInput } from '@renderer/components/ui/form-input'
 import { Filter, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -63,36 +62,33 @@ const FilterDrawer = () => {
   const navigate = useNavigate()
   // const authToken = useAuthHeader()
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedGovernorates, setSelectedGovernorates] = useState<string[]>([])
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedType, setSelectedType] = useState<string[]>([])
+  const [selectedLevel, setSelectedLevel] = useState<string[]>([])
   const [selectedGender, setSelectedGender] = useState<string>('')
-  const [name, setName] = useState('')
-  console.log('🚀 ~ FilterDrawer ~ name:', name)
+
   const [reference, setReference] = useState('')
   console.log('🚀 ~ FilterDrawer ~ reference:', reference)
 
   useEffect(() => {
-    const governorates = searchParams.getAll('directorateGlobalId')
-    const categories = searchParams.getAll('categoryGlobalId')
+    const type = searchParams.getAll('type')
+    const level = searchParams.getAll('IssueDetails[some][level]')
     const gender = searchParams.get('gender') || ''
-    const refernce = searchParams.get('IssueDetails[some][reference]') || ''
-    const name = searchParams.get('name[contains]') || ''
+    const reference = searchParams.get('IssueDetails[some][reference]') || ''
 
-    setSelectedGovernorates(governorates)
-    setSelectedCategories(categories)
-    setName(name)
-    setReference(refernce)
+    setSelectedType(type)
+    setSelectedLevel(level)
+    setReference(reference)
     setSelectedGender(gender)
   }, [searchParams])
 
   const handleGovernorateChange = (globalId: string) => {
-    setSelectedGovernorates((prev) =>
+    setSelectedType((prev) =>
       prev.includes(globalId) ? prev.filter((id) => id !== globalId) : [...prev, globalId]
     )
   }
 
   const handleCategoryChange = (globalId: string) => {
-    setSelectedCategories((prev) =>
+    setSelectedLevel((prev) =>
       prev.includes(globalId) ? prev.filter((id) => id !== globalId) : [...prev, globalId]
     )
   }
@@ -106,17 +102,15 @@ const FilterDrawer = () => {
   const handleFilter = () => {
     const params = new URLSearchParams()
 
-    selectedGovernorates.forEach((id) => params.append('directorateGlobalId', id))
-    selectedCategories.forEach((id) => params.append('categoryGlobalId', id))
+    selectedType.forEach((id) => params.append('type', id))
+    selectedLevel.forEach((id) => params.append('IssueDetails[some][level]', id))
 
     if (dateFrom) {
-      params.set('submissionDate[gte]', dateFrom?.toISOString())
+      params.set('createdAt[gte]', dateFrom?.toISOString())
     }
-    // if (name) {
-    //   params.set('name[contains]', name)
-    // }
+
     if (dateTo) {
-      params.set('submissionDate[lte]', dateTo?.toISOString())
+      params.set('createdAt[lte]', dateTo?.toISOString())
     }
     if (reference) {
       params.set('IssueDetails[some][refrance]', reference)
@@ -135,7 +129,7 @@ const FilterDrawer = () => {
     <Drawer open={isOpen} onOpenChange={setIsOpen} direction="left">
       <DrawerTrigger asChild>
         <Button className="flex items-center text-xl  w-28 mr-3 h-11 bg-[#fff] text-[#3734a9] border-2 border-[#3734a9] hover:bg-[#2e2b8b] hover:text-[#fff] rounded-[12px] px-4">
-          <p className="text-xl">الفترة</p>
+          <p className="text-xl">فلترة</p>
           <Filter className="text-md mr-2" />
           {/* <Search className="text-md mr-2" size={22} /> */}
         </Button>
@@ -160,7 +154,7 @@ const FilterDrawer = () => {
                   <input
                     type="checkbox"
                     value={governorate.value}
-                    checked={selectedGovernorates.includes(String(governorate.value))}
+                    checked={selectedType.includes(String(governorate.value))}
                     onChange={() => handleGovernorateChange(String(governorate.value))}
                     className="ml-2 accent-[#3734A9]"
                   />
@@ -186,7 +180,7 @@ const FilterDrawer = () => {
                   <input
                     type="checkbox"
                     value={category.value}
-                    checked={selectedCategories.includes(String(category.value))}
+                    checked={selectedLevel.includes(String(category.value))}
                     onChange={() => handleCategoryChange(String(category.value))}
                     className="ml-2 accent-[#3734A9]"
                   />
@@ -204,29 +198,6 @@ const FilterDrawer = () => {
           </div>
           <h3 className="text-base font-semibold text-[#383838] mb-2 mt-4">البحث بـ</h3>
           <div className="flex items-center space-x-8 rtl space-x-reverse">
-            {/* First Checkbox */}
-            <div className="flex items-center space-x-2 rtl space-x-reverse">
-              <input
-                type="radio"
-                id="name"
-                name="options"
-                className="hidden"
-                onChange={() => handleSelect('name')}
-                checked={selected === 'name'}
-              />
-              <div
-                onClick={() => handleSelect('name')}
-                className={`w-4 h-4 rounded-full border-[2px] ${
-                  selected === 'name' ? 'border-[#3734A9] ' : 'border-gray-400 bg-white'
-                } flex items-center justify-center cursor-pointer`}
-              >
-                {selected === 'name' && <div className="w-2 h-2 rounded-full bg-[#3734A9]"></div>}
-              </div>
-              <label htmlFor="name" className="text-gray-600 cursor-pointer">
-                الاسم
-              </label>
-            </div>
-
             {/* Second Checkbox */}
             <div className="flex items-center space-x-2 rtl space-x-reverse">
               <input
@@ -235,7 +206,8 @@ const FilterDrawer = () => {
                 name="options"
                 className="hidden "
                 onChange={() => handleSelect('number')}
-                checked={selected === 'number'}
+                // checked={selected === 'number'}
+                checked
               />
               <div
                 onClick={() => handleSelect('number')}
@@ -257,21 +229,13 @@ const FilterDrawer = () => {
                 <input
                   placeholder="ادخل رقم الحكم"
                   type="text"
-                  className="w-full mt-3 h-11 rounded-xl border-[3px] border-[#E5E7EB] -translate-y-0 px-2"
-                  onChange={(e) => setName(e.target.value)}
-                  value={name}
-                />
-              </>
-            ) : (
-              <>
-                <input
-                  placeholder="ادخل الاسم"
-                  type="text"
                   className="w-full h-11 mt-3 rounded-xl border-[3px] border-[#E5E7EB] -translate-y-0 px-2"
                   onChange={(e) => setReference(e.target.value)}
                   value={reference}
                 />
               </>
+            ) : (
+              <></>
             )}
           </div>
           <div className="w-full h-[1px] bg-[#F0F1F5]"></div>

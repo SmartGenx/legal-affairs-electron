@@ -20,8 +20,12 @@ class IssueService {
       } else {
         include = {}
       }
-      // const convertString = convertEqualsToInt(IssueFilter)
-      // IssueFilter = convertString
+      if (IssueFilter.id) {
+        IssueFilter.id = parseInt(IssueFilter.id, 10)
+        if (isNaN(IssueFilter.id)) {
+          throw new Error('Invalid ID: ID must be a number.')
+        }
+      }
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize
         const take = +pageSize
@@ -122,7 +126,7 @@ class IssueService {
       }
 
       return await prisma.issue.create({
-        data: { ...IssueData, invitationType: String(IssueData.invitationType) }
+        data: { ...IssueData, type: String(IssueData.type) }
       })
     } catch (error) {
       if (error instanceof NotFoundError) {
@@ -161,11 +165,11 @@ class IssueService {
         where: { id },
         data: {
           ...IssueData,
-          invitationType: IssueData.invitationType
-            ? String(IssueData.invitationType) // Convert to string if present
-            : existingIssue.invitationType,    // Use the existing value if not provided
-        },
-      });
+          type: IssueData.type
+            ? String(IssueData.type) // Convert to string if present
+            : existingIssue.type // Use the existing value if not provided
+        }
+      })
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error

@@ -36,7 +36,7 @@ const formSchema = z.object({
   postionId: z.string(),
   governmentOfficeId: z.string(),
   title: z.string(),
-  type: z.number(),
+  type: z.string(),
   invitationType: z.string(),
   state: z.boolean(),
   tribunalId: z.string(),
@@ -152,6 +152,7 @@ export default function ViewPage() {
   }
 
   //
+
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     if (value) {
@@ -194,19 +195,14 @@ export default function ViewPage() {
 
   // Fetch issue by ID
   const fetchIssueById = async () => {
-    const response = await axiosInstance.get<IssuesResponse>(`/issue?id=${id}`, {
-      headers: {
-        Authorization: `${authToken()}`
+    const response = await axiosInstance.get<IssuesResponse[]>(
+      `/issue?include[IssueDetails]=true&id=${id}`,
+      {
+        headers: {
+          Authorization: `${authToken()}`
+        }
       }
-    })
-    return response.data
-  }
-  const fetchIssueDetailsById = async () => {
-    const response = await axiosInstance.get<IssuesResponse>(`/issue-details?issueId=${id}`, {
-      headers: {
-        Authorization: `${authToken()}`
-      }
-    })
+    )
     return response.data
   }
 
@@ -221,19 +217,6 @@ export default function ViewPage() {
     enabled: !!id // Only fetch if ID exists
   })
 
-  //   Use the useQuery hook to fetch issue Details data
-  const {
-    data: issueDetailsData,
-    error: issueDetailsError,
-    isLoading: isIssueDetailsLoading
-  } = useQuery({
-    queryKey: ['issue', id],
-    queryFn: fetchIssueDetailsById,
-    enabled: !!id // Only fetch if ID exists
-  })
-
-  const issueName = issueData?.[0].name
-
   // UseEffect to update form default values when data is available
   const form = useForm<IssuesFormValue>({
     resolver: zodResolver(formSchema),
@@ -243,8 +226,8 @@ export default function ViewPage() {
   })
 
   useEffect(() => {
-    if (issueData && issueDetailsData) {
-      //   const issueName = data[0]?.name || ''
+    if (issueData) {
+      // const issueName = data[0]?.name || ''
       const positionId = issueData?.[0].postionId || ''
 
       const governmentOfficeId = issueData?.[0].governmentOfficeId || ''
@@ -253,27 +236,30 @@ export default function ViewPage() {
         postionId: String(positionId),
         governmentOfficeId: String(governmentOfficeId),
         title: issueData[0]?.title,
-        type: issueData[0]?.type,
+        type: String(issueData[0]?.type),
         invitationType: String(issueData[0]?.invitationType),
         state: issueData[0]?.state,
-        tribunalId: String(issueDetailsData[0]?.tribunalId),
-        level: String(issueDetailsData[0]?.level),
-        detailsDate: new Date(issueDetailsData[0]?.detailsDate).toISOString().split('T')[0],
-        judgment: issueDetailsData[0]?.judgment,
-        refrance: issueDetailsData[0]?.refrance,
-        Resumed: issueDetailsData[0]?.Resumed ?? null
+        tribunalId: String(issueData?.[0].IssueDetails[0].tribunalId),
+        level: String(issueData?.[0].IssueDetails[0].level),
+        detailsDate: new Date(issueData?.[0].IssueDetails[0].detailsDate)
+          .toISOString()
+          .split('T')[0],
+        judgment: issueData?.[0].IssueDetails[0].judgment,
+        refrance: issueData?.[0].IssueDetails[0].refrance,
+        Resumed: issueData?.[0].IssueDetails[0].Resumed ?? null
       })
     }
-  }, [issueDetailsData])
-
-  const [selectedValue, setSelectedValue] = useState<kind_of_case | null>()
-
-  useEffect(() => {
-    setSelectedValue((issueData?.[0]?.type as kind_of_case) || null)
   }, [issueData])
 
-  const levelString = String(issueDetailsData?.[0]?.level ?? '')
-  const tribunalIdString = String(issueDetailsData?.[0]?.tribunalId ?? '')
+  const [selectedValue, setSelectedValue] = useState<kind_of_case | null>()
+  console.log("issueData?.[0].IssueDetails[0].level",issueData?.[0].IssueDetails[0].level)
+  useEffect(() => {
+    setSelectedValue((Number(issueData?.[0].type) as kind_of_case) || null)
+  }, [issueData])
+
+  const levelString = String(issueData?.[0].IssueDetails[0].level ?? '')
+
+  const tribunalIdString = String(issueData?.[0].IssueDetails[0].tribunalId ?? '')
 
   const {
     mutate: firstMutate,
@@ -378,9 +364,9 @@ export default function ViewPage() {
   const onSubmit = (datas: IssuesFormValue) => {
     firstMutate(datas)
   }
-  if (isIssueLoading && isIssueDetailsLoading) return <div>Loading...</div>
+  if (isIssueLoading) return <div>Loading...</div>
   if (issueError) return <div>Error fetching issue data</div>
-  if (issueDetailsError) return <div>Error fetching issue details data</div>
+  // if (issueDetailsError) return <div>Error fetching issue details data</div>
   return (
     <>
       <div className="flex items-center text-3xl">
@@ -389,7 +375,7 @@ export default function ViewPage() {
             <ArrowRight size={20} />
           </button>
         </Link>
-        <h1 className="mr-2 text-[#3734a9] font-bold">{issueName}</h1>
+        <h1 className="mr-2 text-[#3734a9] font-bold">{issueData?.[0].title}</h1>
       </div>
 
       <div className="min-h-[50vh] w-full mt-5">
@@ -713,7 +699,7 @@ export default function ViewPage() {
                           field.onChange(value)
                           setSelectedOption(parseInt(value, 10))
                         }}
-                        value={field.value ? String(field.value) : levelString}
+                        value={field.value ? String(field.value) : String(levelString)}
                         defaultValue={levelString}
                       >
                         <FormControl className="w-full  h-[50px] rounded-xl bg-transparent text-[#595959] text-base border-[3px] border-[#a6a3ee]/[.40] ">
@@ -739,9 +725,9 @@ export default function ViewPage() {
 
             <div className="col-span-1 h-auto">
               {(() => {
-                const level = selectedOption ?? issueDetailsData?.[0]?.level
+                const level = selectedOption ?? issueData?.[0].IssueDetails[0].level
 
-                if (level === 1) {
+                if (level === "1") {
                   return (
                     <>
                       <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
@@ -935,7 +921,7 @@ export default function ViewPage() {
                       </div>
                     </>
                   )
-                } else if (level === 2) {
+                } else if (level === "2") {
                   return (
                     <>
                       <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
@@ -1079,7 +1065,7 @@ export default function ViewPage() {
                       </div>
                     </>
                   )
-                } else if (level === 3) {
+                } else if (level === "3") {
                   return (
                     <>
                       <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
@@ -1282,6 +1268,7 @@ export default function ViewPage() {
                   )
                 }
               })()}
+                console.log("🚀 ~ ViewPage ~ level:", level);
             </div>
 
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
