@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { Button } from '@renderer/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@renderer/components/ui/form'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getApi, patchApi } from '@renderer/lib/http'
+import { getApi, postApi } from '@renderer/lib/http'
 import { useAuthHeader } from 'react-auth-kit'
 import { toast } from '@renderer/components/ui/use-toast'
 import { Plus } from 'lucide-react'
@@ -64,7 +64,7 @@ export default function CustomerIndex() {
     mutationKey: ['AddCustomerSetting'],
     mutationFn: (values: z.infer<typeof formSchema>) => {
       // Return the API call to be executed
-      return patchApi(
+      return postApi(
         '/customer',
         { ...values, type: +values.type },
         {
