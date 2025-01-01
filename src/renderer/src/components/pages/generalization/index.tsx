@@ -13,12 +13,19 @@ export default function GeneralizationIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const refrance = searchParams.get('refrance[equals]')
+  const dateFrom = searchParams.get('createdAt[gte]')
+  const dateTo = searchParams.get('createdAt[lte]')
+
   const { isLoading, error, data } = useQuery({
-    queryKey: ['generalization',query,page],
+    queryKey: ['generalization', query, page, refrance, dateFrom, dateTo],
     queryFn: () =>
       getApi<Generalization>('/generalization', {
-        params:{
+        params: {
           'title[contains]': query,
+          'refrance[equals]': refrance,
+          'createdAt[gte]': dateFrom,
+          'createdAt[lte]': dateTo,
           page: page || 1,
           pageSize: 5
         },
@@ -36,8 +43,13 @@ export default function GeneralizationIndex() {
   return (
     <section className="relative space-y-4 ">
       <GeneralizationSearch />
-      <TopButtons data={data?.data.info || []}/>
-      <GeneralizationTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <GeneralizationTable
+        info={infoArray || []}
+        page={Number(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={String(data?.data.total)}
+      />
     </section>
   )
 }

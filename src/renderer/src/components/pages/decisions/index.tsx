@@ -12,13 +12,20 @@ export default function DecisionsIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const refrance = searchParams.get('refrance[equals]')
+  const dateFrom = searchParams.get('createdAt[gte]')
+  const dateTo = searchParams.get('createdAt[lte]')
+
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Decisions' , query,page],
+    queryKey: ['Decisions', query, page, refrance, dateFrom, dateTo],
     queryFn: () =>
       getApi<Decision>('/decision', {
         params: {
           'nameSource[contains]': query,
           'include[governmentOffice]': true,
+          'refrance[equals]': refrance,
+          'createdAt[gte]': dateFrom,
+          'createdAt[lte]': dateTo,
           page: page || 1,
           pageSize: 5
         },
@@ -36,8 +43,13 @@ export default function DecisionsIndex() {
   return (
     <section className="relative space-y-4 ">
       <DecisionsSearch />
-      <TopButtons data={data?.data.info || []}/>
-      <DecisionTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <DecisionTable
+        info={infoArray || []}
+        page={Number(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={String(data?.data.total)}
+      />
     </section>
   )
 }

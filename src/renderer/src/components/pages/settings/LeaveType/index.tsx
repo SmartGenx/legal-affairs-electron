@@ -77,6 +77,7 @@ export default function LeaveTypeIndex() {
         variant: 'success'
       })
       queryClient.invalidateQueries({ queryKey: ['addLeaveTypeForm'] })
+      queryClient.invalidateQueries({ queryKey: ['leave-type'] })
       refetch()
       form.reset()
     },

@@ -20,8 +20,11 @@ class EmployServices {
       } else {
         include = {}
       }
-      const convertString = convertEqualsToInt(EmployFiltetr)
-      EmployFiltetr = convertString
+      // const convertString = convertEqualsToInt(EmployFiltetr)
+      // EmployFiltetr = convertString
+      if (EmployFiltetr.id) {
+        EmployFiltetr.id = parseInt(EmployFiltetr.id, 10)
+      }
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize
         const take = +pageSize
@@ -51,7 +54,7 @@ class EmployServices {
       // Optional cleanup code can be added here
     }
   }
-  async getEmployById(id,EmployFiltetr) {
+  async getEmployById(id, EmployFiltetr) {
     try {
       let { include } = EmployFiltetr
       delete EmployFiltetr.include
@@ -62,7 +65,8 @@ class EmployServices {
         include = {}
       }
       const employ = await prisma.employ.findUnique({
-        where: { id, isDeleted: false },include
+        where: { id, isDeleted: false },
+        include
       })
       if (!employ) {
         throw new NotFoundError(`employ with id ${id} not found.`)
@@ -102,7 +106,6 @@ class EmployServices {
           idtype: +EmployData.idtype,
           empDgree: +EmployData.empDgree,
 
-
           employeeStatus: +EmployData.employeeStatus,
           salary: +EmployData.salary
         }
@@ -126,8 +129,7 @@ class EmployServices {
 
   async updateEmploy(id, EmployData, filePath) {
     // try {
-    console.log('🚀 ~ EmployServices ~ updateEmploy ~ filePath:', EmployData);
-
+    console.log('🚀 ~ EmployServices ~ updateEmploy ~ filePath:', EmployData)
 
     const existingEmploy = await prisma.employ.findUnique({
       where: { id, isDeleted: false }
@@ -136,7 +138,6 @@ class EmployServices {
       throw new NotFoundError(`employ with id ${id} not found.`)
     }
     console.log('🚀 ~ EmployServices ~ updateEmploy ~ id:', { EmployData })
-
 
     // Update the employ
     const employ = await prisma.employ.update({
@@ -147,9 +148,8 @@ class EmployServices {
         idtype: +EmployData.idtype,
         empDgree: +EmployData.empDgree,
 
-        
         employeeStatus: +EmployData.employeeStatus,
-        salary:+EmployData.salary
+        salary: +EmployData.salary
       }
     })
     const existingattachment = await prisma.attachment.findFirst({
@@ -165,7 +165,7 @@ class EmployServices {
       return employ
     }
 
-    if(filePath){
+    if (filePath) {
       await prisma.attachment.update({
         where: { id: existingattachment.id },
         data: {

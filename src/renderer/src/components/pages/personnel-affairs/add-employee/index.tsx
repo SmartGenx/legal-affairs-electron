@@ -12,12 +12,14 @@ export default function EmployeeIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const phone = searchParams.get('phone[equals]')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Employ', page, query],
+    queryKey: ['Employ', page, query, phone],
     queryFn: () =>
       getApi<Employ>('/employ', {
         params: {
           'name[contains]': query,
+          'phone[equals]': phone,
           page: page || 1,
           pageSize: 5
         },
@@ -35,8 +37,13 @@ export default function EmployeeIndex() {
   return (
     <section className="relative space-y-4 ">
       <EmpSearch />
-      <TopButtons data={data?.data.info || []}/>
-      <PersonnelAffairsTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <PersonnelAffairsTable
+        info={infoArray || []}
+        page={Number(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={String(data?.data.total)}
+      />
     </section>
   )
 }

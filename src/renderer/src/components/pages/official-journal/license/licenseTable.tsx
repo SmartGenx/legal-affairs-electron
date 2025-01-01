@@ -55,7 +55,7 @@ export interface LicenseType {
   isDeleted: boolean
 }
 
-export default function LicenseTable({ info, page, total,pageSize }: Props) {
+export default function LicenseTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -87,7 +87,7 @@ export default function LicenseTable({ info, page, total,pageSize }: Props) {
         header: 'رسوم النشر'
       },
       {
-        accessorKey: 'referenceNum',
+        accessorKey: 'licenseNumber',
         header: 'رقم الترخيص'
       },
 
