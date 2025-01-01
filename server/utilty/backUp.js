@@ -1,19 +1,15 @@
 const { exec } = require('child_process')
 const path = require('path')
 const fs = require('fs')
-const BackUpServices = require('../services/BackUpServices') // Adjust the import path as needed
+const  BackUpServices  = require('../services/BackUpServices') // Adjust the import path as needed
 const backupDatabase = async (req, res) => {
   try {
-
-
-    const dbName = 'legalDB'
-    const dbUser = 'postgres'
-    const dbPassword = '123'
-    const dbPort = 5432
-    // const token = req.body.token
-    const backupPath = 'D:\\backup'
-    const backupName = req.body.backupName
-
+    const dbName = 'legalDB';
+    const dbUser = 'postgres';
+    const dbPassword = '12345';
+    const dbPort = 5432;
+    const backupPath = 'D:\\backup';
+    const backupName = req.body.backupName;
 
     if (!backupName) {
       return res.status(400).json({
@@ -57,32 +53,7 @@ const backupDatabase = async (req, res) => {
           error: 'Backup created but failed to save information to the database.',
         });
       }
-
     });
-
-      const downloadOutputPath = path.join(backupPath, filename)
-
-      fs.rename(outputPath, downloadOutputPath, async (err) => {
-        if (err) {
-          console.error('Error moving file:', err)
-          return res.status(500).send('Could not move the file to the download folder')
-        }
-
-        try {
-          // console.log(payload.name)
-          await BackUpServices.createbackup(downloadOutputPath, filename)
-          res
-            .status(200)
-            .json({ message: `Backup successfully created and moved to ${downloadOutputPath}` })
-        } catch (dbError) {
-          console.error('Error saving backup info to the database:', dbError)
-          res
-            .status(500)
-            .json({ error: 'Backup created but failed to save information to the database.' })
-        }
-      })
-    })
-
   } catch (error) {
     console.error('Unexpected error:', error);
     res.status(500).json({ error: 'An unexpected error occurred.' });
@@ -90,4 +61,3 @@ const backupDatabase = async (req, res) => {
 };
 
 module.exports = { backupDatabase };
-
