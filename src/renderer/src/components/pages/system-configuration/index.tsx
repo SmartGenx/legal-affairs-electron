@@ -7,6 +7,7 @@ import PostionIndex from '../settings/Postion'
 import LeaveTypeIndex from '../settings/LeaveType'
 import LicenseTypeIndex from '../settings/licenseType'
 import TribunalIndex from '../settings/Tribunal'
+import CustomerIndex from '../settings/customer'
 
 const subTabs = [
   // { value: 'manage-users', title: 'الأدوار', content: <ManageRoles /> },
@@ -14,7 +15,8 @@ const subTabs = [
   { value: 'backup', title: 'المكاتب الحكومية', content: <GovernmentOfficesIndex /> },
   { value: 'manage-users-2', title: 'نوع  الإجازات', content: <LeaveTypeIndex /> },
   { value: 'system-configuration-2', title: 'أنواع التراخيص', content: <LicenseTypeIndex /> },
-  { value: 'backup-2', title: 'المحكمة', content: <TribunalIndex /> }
+  { value: 'backup-2', title: 'المحكمة', content: <TribunalIndex /> },
+  { value: 'customer', title: 'عميل', content: <CustomerIndex /> }
 ]
 
 export default function SystemConfigurationIndex() {

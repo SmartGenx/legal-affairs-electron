@@ -18,6 +18,13 @@ import { useAuthHeader } from 'react-auth-kit'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@renderer/components/ui/select'
 
 const formSchema = z.object({
   name: z.string().min(1, 'اسم المشتري مطلوب'),
@@ -25,7 +32,10 @@ const formSchema = z.object({
 })
 
 type BookFormValue = z.infer<typeof formSchema>
-
+const types = [
+  { label: 'مشتري', value: 1 },
+  { label: 'شركة', value: 2 }
+]
 export default function AddCustomerDialog() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
@@ -124,12 +134,20 @@ export default function AddCustomerDialog() {
           <div className="col-span-1 h-auto mt-8">
             <FormItem>
               <FormControl>
-                <FormInput
-                  className="h-11 p-0 placeholder:text-base rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                  placeholder="النوع"
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                />
+                <Select onValueChange={(value) => setType(value)}>
+                  <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl ">
+                    <SelectTrigger>
+                      <SelectValue placeholder="نوع العميل" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {types.map((directorate) => (
+                      <SelectItem key={directorate.value} value={String(directorate.value)}>
+                        {directorate.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               {errors.type && <FormMessage>{errors.type}</FormMessage>}
             </FormItem>
