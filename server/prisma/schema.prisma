@@ -327,3 +327,10 @@ model Tribunal {
   isDeleted       Boolean     @default(false)
   IssueDetails IssueDetails[]
 }
+model BackUp {
+  id           Int      @id @default(autoincrement())
+  name     String
+  path         String
+  createAt     DateTime @default(now())
+  deleted      Boolean  @default(false)
+}

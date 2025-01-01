@@ -24,6 +24,7 @@ const TribunalRoutes = require('./TribunalRouters.js')
 const StateIssueAgencyRoutes = require('./StateIssueAgencyRouters.js')
 const AgencyRoutes = require('./AgencyRouters.js')
 const StatisticsRoutes = require('./StatisticsRoutes.js')
+const backUpRouters = require('./backUpRouters.js')
 
 const rootRouter = Router()
 
@@ -51,5 +52,6 @@ rootRouter.use('/tribunal', TribunalRoutes)
 rootRouter.use('/state-issue-agency', StateIssueAgencyRoutes)
 rootRouter.use('/agency', AgencyRoutes)
 rootRouter.use('/statistics', StatisticsRoutes)
+rootRouter.use('/backup', backUpRouters)
 
 module.exports = rootRouter
