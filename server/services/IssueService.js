@@ -20,8 +20,8 @@ class IssueService {
       } else {
         include = {}
       }
-      const convertString = convertEqualsToInt(IssueFilter)
-      IssueFilter = convertString
+      // const convertString = convertEqualsToInt(IssueFilter)
+      // IssueFilter = convertString
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize
         const take = +pageSize
@@ -121,7 +121,9 @@ class IssueService {
         throw new NotFoundError(`governmentOffice with ID ${postionId} not found`)
       }
 
-      return await prisma.issue.create({ data: IssueData })
+      return await prisma.issue.create({
+        data: { ...IssueData, invitationType: String(IssueData.invitationType) }
+      })
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error
@@ -155,7 +157,15 @@ class IssueService {
       if (!existingIssue) {
         throw new NotFoundError(`Issue with id ${id} not found.`)
       }
-      return await prisma.issue.update({ where: { id }, data: IssueData })
+      return await prisma.issue.update({
+        where: { id },
+        data: {
+          ...IssueData,
+          invitationType: IssueData.invitationType
+            ? String(IssueData.invitationType) // Convert to string if present
+            : existingIssue.invitationType,    // Use the existing value if not provided
+        },
+      });
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error
