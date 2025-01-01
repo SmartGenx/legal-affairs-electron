@@ -90,8 +90,17 @@ class CustomerService {
   async updateCustomer(id, customerData) {
     try {
       const { name } = customerData
-      const existCustomer = await prisma.customer.findFirst({ where: { name, isDeleted: false,type:customerData.type } })
-      if (existCustomer.id != id) {
+      const existCustomer = await prisma.customer.findFirst({
+        where: {
+          AND: [
+            { name: name },
+            { isDeleted: false },
+            { type: customerData.type },
+          ],
+        },
+      });
+      console.log("🚀 ~ CustomerService ~ updateCustomer ~ existCustomer:", existCustomer)
+      if (existCustomer) {
         throw new NotFoundError(`Customer with name ${name} already exists.`)
       }
       const existingCustomer = await prisma.customer.findUnique({ where: { id } })
