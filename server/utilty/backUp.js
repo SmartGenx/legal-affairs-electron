@@ -1,12 +1,12 @@
 const { exec } = require('child_process')
 const path = require('path')
 const fs = require('fs')
-const  BackUpServices  = require('../services/BackUpServices') // Adjust the import path as needed
+const BackUpServices = require('../services/BackUpServices') // Adjust the import path as needed
 const backupDatabase = async (req, res) => {
   try {
     const dbName = 'legalDB'
     const dbUser = 'postgres'
-    const dbPassword = '12345'
+    const dbPassword = '123'
     const dbPort = 5432
     // const token = req.body.token
     const backupPath = 'D:\\backup'
@@ -60,11 +60,9 @@ const backupDatabase = async (req, res) => {
           return res.status(500).send('Could not move the file to the download folder')
         }
 
-
-
         try {
           // console.log(payload.name)
-          await BackUpServices.createbackup(downloadOutputPath,filename)
+          await BackUpServices.createbackup(downloadOutputPath, filename)
           res
             .status(200)
             .json({ message: `Backup successfully created and moved to ${downloadOutputPath}` })

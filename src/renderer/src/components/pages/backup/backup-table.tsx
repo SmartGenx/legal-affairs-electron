@@ -13,9 +13,9 @@ type Props = {
 export interface Info {
   id: number
   name: string
-  isDeleted: boolean
-  createdAt: Date
-  updatedAt: Date
+  path: string
+  createAt: Date
+  deleted: boolean
 }
 export default function BackupTable({ info, page, total }: Props) {
   const columns = React.useMemo<ColumnDef<Info>[]>(
@@ -33,8 +33,11 @@ export default function BackupTable({ info, page, total }: Props) {
         header: 'اسم النسخة'
       },
       {
-        accessorKey: 'name',
-        header: 'تاريخ الانشاء'
+        accessorKey: 'createAt',
+        header: 'تاريخ الانشاء',
+        cell: ({ row }) => {
+          return new Date(row.original.createAt).toISOString().split('T')[0]
+        }
       }
     ],
     [page]
