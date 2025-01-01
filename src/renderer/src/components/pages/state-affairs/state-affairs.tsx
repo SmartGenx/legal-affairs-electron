@@ -12,15 +12,19 @@ export default function StateAffairs() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  // const name = searchParams.get('name[contains]')
+  const reference = searchParams.get('IssueDetails[some][refrance]')
+
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Issues', query,page],
+    queryKey: ['Issues', query, page, name, reference],
     queryFn: () =>
       getApi<Issues>('/issue', {
         params: {
           'name[contains]': query,
-          "include[IssueDetails]":true,
-          "include[governmentOffice]":true,
-          "include[postion]":true,
+          'include[IssueDetails]': true,
+          'include[governmentOffice]': true,
+          'include[postion]': true,
+          'IssueDetails[some][refrance]': reference,
           page: page || 1,
           pageSize: 5
         },
@@ -40,8 +44,13 @@ export default function StateAffairs() {
   return (
     <section className="relative space-y-4 ">
       <SearchStateAffairs />
-      <TopButtons data={data?.data.info || []}/>
-      <StateTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <StateTable
+        info={infoArray || []}
+        page={Number(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={String(data?.data.total)}
+      />
     </section>
   )
 }

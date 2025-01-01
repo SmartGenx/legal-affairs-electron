@@ -88,7 +88,7 @@ export interface InfoIssue {
   governmentOfficeId: number
   title: string
   type: number
-  invitationType: number
+  invitationType: string
   isDeleted: boolean
   state: boolean
   createdAt: Date
@@ -101,7 +101,7 @@ export interface IssueDetail {
   id: number
   issueId: number
   tribunalId: number
-  level: number
+  level: string
   createdAt: Date
   updatedAt: Date
   detailsDate: Date

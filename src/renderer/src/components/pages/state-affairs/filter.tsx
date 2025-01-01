@@ -1,4 +1,8 @@
+import { Separator } from '@radix-ui/react-separator'
+import { FormInput } from '@renderer/components/ui/form-input'
+import { Filter, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '../../ui/button' // Replace with your actual button component
 import { Calendar } from '../../ui/calendar' // Replace with your actual calendar component
 import {
@@ -9,11 +13,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger
-} from '../../ui/drawer' 
-import { Filter, X } from 'lucide-react'
-import { Separator } from '@radix-ui/react-separator'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { FormInput } from '@renderer/components/ui/form-input'
+} from '../../ui/drawer'
 
 export interface Directorate {
   id: number
@@ -36,7 +36,6 @@ export interface Category {
   lastModified: Date
 }
 const FilterDrawer = () => {
-  
   const kindOfCase = [
     { label: 'جنائية', value: 1 },
     { label: 'مدنية', value: 2 },
@@ -67,42 +66,22 @@ const FilterDrawer = () => {
   const [selectedGovernorates, setSelectedGovernorates] = useState<string[]>([])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedGender, setSelectedGender] = useState<string>('')
-  // const {
-  //   isPending: isdirectoratePending,
-  //   error: directorateError,
-  //   data: governorateData
-  // } = useQuery({
-  //   queryKey: ['directorate'],
-  //   queryFn: () =>
-  //     getApi<Directorate[]>('/directorate', {
-  //       headers: {
-  //         Authorization: authToken()
-  //       }
-  //     })
-  // })
-
-  // const {
-  //   isPending: isCategoryPending,
-  //   error: categoryError,
-  //   data: categoryData
-  // } = useQuery({
-  //   queryKey: ['category'],
-  //   queryFn: () =>
-  //     getApi<Category[]>('/category', {
-  //       headers: {
-  //         Authorization: authToken()
-  //       }
-  //     })
-  // })
+  const [name, setName] = useState('')
+  console.log('🚀 ~ FilterDrawer ~ name:', name)
+  const [reference, setReference] = useState('')
+  console.log('🚀 ~ FilterDrawer ~ reference:', reference)
 
   useEffect(() => {
     const governorates = searchParams.getAll('directorateGlobalId')
     const categories = searchParams.getAll('categoryGlobalId')
     const gender = searchParams.get('gender') || ''
+    const refernce = searchParams.get('IssueDetails[some][reference]') || ''
+    const name = searchParams.get('name[contains]') || ''
 
     setSelectedGovernorates(governorates)
     setSelectedCategories(categories)
-
+    setName(name)
+    setReference(refernce)
     setSelectedGender(gender)
   }, [searchParams])
 
@@ -122,7 +101,7 @@ const FilterDrawer = () => {
   //   setSelectedGender(gender)
   // }
   const handleClearFilters = () => {
-    navigate('/applicants', { replace: true })
+    navigate('/state-affairs', { replace: true })
   }
   const handleFilter = () => {
     const params = new URLSearchParams()
@@ -133,15 +112,20 @@ const FilterDrawer = () => {
     if (dateFrom) {
       params.set('submissionDate[gte]', dateFrom?.toISOString())
     }
+    // if (name) {
+    //   params.set('name[contains]', name)
+    // }
     if (dateTo) {
       params.set('submissionDate[lte]', dateTo?.toISOString())
     }
-
+    if (reference) {
+      params.set('IssueDetails[some][refrance]', reference)
+    }
     if (selectedGender) {
       params.set('gender', selectedGender)
     }
     setIsOpen(false)
-    navigate(`/applicants?${params.toString()}`, { replace: true })
+    navigate(`/state-affairs?${params.toString()}`, { replace: true })
   }
   // if (isdirectoratePending || isCategoryPending) return 'Loading...'
   // if (directorateError || categoryError)
@@ -270,20 +254,22 @@ const FilterDrawer = () => {
           <div>
             {selected === 'number' ? (
               <>
-                <FormInput
-                  label="رقم الحكم"
+                <input
                   placeholder="ادخل رقم الحكم"
                   type="text"
                   className="w-full mt-3 h-11 rounded-xl border-[3px] border-[#E5E7EB] -translate-y-0 px-2"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                 />
               </>
             ) : (
               <>
-                <FormInput
-                  label="الاسم"
+                <input
                   placeholder="ادخل الاسم"
                   type="text"
                   className="w-full h-11 mt-3 rounded-xl border-[3px] border-[#E5E7EB] -translate-y-0 px-2"
+                  onChange={(e) => setReference(e.target.value)}
+                  value={reference}
                 />
               </>
             )}

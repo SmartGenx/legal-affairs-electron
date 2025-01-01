@@ -90,9 +90,11 @@ class IssueDetailsService {
       if (!existingIssue) {
         throw new NotFoundError(`Issue with id ${issueId} not found.`)
       }
+
       return await prisma.issueDetails.create({
         data: { ...issueDetailsData, level: String(issueDetailsData.level) }
       })
+
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error
@@ -105,10 +107,12 @@ class IssueDetailsService {
 
   async updateIssueDetails(id, issueDetailsData) {
     try {
+
       return await prisma.issueDetails.update({
         where: { id },
         data: { ...issueDetailsData, level: String(issueDetailsData.level) }
       })
+
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error
