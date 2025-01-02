@@ -26,7 +26,7 @@ export interface ReferenceProp {
   createdAt: Date
   updatedAt: Date
 }
-export default function PersonnelAffairsTable({ info, page, total,pageSize }: Props) {
+export default function PersonnelAffairsTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<EmployInfo>[]>(
     () => [
@@ -54,7 +54,20 @@ export default function PersonnelAffairsTable({ info, page, total,pageSize }: Pr
 
       {
         accessorKey: 'idtype',
-        header: 'نوع الوثقية'
+        header: 'نوع الوثقية',
+        cell: ({ row }) => {
+          const typeId = row.original.idtype
+          switch (typeId) {
+            case 1:
+              return 'بطاقة'
+            case 2:
+              return 'جواز'
+            case 3:
+              return 'شهادة ميلاد'
+            default:
+              return 'نوع غير معروف' // You can customize the default text as needed
+          }
+        }
       },
       {
         accessorKey: 'employmentDate',

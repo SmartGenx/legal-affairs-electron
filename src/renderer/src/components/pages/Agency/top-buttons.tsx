@@ -31,7 +31,7 @@ useEffect(() => {
     const dataToExport = data?.map((item) => {
 
       return {
-        "id": item.id,
+        "م": item.id,
         "الاسم القانوني": item.legalName,
         'المرفق الذي يمثله': item.providedDocument,
         'المرفق الحكومي': item.governmentOffice.name,

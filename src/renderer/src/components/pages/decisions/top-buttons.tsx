@@ -29,7 +29,7 @@ export default function TopButtons({ data }: propDetails) {
     if (data) {
       const dataToExport = data?.map((item) => {
         return {
-          id: item.id,
+          "م": item.id,
           'رقم القرار': item.refrance,
           'تاريخ القرار': new Date(item.decisionDate).toISOString().split('T')[0],
           'جهة القرار': item.governmentOffice.name,

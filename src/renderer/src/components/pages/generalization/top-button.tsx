@@ -31,7 +31,7 @@ useEffect(() => {
     const dataToExport = data?.map((item) => {
 
       return {
-        "id": item.id,
+        "م": item.id,
         "موضوع التعميم": item.title,
         'رقم التعميم': item.refrance,
         'تاريخ الإضافة': new Date(item.createdAt).toISOString().split('T')[0],

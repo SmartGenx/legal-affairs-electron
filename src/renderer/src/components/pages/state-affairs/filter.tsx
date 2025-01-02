@@ -46,13 +46,7 @@ const FilterDrawer = () => {
     { label: 'ابتدائي', value: 2 },
     { label: 'عليا', value: 3 }
   ] as const
-  // const [selectedValue, setSelectedValue] = useState<number | undefined>(undefined)
-  const [selected, setSelected] = useState('')
-  console.log('🚀 ~ FilterDrawer ~ selected:', selected)
 
-  const handleSelect = (value) => {
-    setSelected(value)
-  }
   const [dateFrom, setDateFrom] = React.useState<Date | undefined>()
   const [dateTo, setDateTo] = React.useState<Date | undefined>()
 
@@ -197,8 +191,8 @@ const FilterDrawer = () => {
             </div>
           </div>
           <h3 className="text-base font-semibold text-[#383838] mb-2 mt-4">البحث بـ</h3>
-          <div className="flex items-center space-x-8 rtl space-x-reverse">
-            {/* Second Checkbox */}
+          {/* <div className="flex items-center space-x-8 rtl space-x-reverse">
+           
             <div className="flex items-center space-x-2 rtl space-x-reverse">
               <input
                 type="radio"
@@ -221,22 +215,16 @@ const FilterDrawer = () => {
                 رقم الحكم
               </label>
             </div>
-          </div>
+          </div> */}
 
           <div>
-            {selected === 'number' ? (
-              <>
-                <input
-                  placeholder="ادخل رقم الحكم"
-                  type="text"
-                  className="w-full h-11 mt-3 rounded-xl border-[3px] border-[#E5E7EB] -translate-y-0 px-2"
-                  onChange={(e) => setReference(e.target.value)}
-                  value={reference}
-                />
-              </>
-            ) : (
-              <></>
-            )}
+            <input
+              placeholder="ادخل رقم الحكم"
+              type="text"
+              className="w-full h-11 mt-3 rounded-xl border-[3px] border-[#E5E7EB] -translate-y-0 px-2"
+              onChange={(e) => setReference(e.target.value)}
+              value={reference}
+            />
           </div>
           <div className="w-full h-[1px] bg-[#F0F1F5]"></div>
           <div className="mb-6 mt-5">

@@ -48,12 +48,10 @@ export interface leaveType {
 }
 
 const FilterDrawer = () => {
- 
   // const [selectedValue, setSelectedValue] = useState<number | undefined>(undefined)
   const [selected, _setSelected] = useState('')
   console.log('🚀 ~ FilterDrawer ~ selected:', selected)
   const authToken = useAuthHeader()
-  
 
   const { data: leaveType } = useQuery({
     queryKey: ['leave-type'],
@@ -98,8 +96,6 @@ const FilterDrawer = () => {
       prev.includes(globalId) ? prev.filter((id) => id !== globalId) : [...prev, globalId]
     )
   }
-
-  
 
   // const handleGenderChange = (gender: string) => {
   //   setSelectedGender(gender)
@@ -155,7 +151,7 @@ const FilterDrawer = () => {
         <div className="p-6 overflow-y-auto">
           {/* Governorates Filter */}
           <div className="mb-6">
-            <h3 className="text-base font-semibold text-[#383838] mb-2">المؤهل التعليمي</h3>
+            <h3 className="text-base font-semibold text-[#383838] mb-2">نوع الإجازة</h3>
             <div className="grid grid-cols-3 gap-4">
               {leaveType?.data?.map((governorate) => (
                 <div key={governorate.id} className="flex items-center space-x-2">

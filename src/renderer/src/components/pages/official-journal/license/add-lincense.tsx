@@ -53,6 +53,20 @@ const formSchema = z.object({
 
 type BookFormValue = z.infer<typeof formSchema>
 
+const year = [
+  { label: 'يناير', value: 1 },
+  { label: 'فبراير', value: 2 },
+  { label: 'مارس', value: 3 },
+  { label: 'أبريل', value: 4 },
+  { label: 'مايو', value: 5 },
+  { label: 'يونيو', value: 6 },
+  { label: 'يوليو', value: 7 },
+  { label: 'أغسطس', value: 8 },
+  { label: 'سبتمبر', value: 9 },
+  { label: 'أكتوبر', value: 10 },
+  { label: 'نوفمبر', value: 11 },
+  { label: 'ديسمبر', value: 12 }
+]
 export default function AddLincense() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
@@ -169,12 +183,7 @@ export default function AddLincense() {
           onSubmit={form.handleSubmit(onSubmit)}
           className=""
         >
-          {process.env.NODE_ENV === 'development' && (
-            <>
-              <p>Ignore it, it just in dev mode</p>
-              <div>{JSON.stringify(form.formState.errors)}</div>
-            </>
-          )}
+         
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>
@@ -379,11 +388,20 @@ export default function AddLincense() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <FormInput
-                        className="h-11 px-3 placeholder:px-0 placeholder:text-base text-[#595959] placeholder:text-[#595959] rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                        placeholder="   السنة "
-                        {...field}
-                      />
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl translate-y-2">
+                          <SelectTrigger>
+                            <SelectValue placeholder="المرفق الحكومي" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {year.map((years) => (
+                            <SelectItem key={years.value} value={String(years.value)}>
+                              {years.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

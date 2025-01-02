@@ -63,7 +63,7 @@ useEffect(() => {
     const dataToExport = data?.map((item) => {
 
       return {
-        "id": item.id,
+        "م": item.id,
         "اسم الشركة": item.Customer.name,
         'نوع الترخيص': item.licenseType.name,
         'السنة': item.licenseYear,

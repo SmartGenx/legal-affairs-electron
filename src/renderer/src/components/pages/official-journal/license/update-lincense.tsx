@@ -39,7 +39,20 @@ export interface licenseResp {
   updatedAt: Date
   isDeleted: boolean
 }
-
+const year = [
+  { label: 'يناير', value: 1 },
+  { label: 'فبراير', value: 2 },
+  { label: 'مارس', value: 3 },
+  { label: 'أبريل', value: 4 },
+  { label: 'مايو', value: 5 },
+  { label: 'يونيو', value: 6 },
+  { label: 'يوليو', value: 7 },
+  { label: 'أغسطس', value: 8 },
+  { label: 'سبتمبر', value: 9 },
+  { label: 'أكتوبر', value: 10 },
+  { label: 'نوفمبر', value: 11 },
+  { label: 'ديسمبر', value: 12 }
+]
 const formSchema = z.object({
   licenseTypeId: z.string(),
   customerId: z.string(),
@@ -227,7 +240,6 @@ export default function UpdateLicense() {
             onSubmit={form.handleSubmit(onSubmit)}
             className=""
           >
-         
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
               <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
             </div>
@@ -446,11 +458,28 @@ export default function UpdateLicense() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <FormInput
-                          className="h-11 px-3 placeholder:px-0 placeholder:text-base text-[#595959] placeholder:text-[#595959]  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
-                          placeholder="   السنة "
-                          {...field}
-                        />
+                        <Select
+                          onValueChange={field.onChange}
+                          value={
+                            field.value
+                              ? String(field.value)
+                              : String(licenseById?.data.licenseYear)
+                          }
+                          defaultValue={field.value}
+                        >
+                          <FormControl className="bg-transparent h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl translate-y-2">
+                            <SelectTrigger>
+                              <SelectValue placeholder="المرفق الحكومي" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {year.map((years) => (
+                              <SelectItem key={years.value} value={String(years.value)}>
+                                {years.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
