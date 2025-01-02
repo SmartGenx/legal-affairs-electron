@@ -81,29 +81,29 @@ export default function AlLftaIndex() {
       console.error('Error fetching data:', error)
     }
   }
- //
- const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const value = event.target.value
-  if (value) {
-    const inputDate = new Date(value)
-    const today = new Date()
+  //
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    if (value) {
+      const inputDate = new Date(value)
+      const today = new Date()
 
-    // Reset hours, minutes, seconds, and milliseconds for today
-    today.setHours(0, 0, 0, 0)
+      // Reset hours, minutes, seconds, and milliseconds for today
+      today.setHours(0, 0, 0, 0)
 
-    // Compare the date components directly
-    const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
+      // Compare the date components directly
+      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
 
-    if (inputDateOnly > today) {
-      toast({
-        title: 'لم تتم العملية',
-        description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
-        variant: 'destructive'
-      })
+      if (inputDateOnly > today) {
+        toast({
+          title: 'لم تتم العملية',
+          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
+          variant: 'destructive'
+        })
+      }
     }
   }
-}
-//
+  //
   const form = useForm<ComplaintFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -171,6 +171,7 @@ export default function AlLftaIndex() {
       })
       queryClient.invalidateQueries({ queryKey: ['Complaint'] })
       navigate('/the-department-of-al-lfta')
+      window.location.reload()
     },
     onError: (error) => {
       toast({
@@ -202,12 +203,6 @@ export default function AlLftaIndex() {
             onSubmit={form.handleSubmit(onSubmit)}
             className=""
           >
-            {process.env.NODE_ENV === 'development' && (
-              <>
-                <p>Ignore it, it just in dev mode</p>
-                <div>{JSON.stringify(form.formState.errors)}</div>
-              </>
-            )}
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
               <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
             </div>
@@ -410,7 +405,6 @@ export default function AlLftaIndex() {
               {/*  */}
             </div>
 
-            
             <div className="w-full flex justify-end gap-2 mb-4">
               <Link to={'/the-department-of-al-lfta'}>
                 <Button className="text-sm h-10 md:w-30 lg:w-30  bg-[#fff] border-2 border-[#3734a9] text-[#3734a9] hover:bg-[#3734a9] hover:text-[#fff] hover:border-2 hover:border-white rounded-[12px] sm:w-28 sm:text-[10px]  lg:text-sm">

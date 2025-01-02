@@ -51,6 +51,10 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
         header: 'موضوع رأي'
       },
       {
+        accessorKey: 'refrance',
+        header: 'رقم رأي'
+      },
+      {
         accessorKey: 'date',
         header: 'تاريخ الرأي والإفتاء',
         cell: ({ row }) => {
