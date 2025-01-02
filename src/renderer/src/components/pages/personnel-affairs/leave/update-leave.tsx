@@ -117,8 +117,8 @@ export default function UpdateLeaveIndex() {
   const { id } = useParams<{ id: string }>()
 
   const fetchDataById = async () => {
-    const response = await axiosInstance.get<LeaveResp[]>(
-      `/leave-details?include[LeaveType]=true&include[employ]=true&id=${id}`,
+    const response = await axiosInstance.get<LeaveResp>(
+      `/leave-details/${id}?include[LeaveType]=true`,
       {
         headers: {
           Authorization: `${authToken()}`
@@ -141,12 +141,12 @@ export default function UpdateLeaveIndex() {
   useEffect(() => {
     if (BookData) {
       form.reset({
-        employeeeId: String(BookData[0].employeeeId),
-        leaveTypeId: String(BookData[0].leaveTypeId),
-        dayNumber: String(BookData[0].dayNumber),
-        startDate: String(BookData[0].startDate).split('T')[0],
-        endDate: String(BookData[0].endDate).split('T')[0],
-        leaveNote: String(BookData[0].leaveNote)
+        employeeeId: String(BookData?.employeeeId),
+        leaveTypeId: String(BookData?.leaveTypeId),
+        dayNumber: String(BookData?.dayNumber),
+        startDate: String(BookData?.startDate).split('T')[0],
+        endDate: String(BookData?.endDate).split('T')[0],
+        leaveNote: String(BookData?.leaveNote)
       })
     }
   }, [BookData])
@@ -273,12 +273,6 @@ export default function UpdateLeaveIndex() {
             onSubmit={form.handleSubmit(onSubmit)}
             className=""
           >
-            {process.env.NODE_ENV === 'development' && (
-              <>
-                <p>Ignore it, it just in dev mode</p>
-                <div>{JSON.stringify(form.formState.errors)}</div>
-              </>
-            )}
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
               <h3 className="font-bold text-[#3734a9] p-3">بيانات الموظف الشخصية</h3>
             </div>
@@ -295,13 +289,7 @@ export default function UpdateLeaveIndex() {
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        value={
-                          field.value
-                            ? String(field.value)
-                            : BookData && BookData.length > 0
-                              ? String(BookData[0].employeeeId)
-                              : '' // fallback in case BookData is undefined or empty
-                        }
+                        value={field.value ? String(field.value) : String(BookData?.employeeeId)}
                         defaultValue={field.value}
                       >
                         <FormControl className="bg-transparent h-11 mt-2 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">
@@ -340,13 +328,7 @@ export default function UpdateLeaveIndex() {
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        value={
-                          field.value
-                            ? String(field.value)
-                            : BookData && BookData.length > 0
-                              ? String(BookData[0].leaveTypeId)
-                              : '' // fallback in case BookData is undefined or empty
-                        }
+                        value={field.value ? String(field.value) : String(BookData?.leaveTypeId)}
                         defaultValue={field.value}
                       >
                         <FormControl className="bg-transparent mt-2 h-11 text-[#757575] text-base border-[3px] border-[#E5E7EB] rounded-xl">

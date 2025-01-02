@@ -160,7 +160,9 @@ export default function ViewOrderPage() {
 
               <div className="text-[#757575] col-span-1 h-[50px] ">
                 <label className="font-bold text-lg">سعر الكتاب</label>
-                <p className="mt-2">{bookId}</p>
+                <p className="mt-2">
+                  {BookData && BookData.length > 0 ? BookData[0].Book.price : 'no data'}
+                </p>
               </div>
 
               <div className="text-[#757575] col-span-1 h-[50px] ">

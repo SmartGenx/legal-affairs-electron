@@ -252,7 +252,7 @@ export default function ViewPage() {
   }, [issueData])
 
   const [selectedValue, setSelectedValue] = useState<kind_of_case | null>()
-  console.log("issueData?.[0].IssueDetails[0].level",issueData?.[0].IssueDetails[0].level)
+  console.log('issueData?.[0].IssueDetails[0].level', issueData?.[0].IssueDetails[0].level)
   useEffect(() => {
     setSelectedValue((Number(issueData?.[0].type) as kind_of_case) || null)
   }, [issueData])
@@ -352,6 +352,7 @@ export default function ViewPage() {
       queryClient.invalidateQueries({ queryKey: ['Issues'] })
       queryClient.invalidateQueries({ queryKey: ['statisticsSDashboard'] })
       navigate('/state-affairs')
+      window.location.reload()
     },
     onError: (error) => {
       toast({
@@ -386,12 +387,7 @@ export default function ViewPage() {
             onSubmit={form.handleSubmit(onSubmit)}
             className=""
           >
-            {process.env.NODE_ENV === 'development' && (
-              <>
-                <p>Ignore it, it just in dev mode</p>
-                <div>{JSON.stringify(form.formState.errors)}</div>
-              </>
-            )}
+         
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
               <h3 className="font-bold text-[#3734a9] p-3">بيانات المختص القانوني</h3>
             </div>
@@ -727,7 +723,7 @@ export default function ViewPage() {
               {(() => {
                 const level = selectedOption ?? issueData?.[0].IssueDetails[0].level
 
-                if (level === "1") {
+                if (level === '1') {
                   return (
                     <>
                       <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
@@ -921,7 +917,7 @@ export default function ViewPage() {
                       </div>
                     </>
                   )
-                } else if (level === "2") {
+                } else if (level === '2') {
                   return (
                     <>
                       <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
@@ -1065,7 +1061,7 @@ export default function ViewPage() {
                       </div>
                     </>
                   )
-                } else if (level === "3") {
+                } else if (level === '3') {
                   return (
                     <>
                       <div className="grid h-[80px] mb-1 grid-cols-1 items-start gap-4 overflow-y-scroll scroll-smooth  text-right ">
@@ -1268,7 +1264,7 @@ export default function ViewPage() {
                   )
                 }
               })()}
-                console.log("🚀 ~ ViewPage ~ level:", level);
+              console.log("🚀 ~ ViewPage ~ level:", level);
             </div>
 
             <div className="mb-4 bg-[#dedef8] rounded-t-lg">
