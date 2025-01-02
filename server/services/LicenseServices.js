@@ -21,7 +21,7 @@ class LicenseService {
         include = {};
       }
 
-      LicenseFilter = convertEqualsToInt(LicenseFilter);
+      // LicenseFilter = convertEqualsToInt(LicenseFilter);
 
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize;

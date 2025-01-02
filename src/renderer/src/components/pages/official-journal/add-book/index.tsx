@@ -12,12 +12,17 @@ export default function AddBookIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const dateFrom = searchParams.get('createdAt[gte]')
+  const dateTo = searchParams.get('createdAt[lte]')
+
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Books',query,page],
+    queryKey: ['Books', query, page, dateFrom, dateTo],
     queryFn: () =>
       getApi<Books>('/book', {
-        params:{
+        params: {
           'name[contains]': query,
+          'createdAt[gte]': dateFrom,
+          'createdAt[lte]': dateTo,
           page: page || 1,
           pageSize: 5
         },
@@ -35,8 +40,13 @@ export default function AddBookIndex() {
   return (
     <section className="relative space-y-4 ">
       <BookSearch />
-      <TopButtons data={data?.data.info || []}/>
-      <BookTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <BookTable
+        info={infoArray || []}
+        page={Number(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={String(data?.data.total)}
+      />
     </section>
   )
 }

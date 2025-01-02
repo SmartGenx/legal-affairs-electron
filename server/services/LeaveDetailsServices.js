@@ -25,7 +25,7 @@ class LeaveDetailsService {
         include = {}
       }
 
-      LeaveDetailsFilter = convertEqualsToInt(LeaveDetailsFilter)
+      // LeaveDetailsFilter = convertEqualsToInt(LeaveDetailsFilter)
 
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize

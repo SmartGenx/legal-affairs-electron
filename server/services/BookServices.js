@@ -21,7 +21,7 @@ class BookService {
                 include = {};
             }
 
-            BookFilter = convertEqualsToInt(BookFilter);
+            // BookFilter = convertEqualsToInt(BookFilter);
 
             if (page && pageSize) {
                 const skip = (+page - 1) * +pageSize;

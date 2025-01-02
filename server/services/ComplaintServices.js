@@ -20,8 +20,8 @@ class ComplaintService {
       } else {
         include = {}
       }
-      const convertString = convertEqualsToInt(ComplaintFilter)
-      ComplaintFilter = convertString
+      // const convertString = convertEqualsToInt(ComplaintFilter)
+      // ComplaintFilter = convertString
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize
         const take = +pageSize

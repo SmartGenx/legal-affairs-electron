@@ -54,7 +54,7 @@ export interface Customer {
   isDeleted: boolean
 }
 
-export default function OrderBookTable({ info, page, total,pageSize }: Props) {
+export default function OrderBookTable({ info, page, total, pageSize }: Props) {
   const navigate = useNavigate()
   const columns = React.useMemo<ColumnDef<Info>[]>(
     () => [
@@ -78,7 +78,7 @@ export default function OrderBookTable({ info, page, total,pageSize }: Props) {
         }
       },
       {
-        accessorKey: 'reference',
+        accessorKey: 'orderNumber',
         header: 'رقم السند'
       },
       {
@@ -86,7 +86,7 @@ export default function OrderBookTable({ info, page, total,pageSize }: Props) {
         header: 'سعر الكتاب'
       },
       {
-        accessorKey: 'orderNumber',
+        accessorKey: 'reference',
         header: 'رقم الصرف'
       },
 

@@ -72,14 +72,20 @@ export default function LeaveIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const leaveTypeId = searchParams.get('leaveTypeId')
+  const dateFrom = searchParams.get('startDate[gte]')
+  const dateTo = searchParams.get('startDate[lte]')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['leaveAllocation',page,query],
+    queryKey: ['leaveAllocation', page, query, leaveTypeId, dateFrom, dateTo],
     queryFn: () =>
       getApi<LeaveResp>('/leave-details', {
         params: {
           'employ[name][contains]': query,
           'include[LeaveType]': true,
           'include[employ]': true,
+          leaveTypeId: leaveTypeId,
+          'startDate[gte]': dateFrom,
+          'startDate[lte]': dateTo,
           page: page || 1,
           pageSize: 5
         },
@@ -98,7 +104,12 @@ export default function LeaveIndex() {
     <section className="relative space-y-4 ">
       <LeaveSearch />
       <TopButtons data={data?.data.info || []} />
-      <LeaveTable info={infoArray || []} page={String(data?.data.page)} pageSize={String(data?.data.pageSize)} total={Number(data?.data.total)} />
+      <LeaveTable
+        info={infoArray || []}
+        page={String(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={Number(data?.data.total)}
+      />
     </section>
   )
 }

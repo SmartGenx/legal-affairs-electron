@@ -32,12 +32,12 @@ export interface Info {
   Customer: Customer
 }
 export interface Customer {
-  id:        number;
-  name:      string;
-  type?:     number;
-  createdAt: Date;
-  updatedAt: Date;
-  isDeleted: boolean;
+  id: number
+  name: string
+  type?: number
+  createdAt: Date
+  updatedAt: Date
+  isDeleted: boolean
 }
 
 export interface LicenseType {
@@ -54,14 +54,21 @@ export default function LicenseIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const refrance = searchParams.get('licenseNumber[equals]')
+  const dateFrom = searchParams.get('createdAt[gte]')
+  const dateTo = searchParams.get('createdAt[lte]')
+
   const { isLoading, error, data } = useQuery({
-    queryKey: ['LicenseResponse', page,query],
+    queryKey: ['LicenseResponse', page, query, refrance, dateFrom, dateTo],
     queryFn: () =>
       getApi<LicenseResp>('/license', {
         params: {
           'Customer[name][contains]': query,
           'include[licenseType]': true,
           'include[Customer]': true,
+          'licenseNumber[equals]': refrance,
+          'createdAt[gte]': dateFrom,
+          'createdAt[lte]': dateTo,
           page: page || 1,
           pageSize: 5
         },
@@ -79,8 +86,13 @@ export default function LicenseIndex() {
   return (
     <section className="relative space-y-4 ">
       <LicenseSearch />
-      <TopButtons data={data?.data.info || []}/>
-      <LicenseTable info={infoArray || []} page={String(data?.data.page)} pageSize={String(data?.data.pageSize)} total={Number(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <LicenseTable
+        info={infoArray || []}
+        page={String(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={Number(data?.data.total)}
+      />
     </section>
   )
 }

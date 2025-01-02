@@ -12,13 +12,19 @@ export default function AgencyIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const refrance = searchParams.get('providedDocument[equals]')
+  const dateFrom = searchParams.get('createdAt[gte]')
+  const dateTo = searchParams.get('createdAt[lte]')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Agency', query, page],
+    queryKey: ['Agency', query, page, refrance, dateFrom, dateTo],
     queryFn: () =>
       getApi<Agency>('/agency', {
         params: {
           'legalName[contains]': query,
-          "include[governmentOffice]":true,
+          'include[governmentOffice]': true,
+          'providedDocument[equals]': refrance,
+          'createdAt[gte]': dateFrom,
+          'createdAt[lte]': dateTo,
           page: page || 1,
           pageSize: 5
         },
@@ -36,8 +42,13 @@ export default function AgencyIndex() {
   return (
     <section className="relative space-y-4 ">
       <DecisionsSearch />
-      <TopButtons data={data?.data.info || []}/>
-      <AgencyTable info={infoArray || []} page={Number(data?.data.page)} pageSize={String(data?.data.pageSize)} total={String(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <AgencyTable
+        info={infoArray || []}
+        page={Number(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={String(data?.data.total)}
+      />
     </section>
   )
 }

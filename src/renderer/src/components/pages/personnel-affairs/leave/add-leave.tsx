@@ -18,36 +18,8 @@ const formSchema = z.object({
   employeeeId: z.string(),
   leaveTypeId: z.string(),
   dayNumber: z.string(),
-  startDate: z.string().refine(
-    (date) => {
-      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
-      const [year, month, day] = date.split('-').map(Number)
-      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
-
-      const today = new Date()
-      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
-
-      return inputDate <= today // Return true if inputDate is today or before
-    },
-    {
-      message: 'Date must be today or before.'
-    }
-  ),
-  endDate: z.string().refine(
-    (date) => {
-      // Parse the input date string (yyyy-mm-dd) and construct a new Date object
-      const [year, month, day] = date.split('-').map(Number)
-      const inputDate = new Date(year, month - 1, day) // Month is 0-based in JS Date
-
-      const today = new Date()
-      today.setHours(0, 0, 0, 0) // Set today's date to midnight to ignore time
-
-      return inputDate <= today // Return true if inputDate is today or before
-    },
-    {
-      message: 'Date must be today or before.'
-    }
-  ),
+  startDate: z.string(),
+  endDate: z.string(),
   leaveNote: z.string()
 })
 
@@ -92,27 +64,7 @@ export default function AddLeaveIndex() {
   const DataArray = LeaveTypeData?.data?.info || [] // Changed LeaveTypeLoading to LeaveTypeData here
 
   //
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    if (value) {
-      const inputDate = new Date(value)
-      const today = new Date()
 
-      // Reset hours, minutes, seconds, and milliseconds for today
-      today.setHours(0, 0, 0, 0)
-
-      // Compare the date components directly
-      const inputDateOnly = new Date(inputDate.setHours(0, 0, 0, 0))
-
-      if (inputDateOnly > today) {
-        toast({
-          title: 'لم تتم العملية',
-          description: 'التاريخ يجب أن يكون اليوم أو قبل اليوم.',
-          variant: 'destructive'
-        })
-      }
-    }
-  }
   //
   const form = useForm<AddEmployeeValue>({
     resolver: zodResolver(formSchema)
@@ -283,7 +235,6 @@ export default function AddLeaveIndex() {
                         className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => {
                           field.onChange(e)
-                          handleDateChange(e) // Validation is triggered whenever the value changes
                         }}
                       />
                     </FormControl>
@@ -309,7 +260,6 @@ export default function AddLeaveIndex() {
                         className="h-11 px-1 placeholder:text-base  rounded-xl border-[3px] border-[#E5E7EB] text-sm"
                         onChange={(e) => {
                           field.onChange(e)
-                          handleDateChange(e) // Validation is triggered whenever the value changes
                         }}
                       />
                     </FormControl>

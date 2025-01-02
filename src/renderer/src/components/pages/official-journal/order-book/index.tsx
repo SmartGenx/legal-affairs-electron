@@ -53,36 +53,46 @@ export default function OrderBookIndex() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query')
   const page = searchParams.get('page')
+  const refrance = searchParams.get('reference[equals]')
+  const orderNumber = searchParams.get('orderNumber')
+  const dateFrom = searchParams.get('createdAt[gte]')
+  const dateTo = searchParams.get('createdAt[lte]')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['OrderBookResponseTable',page,query],
+    queryKey: ['OrderBookResponseTable', page, query, refrance, orderNumber, dateFrom, dateTo],
     queryFn: () =>
-      getApi<OrderBookResponse>(
-        '/book-order',
-        {
-          params: {
-            'Book[name][contains]': query,
-            'include[Book]': true,
-            'include[Customer]': true,
-            page: page || 1,
-            pageSize: 5
-          },
-          headers: {
-            Authorization: authToken()
-          }
+      getApi<OrderBookResponse>('/book-order', {
+        params: {
+          'Book[name][contains]': query,
+          'include[Book]': true,
+          'include[Customer]': true,
+          'reference[equals]': refrance,
+          "orderNumber": orderNumber,
+          'createdAt[gte]': dateFrom,
+          'createdAt[lte]': dateTo,
+          page: page || 1,
+          pageSize: 5
+        },
+        headers: {
+          Authorization: authToken()
         }
-      )
+      })
   })
   const infoArray = data?.data?.info || []
   console.log('infoArray:', infoArray)
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error.message
-  
+
   return (
     <section className="relative space-y-4 ">
       <OrderBookSearch />
-      <TopButtons data={data?.data.info || []}/>
-      <OrderBookTable info={infoArray || []} page={String(data?.data.page)} pageSize={String(data?.data.pageSize)} total={Number(data?.data.total)} />
+      <TopButtons data={data?.data.info || []} />
+      <OrderBookTable
+        info={infoArray || []}
+        page={String(data?.data.page)}
+        pageSize={String(data?.data.pageSize)}
+        total={Number(data?.data.total)}
+      />
     </section>
   )
 }

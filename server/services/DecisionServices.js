@@ -20,8 +20,8 @@ class DecisionServices {
             } else {
                 include = {};
             }
-            const convertString = convertEqualsToInt(DecisionFiltetr);
-            DecisionFiltetr = convertString;
+            // const convertString = convertEqualsToInt(DecisionFiltetr);
+            // DecisionFiltetr = convertString;
             if (page && pageSize) {
                 const skip = (+page - 1) * +pageSize;
                 const take = +pageSize;

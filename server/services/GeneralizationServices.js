@@ -22,8 +22,8 @@ class GeneralizationServices {
       } else {
         include = {}
       }
-      const convertString = convertEqualsToInt(generalizationfilter)
-      generalizationfilter = convertString
+      // const convertString = convertEqualsToInt(generalizationfilter)
+      // generalizationfilter = convertString
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize
         const take = +pageSize
