@@ -181,7 +181,7 @@ class UserService {
       if (existingUser.isDeleted) {
         throw new NotFoundError(`User was deleted.`)
       }
-  
+
 
 
       let hashPass = ''
@@ -358,6 +358,9 @@ class UserService {
   // Delete a User by their ID
   async deleteUser(id) {
     try {
+      if(id == 1){
+        throw new NotFoundError(`You cannot delete Admin`)
+      }
       const user = await prisma.user.findUnique({ where: { id } })
       if (!user) {
         throw new NotFoundError(`User with id ${id} not found.`)
