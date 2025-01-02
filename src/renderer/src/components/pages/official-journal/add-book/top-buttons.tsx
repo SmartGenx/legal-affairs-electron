@@ -30,7 +30,7 @@ useEffect(() => {
     const dataToExport = data?.map((item) => {
 
       return {
-        "id": item.id,
+        "م": item.id,
         "اسم الكتاب": item.name,
         'الكمية': item.quantity,
         'سعر النسخة': item.price,

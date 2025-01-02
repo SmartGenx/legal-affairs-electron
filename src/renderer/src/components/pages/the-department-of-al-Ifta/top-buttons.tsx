@@ -30,13 +30,12 @@ export default function TopButtons({ data }: propDetails) {
     if (data) {
       const dataToExport = data?.map((item) => {
         return {
-          id: item.id,
-          'مقدم الشكوى': item.name,
+          "م": item.id,
+          'مقدم الرأي': item.name,
           'مصدر التوجية': item.governmentOffice.name,
-          'موضوع الشكوى': item.title,
-          'تاريخ رأي المكتب': new Date(item.date).toISOString().split('T')[0],
-          'نص رأي المكتب': item.officeOpinian,
-          'تاريخ الإضافة': new Date(item.createdAt).toISOString().split('T')[0]
+          'موضوع الرأي': item.title,
+          'رقم الرأي': item.refrance,
+          'تاريخ الرأي والإفتاء': new Date(item.date).toISOString().split('T')[0]
         }
       })
 
@@ -48,7 +47,7 @@ export default function TopButtons({ data }: propDetails) {
     const worksheet = XLSX.utils.json_to_sheet(dataPrint)
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
 
-    const fileName = 'جدول الشكاوى.xlsx'
+    const fileName = 'الآراء والفتوى.xlsx'
     XLSX.writeFile(workbook, fileName)
   }
   return (

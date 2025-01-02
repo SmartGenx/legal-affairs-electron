@@ -37,7 +37,7 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
       },
       {
         accessorKey: 'name',
-        header: 'مقدم رأي'
+        header: 'مقدم الرأي'
       },
       {
         accessorKey: 'governmentOfficeId',
@@ -48,11 +48,11 @@ export default function AlLftaTable({ info, page, total, pageSize }: Props) {
       },
       {
         accessorKey: 'title',
-        header: 'موضوع رأي'
+        header: 'موضوع الرأي'
       },
       {
         accessorKey: 'refrance',
-        header: 'رقم رأي'
+        header: 'رقم الرأي'
       },
       {
         accessorKey: 'date',

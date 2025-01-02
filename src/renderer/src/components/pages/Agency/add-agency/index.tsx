@@ -108,12 +108,7 @@ export default function AddAgency() {
           onSubmit={form.handleSubmit(onSubmit)}
           className=""
         >
-          {process.env.NODE_ENV === 'development' && (
-            <>
-              <p>Ignore it, it just in dev mode</p>
-              <div>{JSON.stringify(form.formState.errors)}</div>
-            </>
-          )}
+          
           <div className="mb-4 bg-[#dedef8] rounded-t-lg">
             <h3 className="font-bold text-[#3734a9] p-3">المعلومات الأساسية</h3>
           </div>

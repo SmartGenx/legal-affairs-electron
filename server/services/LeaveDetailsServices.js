@@ -26,7 +26,12 @@ class LeaveDetailsService {
       }
 
       // LeaveDetailsFilter = convertEqualsToInt(LeaveDetailsFilter)
-
+      if (LeaveDetailsFilter.id) {
+        LeaveDetailsFilter.id = parseInt(LeaveDetailsFilter.id, 10)
+      }
+      if (LeaveDetailsFilter.leaveTypeId) {
+        LeaveDetailsFilter.leaveTypeId = parseInt(LeaveDetailsFilter.leaveTypeId, 10)
+      }
       if (page && pageSize) {
         const skip = (+page - 1) * +pageSize
         const take = +pageSize
@@ -106,17 +111,15 @@ class LeaveDetailsService {
       if (existingLeaveDetails) {
         await prisma.leaveDetails.update({
           where: {
-            id: existingLeaveDetails.id,
+            id: existingLeaveDetails.id
           },
           data: {
             ...leaveDetailsData,
             dayNumber: existingLeaveDetails.dayNumber + leaveDetailsData.dayNumber
           }
-
         })
-
-      }else{
-      const leaveDetails = await prisma.leaveDetails.create({
+      } else {
+        const leaveDetails = await prisma.leaveDetails.create({
           data: {
             ...leaveDetailsData,
             employeeeId: +employeeeId,
@@ -125,9 +128,7 @@ class LeaveDetailsService {
             dayNumber: +leaveDetailsData.dayNumber
           }
         })
-
       }
-
 
       const result = await prisma.leaveDetails.aggregate({
         _sum: {
@@ -141,13 +142,12 @@ class LeaveDetailsService {
         }
       })
 
-
       const leaveType = await LeaveTypeServices.getleaveTypeById(leaveDetailsData.leaveTypeId)
       console.log(leaveType.defaultDay + 'sum' + result._sum.dayNumber)
       if (leaveType.defaultDay < result._sum.dayNumber) {
         throw new NotFoundError(`لا يمكنك اخذ اجازه `)
       }
-      const dayNumber =  leaveType.defaultDay-result._sum.dayNumber
+      const dayNumber = leaveType.defaultDay - result._sum.dayNumber
       const existingAllocation = await prisma.leaveallocation.findFirst({
         where: {
           employeeId: employeeeId,
@@ -172,7 +172,7 @@ class LeaveDetailsService {
         })
       }
 
-      return "تم اضافه الاجازه بنجاح"
+      return 'تم اضافه الاجازه بنجاح'
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error

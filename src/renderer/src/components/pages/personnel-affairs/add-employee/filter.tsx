@@ -129,7 +129,7 @@ const FilterDrawer = () => {
   const handleFilter = () => {
     const params = new URLSearchParams()
 
-    selectedType.forEach((id) => params.append('type', id))
+    selectedType.forEach((id) => params.append('education[contains]', id))
     selectedLevel.forEach((id) => params.append('IssueDetails[some][level]', id))
 
     if (dateFrom) {

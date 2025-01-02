@@ -13,13 +13,15 @@ export default function EmployeeIndex() {
   const query = searchParams.get('query')
   const page = searchParams.get('page')
   const phone = searchParams.get('phone[equals]')
+  const education = searchParams.get('education[contains]')
   const { isLoading, error, data } = useQuery({
-    queryKey: ['Employ', page, query, phone],
+    queryKey: ['Employ', page,education, query, phone],
     queryFn: () =>
       getApi<Employ>('/employ', {
         params: {
           'name[contains]': query,
           'phone[equals]': phone,
+          'education[contains]': education,
           page: page || 1,
           pageSize: 5
         },

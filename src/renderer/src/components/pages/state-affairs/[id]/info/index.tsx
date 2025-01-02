@@ -108,7 +108,7 @@ export default function StateAffairsInfo() {
   const { id } = useParams<{ id: string }>()
   const authToken = useAuthHeader()
   const [dataPosition, setPositionData] = useState<PositionsProp[]>([])
-  const [dataGovernment, _setGovernmentData] = useState<GovernmentOffice[]>([])
+  const [dataGovernment, setGovernmentData] = useState<GovernmentOffice[]>([])
   const [tribunal, setTribunal] = useState<Tribunal[]>([])
   const [selectedOption, _setSelectedOption] = useState<number | null>(null)
 
@@ -138,7 +138,20 @@ export default function StateAffairsInfo() {
         console.error('Error fetching data:', error)
       }
     }
+    const fetchGovernmentData = async () => {
+      try {
+        const response = await axiosInstance.get('/government-office', {
+          headers: {
+            Authorization: `${authToken()}`
+          }
+        })
+        setGovernmentData(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
     fetchPositionData()
+    fetchGovernmentData()
     fetchData()
   }, [selectedOption])
 
@@ -216,6 +229,7 @@ export default function StateAffairsInfo() {
   const filteredGovernmentName = dataGovernment
     .filter((x) => x.id === issueData?.[0]?.governmentOfficeId)
     .map((x) => x.name)[0]
+  console.log('issueData?.[0]?.governmentOfficeId', dataGovernment)
 
   const [_selectedValue, _setSelectedValue] = useState<string | null>(issueData?.[0]?.type || null)
 

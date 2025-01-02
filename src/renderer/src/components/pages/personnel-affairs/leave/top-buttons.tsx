@@ -82,7 +82,7 @@ useEffect(() => {
     const dataToExport = data?.map((item) => {
 
       return {
-        "id": item.id,
+        "م": item.id,
         "م الموظف": item.employ.reference,
         'الأسم': item.employ.name,
         'نوع الإجازة': item.LeaveType.name,

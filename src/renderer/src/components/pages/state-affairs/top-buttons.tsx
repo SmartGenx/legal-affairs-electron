@@ -32,7 +32,7 @@ const handlePrint = useReactToPrint({
         const typeExcal = Number(item.type)
         const levelExcal = Number(item.IssueDetails[0].level)
         return {
-          "id": item.id,
+          "م": item.id,
           "الأسم": item.name,
           "الصفة": item.postion.name,
           'المرفق الحكومي': item.governmentOffice.name,

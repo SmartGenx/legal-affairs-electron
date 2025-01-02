@@ -6,7 +6,12 @@
   font-family: 'Cairo';
   src: url('./font/Cairo-Medium.ttf');
 }
-
+@font-face {
+  font-family: 'arial';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./font/alfont_com_AlFont_com_arial.ttf');
+}
 * {
   font-family: 'Cairo';
 }
@@ -105,4 +110,31 @@ details > summary::-webkit-details-marker /* Safari */ {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   opacity: 0;
+}
+
+@media print {
+  .print-footer {
+    position: fixed;
+    bottom: 20px; /* Adjust as needed */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px; /* Adjust font size as needed */
+    color: #000; /* Ensure the text is visible in print */
+  }
+
+  @page {
+    margin-bottom: 50px; /* Ensure there's space for the footer */
+  }
+}
+
+/* Hide the footer on screen */
+.print-footer {
+  display: none;
+}
+
+@media print {
+  .print-footer {
+    display: block;
+  }
 }

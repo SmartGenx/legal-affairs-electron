@@ -70,7 +70,7 @@ useEffect(() => {
     const dataToExport = data?.map((item) => {
 
       return {
-        "id": item.id,
+        "م": item.id,
         "اسم الكتاب": item.Book.name,
         'اسم المشتري': item.quantity,
         'رقم السند': item.reference,

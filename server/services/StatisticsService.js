@@ -18,22 +18,22 @@ class StatisticsService {
       let arr = []
       for (let index = 0; index < invitationType.length; index++) {
         switch (invitationType[index].type) {
-          case 1:
+          case "1":
             arr.push({
               جنائية: invitationType[index]._count.type
             })
             break
-          case 2:
+          case "2":
             arr.push({
               مدنية: invitationType[index]._count.type
             })
             break
-          case 3:
+          case "3":
             arr.push({
               تجارية: invitationType[index]._count.type
             })
             break
-          case 4:
+          case "4":
             arr.push({
               إدارية: invitationType[index]._count.type
             })

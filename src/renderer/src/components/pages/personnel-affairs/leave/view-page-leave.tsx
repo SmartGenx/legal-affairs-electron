@@ -1,6 +1,6 @@
 import { Separator } from '@radix-ui/react-dropdown-menu'
 import { axiosInstance, getApi } from '@renderer/lib/http'
-import {  Leave } from '@renderer/types'
+import { Leave } from '@renderer/types'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowRight } from 'lucide-react'
 import { useEffect } from 'react'
@@ -67,7 +67,7 @@ export default function ViewPageLeave() {
 
   const fetchDataById = async () => {
     const response = await axiosInstance.get<LeaveResp[]>(
-      `/leave-details?include[LeaveType]=true&include[employ]=true&id=${id}`,
+      `/leave-details?include[employ]=true&id=${id}`,
       {
         headers: {
           Authorization: `${authToken()}`
@@ -88,7 +88,6 @@ export default function ViewPageLeave() {
 
   console.log('BookData', BookData)
   useEffect(() => {}, [BookData])
-  
 
   const {
     isLoading: _LeaveTypeLoading,
@@ -128,19 +127,15 @@ export default function ViewPageLeave() {
                   اسم الموظف
                 </label>
                 <p className="mt-2">
-                  {BookData?.[0] && (
-                    <h1 className="mr-2 text-[#757575]">{BookData[0].employ.name}</h1>
-                  )}
+                  {BookData?.[0] && <h1 className="mr-2 text-[#757575]">{BookData[0].employ.name}</h1>}
                 </p>
               </div>
 
               <div className="text-[#757575] col-span-1 h-[50px] ">
                 <label className="font-bold text-lg">نوع الإجازه</label>
                 <p className="mt-2">
-                  {BookData && BookData.length > 0
-                    ? LeaveTypeData?.data.info.filter((x) => x.id === BookData[0]?.LeaveType?.id)[0]
-                        ?.name || ''
-                    : ''}
+                  {LeaveTypeData?.data.info.filter((x) => x.id === BookData?.[0]?.leaveTypeId)[0]
+                    ?.name || ''}
                 </p>
               </div>
 
@@ -148,9 +143,7 @@ export default function ViewPageLeave() {
                 <label htmlFor="" className="font-bold text-lg">
                   الايام
                 </label>
-                <p className="mt-2">
-                  {BookData && BookData.length > 0 ? BookData[0]?.dayNumber : ''}
-                </p>
+                <p className="mt-2">{BookData?.[0]?.dayNumber}</p>
               </div>
               {/*  */}
             </div>
@@ -161,21 +154,13 @@ export default function ViewPageLeave() {
                 <label htmlFor="" className="font-bold text-lg">
                   بداية الإجازة
                 </label>
-                <p>
-                  {BookData && BookData.length > 0
-                    ? String(BookData[0]?.startDate).split('T')[0]
-                    : ''}
-                </p>
+                <p>{String(BookData?.[0]?.startDate).split('T')[0]}</p>
               </div>
 
               <div className="text-[#757575] col-span-1 h-[50px] ">
                 <label className="font-bold text-lg">نهاية الإجازة</label>
                 <p className="mt-2">
-                  <p>
-                    {BookData && BookData.length > 0
-                      ? String(BookData[0]?.endDate).split('T')[0]
-                      : ''}
-                  </p>
+                  <p>{String(BookData?.[0]?.endDate).split('T')[0]}</p>
                 </p>
               </div>
               {/*  */}
@@ -187,9 +172,7 @@ export default function ViewPageLeave() {
                 <label htmlFor="" className="font-bold text-lg">
                   ملاحظات
                 </label>
-                <p className="mt-2">
-                  {BookData && BookData.length > 0 ? BookData[0]?.leaveNote : ''}
-                </p>
+                <p className="mt-2">{BookData?.[0]?.leaveNote}</p>
               </div>
             </div>
           </div>

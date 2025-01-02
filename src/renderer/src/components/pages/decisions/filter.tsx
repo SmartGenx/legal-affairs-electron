@@ -105,7 +105,7 @@ const FilterDrawer = () => {
 
           <div>
             <input
-              placeholder="ادخل رقم الرأي"
+              placeholder="ادخل رقم القرار"
               type="text"
               className="w-full h-11 mt-3 rounded-xl border-[3px] border-[#E5E7EB] -translate-y-0 px-2"
               onChange={(e) => setReference(e.target.value)}
